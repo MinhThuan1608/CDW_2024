@@ -1,0 +1,44 @@
+
+
+body{
+    margin: 0;
+    min-width: 400px;
+    background: radial-gradient(ellipse at center, #E26EE5, #49108B);
+}
+
+.main-container{
+    width: 100%;
+    min-height: 100vh;
+    height: max-content;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.left-container{
+    display: flex;
+    width: 50%;
+    min-width: max-content;
+    align-items: center;
+}
+
+.title-container{
+    width: 100%;
+}
+
+
+
+
+.form-title{
+    font-size: 25px;
+    margin: 20px 0;
+}
+
+
+
+#error-message{
+    color: rgb(255, 0, 0);
+    font-style: italic;
+}
+

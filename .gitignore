@@ -1,0 +1,62 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/MonopolyUI/node_modules
+/MonopolyUI/.pnp
+/MonopolyUI/.pnp.js
+
+# testing
+/MonopolyUI/coverage
+
+# production
+/MonopolyUI/build
+
+# misc
+/MonopolyUI/.DS_Store
+/MonopolyUI/.env.local
+/MonopolyUI/.env.development.local
+/MonopolyUI/.env.test.local
+/MonopolyUI/.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+HELP.md
+/MonopolySocketApi/.gradle
+/MonopolySocketApi/build/
+/MonopolySocketApi/!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+/MonopolySocketApi/.apt_generated
+/MonopolySocketApi/.classpath
+/MonopolySocketApi/.factorypath
+/MonopolySocketApi/.project
+/MonopolySocketApi/.settings
+/MonopolySocketApi/.springBeans
+/MonopolySocketApi/.sts4-cache
+/MonopolySocketApi/bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+/MonopolySocketApi/.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+

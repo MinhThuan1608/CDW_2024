@@ -1,0 +1,64 @@
+
+
+body{
+	margin: 0;
+
+}
+
+.main-container{
+	width: 100vw;
+	height: 100vh;
+	background: radial-gradient(ellipse at center, #E26EE5, #49108B);
+	position: relative;
+}
+
+.title-container{
+	margin: unset auto;
+	padding: calc(40vh - 100px) 0 0 0;
+}
+
+.title{
+	font-size: 100px;
+	color: #F3F8FF;
+	text-align: center;
+	text-shadow: 0 0 10px #b484f4, 0 0 20px #8a43e7, 0 0 30px #7E30E1;
+	cursor: default;
+}
+
+.button-container{
+	display: flex;
+	justify-content: center;
+	margin-top: 100px;
+}
+
+.button{
+	margin: auto 10px;
+	padding: 15px 40px;
+	background-color: #7E30E1;
+	cursor: pointer;
+	color: #F3F8FF;
+	border-radius: 5px;
+	font-size: 17px;
+	border: none;
+}
+
+.button:hover{
+	box-shadow: 0 0 10px #b484f4, 0 0 20px #8a43e7, 0 0 30px #7E30E1;
+}
+
+#login-button{
+	background-color: #9b51fd;
+}
+
+.copy-right-container{
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+}
+
+#copy-right{
+	font-size: 10px;
+	font-weight: 200;
+	text-align: right;
+	color: #F3F8FF;
+}

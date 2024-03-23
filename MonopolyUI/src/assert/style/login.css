@@ -1,0 +1,115 @@
+
+
+body{
+    margin: 0;
+    min-width: 400px;
+    background: radial-gradient(ellipse at center, #E26EE5, #49108B);
+}
+
+.main-container-login{
+    width: 100%;
+    min-height: 100vh;
+    height: max-content;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* flex-direction: row; */
+}
+
+.left-container{
+    display: flex;
+    width: 50%;
+    min-width: max-content;
+    align-items: center;
+}
+
+.title-container{
+    width: 100%;
+}
+
+.title{
+    font-size: 70px;
+    color: #F3F8FF;
+    text-align: center;
+    text-shadow: 0 0 10px #b484f4, 0 0 20px #8a43e7, 0 0 30px #7E30E1;
+}
+
+.right-container{
+    display: flex;
+    align-items: center;
+    width: 30%;
+    min-width: 350px;
+
+}
+
+.form-container{
+    width: 100%;
+    border: 2px solid #ffffff;
+    border-radius: 10px;
+    position: relative;
+}
+
+.form-bounder{
+    padding: 20px 40px 50px;
+}
+
+.form-title{
+    font-size: 25px;
+    margin: 20px 0;
+    color: #ffffff;
+    text-align: center;
+}
+
+.input-text{
+    /* width: calc(100% - 30px); */
+    width: 100%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ffffff;
+    outline: none;
+}
+
+#error-message{
+    color: red;
+    font-style: italic;
+}
+
+.button-container{
+    display: flex;
+    justify-content: space-around; 
+    margin: 30px 0 20px;
+    width: 100%;
+}
+
+.button{
+    padding: 15px 20px;
+    background-color: #7E30E1;
+    cursor: pointer;
+    color: #F3F8FF;
+    border-radius: 5px;
+    font-size: 15px;
+    border: none;
+    margin: 5px 10px;
+}
+
+.button:hover{
+    box-shadow: 0 0 10px #b484f4, 0 0 20px #8a43e7, 0 0 30px #7E30E1;
+}
+
+#submit{
+    background-color: #6e19dc;
+}
+
+#missing-password{
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#missing-password:hover{
+    text-decoration: underline;
+}
