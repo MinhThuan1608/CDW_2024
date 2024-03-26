@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
@@ -9,7 +9,12 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 
 const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJoinRoomModal }) => {
-    const rooms = ["Room 1", "Room abc", "Room ghj"];
+    const [filteredRooms, setFilteredRooms] = useState([]); // State để lưu danh sách phòng sau khi lọc
+
+    const rooms = [{ roomId: 'a12', roomName: 'huong', havePass: false },
+    { roomId: 'd12', roomName: 'thuan', havePass: false },
+    { roomId: 'f45', roomName: 'thuy', havePass: true },
+    { roomId: 'g34', roomName: 'quay', havePass: false }];
 
     // Hàm xử lý khi ấn nút đóng modal
     const handleCloseModal = () => {
@@ -22,6 +27,8 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     const closeJoinRoomModal = () => {
         setShowJoinRoomModal(false);
     };
+
+
     return (
         <div
             className="modal show"
@@ -37,17 +44,21 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                     <Modal.Body>
                         <div className="search-room">
                             <p>Tìm kiếm:</p>
-                            <FloatingLabel className="mb-3 search-room-input"  controlId="floatingInput"
+                            <FloatingLabel className="mb-3 search-room-input" controlId="floatingInput"
                                 label="Nhập ID">
-                                <Form.Control type="text" placeholder="Nhập ID" />
+                                <Form.Control type="text" placeholder="Nhập ID"
+                                    onChange={e => setFilteredRooms(rooms.filter(room => room.roomId.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                                        room.roomName.toLowerCase().includes(e.target.value.toLowerCase())))} />
                             </FloatingLabel>
-
                         </div>
                         <div className="listRoom">
-                            {rooms.map((room, index) => (
-                                <div key={index} className="room" onClick={joinRoomModal}>
-                                    {room}
-                                    <FontAwesomeIcon icon={faLock} className="lock-icon" />
+                            {(filteredRooms.length > 0 ? filteredRooms : rooms).map((room) => (
+
+                                <div key={room.roomId} className="room" onClick={room.havePass ? joinRoomModal : undefined}>
+                                    {room.roomId}
+                                    {room.havePass && (
+                                        <FontAwesomeIcon icon={faLock} className="lock-icon" />
+                                    )}
                                 </div>
                             ))}
                         </div>

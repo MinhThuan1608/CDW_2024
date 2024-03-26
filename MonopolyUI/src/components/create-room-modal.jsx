@@ -39,9 +39,7 @@ const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom }) => {
                             >
                                 <Form.Control type="password" placeholder="Nhập password" />
                             </FloatingLabel>
-                            <FloatingLabel controlId="floatingPassword" label="Số tiền đặt cược">
-                                <Form.Control type="number" min='1' max='2000000' placeholder='Số tiền đặt cược' />
-                            </FloatingLabel>
+                        
                             <Button className='createBtn'>Tạo</Button>
 
                         </div>

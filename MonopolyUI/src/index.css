@@ -1,15 +1,23 @@
+* {
+  margin: 0;
+  font-family: 'Rowdies';
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-    font-family: 'Rowdies';
+  font-family: 'Rowdies';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  min-width: 400px;
+  background: radial-gradient(ellipse at center, #E26EE5, #49108B);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-    font-family: 'Rowdies';
+  font-family: 'Rowdies';
 }

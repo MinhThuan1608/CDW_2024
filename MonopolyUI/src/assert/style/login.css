@@ -1,11 +1,4 @@
 
-
-body{
-    margin: 0;
-    min-width: 400px;
-    background: radial-gradient(ellipse at center, #E26EE5, #49108B);
-}
-
 .main-container-login{
     width: 100%;
     min-height: 100vh;
