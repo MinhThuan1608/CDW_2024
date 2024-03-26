@@ -1,9 +1,13 @@
 **1. Giới thiệu đồ án:**
 Đồ án này là một website GAME CỜ VUA online multiplayer, được thiết kế để cung cấp trải nghiệm chơi cờ vua trực tuyến. Người dùng có thể tham gia vào các trận đấu với người chơi khác thông qua mạng internet.
+
 **1.1. Tính năng chính:**
 **Chơi đa người chơi:** Người dùng có thể tham gia vào các trận đấu với người chơi khác trên mạng.
+
 **Nhiều page:** Giao diện được chia thành nhiều trang để dễ dàng quản lý và tương tác.
+
 **Realtime:** Trò chơi được cập nhật realtime qua WebSocket, đảm bảo sự tương tác nhanh chóng và mượt mà.
+
 **2. Công nghệ sử dụng:**
 **2.1. Frontend (FE):**
 ReactJS: Dùng để xây dựng giao diện người dùng (UI) linh hoạt và tương tác.
