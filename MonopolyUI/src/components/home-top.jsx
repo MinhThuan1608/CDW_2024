@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import userAvt from '../assert/images/avatar/user.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faCircle, faEnvelope, faBell, faCoins, faGem } from '@fortawesome/free-solid-svg-icons';
 
 const HomeTop = () => {
+    const [user, setUser] = useState(null)
+
+    useEffect(()=>{
+        const userStorage = JSON.parse(sessionStorage.getItem('user'))
+        setUser(userStorage)
+    }, [])
+
     return (
         <div className="top-container">
         <div className="info-container">
             <img src={userAvt} alt="avatar" id="avatar"/>
             <div className="username-container">
-                <p id="username-title">Faker#T1</p>
+                <p id="username-title">{user?user.username:"error"}</p>
             </div>
         </div>
         <div className="money-container">

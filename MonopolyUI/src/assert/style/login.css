@@ -64,9 +64,20 @@
     outline: none;
 }
 
+.input-text.error{
+    border:2px solid red;
+}
+
 #error-message{
     color: red;
     font-style: italic;
+    display: none;
+}
+
+.error-message{
+    color: red;
+    font-style: italic;
+    display: none;
 }
 
 .button-container{

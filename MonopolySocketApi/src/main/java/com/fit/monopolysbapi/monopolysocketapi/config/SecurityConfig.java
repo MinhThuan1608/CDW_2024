@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationProvider authenticationProvider;
-    public static final String[] PUBLIC_RESOURCE = {"/authenticate/*"};
+    public static final String[] PUBLIC_RESOURCE = {"/authenticate/*", "/user/avatar/default"};
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
