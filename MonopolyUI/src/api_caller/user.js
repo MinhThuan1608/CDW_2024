@@ -1,12 +1,14 @@
-export async function isUsernameValid(username) {
+const accessToken = sessionStorage.getItem('access_token');
+
+export async function IsUsernameValid(username) {
     const urlString = `http://localhost:8001/user/exists/${username}`;
 
     const response = await fetch(urlString, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
         },
-        body: ""
     });
 
     const responseData = await response.json()
@@ -16,7 +18,7 @@ export async function isUsernameValid(username) {
     return false;
 }
 
-export async function getDefaultAvatar() {
+export async function GetDefaultAvatar() {
     const urlString = `http://localhost:8001/user/avatar/default`;
 
     const response = await fetch(urlString, {
@@ -24,7 +26,6 @@ export async function getDefaultAvatar() {
         headers: {
             "Content-Type": "application/json",
         },
-        body: ""
     });
 
     const responseData = await response.json()
@@ -34,13 +35,14 @@ export async function getDefaultAvatar() {
     return [];
 }
 
-export async function initUser(username, defaultAvatarId, avatar) {
+export async function InitUser(username, defaultAvatarId, avatar) {
     const urlString = `http://localhost:8001/user/init`;
 
     const response = await fetch(urlString, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
         },
         body: JSON.stringify({
             username: username,
