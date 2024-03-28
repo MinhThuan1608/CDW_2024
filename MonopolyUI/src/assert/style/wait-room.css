@@ -1,12 +1,3 @@
-* {
-    margin: 0;
-    font-family: 'Rowdies';
-}
-
-body {
-    background: radial-gradient(ellipse at center, #E26EE5, #49108B);
-}
-
 .container {
     width: 100%;
     margin: auto;
@@ -139,7 +130,7 @@ body {
 .center-part {
     display: flex;
     justify-content: space-evenly;
-
+    margin-top: 8px;
 }
 .center-part-left {
     height: 50%;
@@ -203,15 +194,21 @@ body {
 
 .main-room-player {
     position: absolute;
-    top: 45px;
-    right: 12px;
-    text-transform: uppercase;
+    top: -29px;
+    left: -29px;
     text-align: center;
-    background-color: #0a83d8;
-    color: #ffffff;
-    padding: 2px 8px;
-    border-radius: 5px;
-    border: 3px solid #ffffff;
+    color: #ffd000;
+    font-size: 32px;
+    z-index: 1;
+    transform: rotate(-27deg);
+}
+.icon-delete-user{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: #FF204E;
+    font-size: 26px;
+    z-index: 1;
 }
 /* chat side */
 .chat-room-part{

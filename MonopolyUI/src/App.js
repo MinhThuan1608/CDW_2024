@@ -4,6 +4,8 @@ import WaitRoom from "./pages/WaitRoom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import CreateCharacter from "./pages/CreateCharacter";
+import GamePage from "./pages/GamePage";
 
 function App() {
   return (
@@ -11,9 +13,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />   
-          <Route path="/login" element={<Login />} />
           <Route path="/wait-room" element={<WaitRoom />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/create-character" element={<CreateCharacter />} />
+          <Route path="/game" element={<GamePage />} />
         </Routes>
       </BrowserRouter>
 

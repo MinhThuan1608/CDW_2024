@@ -59,13 +59,13 @@ const WaitRoom = () => {
                         value={password}
                         placeholder='********'
                     />
-                    <FontAwesomeIcon icon={faCopy} onClick={handleCopyPassword} className="setting-icon" />
+                    <FontAwesomeIcon icon={faCopy} onClick={handleCopyPassword} className="setting-icon"/>
                 </div>
-                <div className='options-div'>
+                {/* <div className='options-div'>
                     <button className="options-btn btn-primary">2x2</button>
                     <button className="options-btn">quick game</button>
                     <button className="options-btn">no sussgest</button>
-                </div>
+                </div> */}
             </div>
 
         </div>

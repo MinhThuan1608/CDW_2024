@@ -1,6 +1,3 @@
-body {
-    background: radial-gradient(ellipse at center, #E26EE5, #49108B);
-}
 
 .main-container {
     height: 90vh;
@@ -363,7 +360,10 @@ body {
     justify-content: space-between;
 }
 .search-room-input{
-    margin-left: 12px;
+    margin: 0 12px;
+}
+.searchBtn{
+    margin-bottom: 1rem;
 }
 .listRoom {
     display: flex;
