@@ -1,14 +1,32 @@
-import React from 'react';
-
+import React, { useContext, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import { CreateRoom } from '../api_caller/room';
+import { SocketContext } from '../App';
 
 
-const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom }) => {
+const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {
 
-    // Hàm xử lý khi ấn nút đóng modal
+    const [roomName, setRoomName] = useState('');
+    const [password, setPassword] = useState('');
+    const {socket, setSocket} = useContext(SocketContext);
+
+
     const handleCloseModal = () => {
         setShowModalCreateRoom(false);
     };
+
+    const handleCreateRoom = async () => {
+        if (!roomName) {
+            const errorRoomName = document.querySelector('.error-message');
+            errorRoomName.innerHTML = "Tên phòng không thể bỏ trống";
+            errorRoomName.style.display = 'block';
+            return;
+        }
+        const room = await CreateRoom(roomName, password);
+        if (room){
+            window.location = `/wait-room/${room.id}`
+        } else alert('Error')
+    }
 
     return (
         <div
@@ -24,23 +42,15 @@ const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom }) => {
 
                     <Modal.Body >
                         <div className="createRoom">
-                            <FloatingLabel
-                                controlId="floatingInput"
-                                label="Nhập tên phòng"
-                                className="mb-3"
-                            >
-                                <Form.Control type="text" placeholder="Nhập tên phòng" />
+                            <FloatingLabel controlId="floatingInput" label="Nhập tên phòng" className="mb-3" >
+                                <Form.Control type="text" value={roomName} placeholder="Nhập tên phòng" onChange={(event) => setRoomName(event.target.value)}/>
                             </FloatingLabel>
-                            
-                            <FloatingLabel
-                                controlId="floatingInput"
-                                label="Nhập password"
-                                className="mb-3"
-                            >
-                                <Form.Control type="password" placeholder="Nhập password" />
+                            <p className="error-message"></p>
+                            <FloatingLabel controlId="floatingInput" label="Nhập password" className="mb-3">
+                                <Form.Control type="password" value={password} placeholder="Nhập password" onChange={(event) => setPassword(event.target.value)}/>
                             </FloatingLabel>
                         
-                            <Button className='createBtn'>Tạo</Button>
+                            <Button className='createBtn' onClick={handleCreateRoom}>Tạo</Button>
 
                         </div>
                     </Modal.Body>

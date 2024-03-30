@@ -1,31 +1,79 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
-
+import { GetAllRoom, JoinRoom } from '../api_caller/room';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faUser, faUserAlt, faUserClock, faUsersLine } from '@fortawesome/free-solid-svg-icons';
+import { SocketContext } from '../App';
 
 
 
 const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJoinRoomModal }) => {
     const [filteredRooms, setFilteredRooms] = useState([]); // State để lưu danh sách phòng sau khi lọc
+    const [rooms, setRooms] = useState([])
+    const [roomChosen, setRoomChosen] = useState(null)
+    const [password, setPassword] = useState('')
+    const {socket, setSocket} = useContext(SocketContext);
 
-    const rooms = [{ roomId: 'a12', roomName: 'huong', havePass: false },
-    { roomId: 'd12', roomName: 'thuan', havePass: false },
-    { roomId: 'f45', roomName: 'thuy', havePass: true },
-    { roomId: 'g34', roomName: 'quay', havePass: false }];
+    useEffect(() => {
+        const fecthData = async () => {
+            const arr = await GetAllRoom();
+            if (arr) {
+                console.log(arr)
+                setRooms(arr)
+            }
+        }
+        fecthData();
+    }, [])
+
+    useEffect(()=>{
+        if (socket){
+            socket.subscribe('/topic/room/get-all', (message) => {
+                setRooms(JSON.parse(message.body))
+            });
+        }
+    },[socket])
 
     // Hàm xử lý khi ấn nút đóng modal
     const handleCloseModal = () => {
         setShowModal(false);
     };
-    const joinRoomModal = () => {
-        // setShowModal(false);
+    const joinRoomModal = () => { //choose room with pass
         setShowJoinRoomModal(true);
     };
     const closeJoinRoomModal = () => {
         setShowJoinRoomModal(false);
+    };
+    const handleJoinRoom = async (room) => {
+        if (room.numUser>1) {
+            alert('Phòng full ời má!')
+            return;
+        }
+        if (room.havePass) {
+            joinRoomModal();
+            setRoomChosen(room);
+            return;
+        }
+        const res = await JoinRoom(room.id, "");
+        if (res){
+            window.location = `/wait-room/${room.id}`
+        } else {
+            alert('Error')
+        }
+    }
+    const handleJoinRoomWithPass = async () => {
+        if (!password){
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.innerHTML = "Mật khẩu không được bỏ trống";
+            errorMessage.style.display = "block";
+            return;
+        }
+        const res = await JoinRoom(roomChosen.id, password);
+        if (res){
+            window.location = `/wait-room/${roomChosen.id}`
+        } else {
+            alert('Error')
+        }
     };
 
 
@@ -54,8 +102,13 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                         <div className="listRoom">
                             {(filteredRooms.length > 0 ? filteredRooms : rooms).map((room) => (
 
-                                <div key={room.roomId} className="room" onClick={room.havePass ? joinRoomModal : undefined}>
-                                    {room.roomId}
+                                <div key={room.id} id={room.id} className="room" onClick={()=> handleJoinRoom(room)}>
+                                    {room.roomName}
+                                    <div style={{ display: 'flex' }}>
+                                        {Array.from({ length: room.numUser }, (_, index) => (
+                                            <FontAwesomeIcon key={index} icon={faUser} />
+                                        ))}
+                                    </div>
                                     {room.havePass && (
                                         <FontAwesomeIcon icon={faLock} className="lock-icon" />
                                     )}
@@ -72,20 +125,13 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                         <Modal.Title>Tham gia</Modal.Title>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={closeJoinRoomModal}></button>
                     </Modal.Header>
-
                     <Modal.Body >
                         <div className="createRoom">
-
-                            <FloatingLabel
-                                controlId="floatingInput"
-                                label="Nhập password"
-                                className="mb-3"
-                            >
-                                <Form.Control type="password" placeholder="Nhập password" />
+                            <FloatingLabel controlId="floatingInput" label="Nhập password" className="mb-3">
+                                <Form.Control type="password" placeholder="Nhập password" onChange={(event) => setPassword(event.target.value)}/>
                             </FloatingLabel>
-
-                            <Button className='joinRoom'>Vào</Button>
-
+                            <p className="error-message"></p>
+                            <Button className='joinRoom' onClick={handleJoinRoomWithPass}>Vào</Button>
                         </div>
                     </Modal.Body>
                 </Modal.Dialog>

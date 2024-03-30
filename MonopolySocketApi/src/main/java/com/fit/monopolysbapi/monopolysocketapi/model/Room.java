@@ -16,6 +16,11 @@ public class Room {
     private String password;
     private List<User> users;
 
+    public boolean havePassword(){
+        if (password==null) return false;
+        return !password.isEmpty();
+    }
+
     @Override
     public String toString() {
         return "Room{" +
