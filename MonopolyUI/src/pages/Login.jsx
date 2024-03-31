@@ -1,30 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { LoginAPI } from '../api_caller/authenticate';
 import '../assert/style/login.css';
 
 
 const Login = () => {
+  const [identify, setIdentify] = useState('')
+  const [password, setPassword] = useState('')
+
+  const login = async () => {
+    if (validateIdentify() && validatePassword()) {
+      const response = await LoginAPI(identify, password);
+      const errorMessage = document.querySelector('#error-message');
+      if (response.id) {
+        window.location = '/'
+      } else {
+        errorMessage.innerHTML = response
+        errorMessage.style.display = "block"
+      }
+    }
+  }
+
+  const validateIdentify = () => {
+    const identifyInput = document.querySelector('#identify');
+    const errorIdentify = document.querySelector('#error-identify');
+    if (!identify) {
+      errorIdentify.innerHTML = 'Username hoặc Email không được bỏ trống';
+      errorIdentify.style.display = 'block';
+      identifyInput.classList.add('error');
+      return false;
+    } else {
+      errorIdentify.style.display = 'none';
+      identifyInput.classList.remove('error');
+      return true;
+    }
+  }
+
+  const validatePassword = () => {
+    const errorPassword = document.querySelector('#error-password');
+    const passwordInput = document.querySelector('#password');
+    if (!password) {
+      errorPassword.innerHTML = 'Password không được bỏ trống';
+      errorPassword.style.display = 'block';
+      passwordInput.classList.add('error');
+      return false;
+    } else {
+      errorPassword.style.display = 'none';
+      passwordInput.classList.remove('error');
+      return true;
+    }
+  }
+
+
+
   return (
     <div class="main-container-login">
       <div class="left-container">
         <div class="title-container">
-          <h1 class="title">CỜ TỶ PHÚ</h1>
+          <h1 class="title">♛ CỜ VUA ♛</h1>
         </div>
       </div>
       <div class="right-container">
         <div class="form-container">
           <div class="form-bounder">
             <p class="form-title">Đăng nhập</p>
-            <form action='' method="post">
-              <input type="text" class="input-text" name="username" id="username" placeholder="Email"
-                required />
-              <input type="password" class="input-text" name="password" id="password" placeholder="Mật khẩu"
-                required />
-              {/* <p id="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p> */}
-              <div class="button-container">
-                <a href="/register"><button id="register" class="button" form="">Đăng ký</button></a>
-                <input type="submit" class="button" id="submit" value="Đăng nhập" />
-              </div>
-            </form>
+
+            <input type="text" class="input-text" name="username" id="identify" placeholder="Username hoặc email"
+              onChange={(event) => setIdentify(event.target.value)} onBlur={validateIdentify} />
+            <p className="error-message" id="error-identify"></p>
+            <input type="password" class="input-text" name="password" id="password" placeholder="Mật khẩu"
+              onChange={(event) => setPassword(event.target.value)} onBlur={validatePassword} />
+            <p className="error-message" id="error-password"></p>
+            <p id="error-message"></p>
+            <div class="button-container">
+              <a href="/register"><button id="register" class="button" form="">Đăng ký</button></a>
+              <input type="submit" class="button" id="submit" value="Đăng nhập" onClick={login} />
+            </div>
+
             <a href="#" id="missing-password">Quên mật khẩu?</a>
           </div>
         </div>
