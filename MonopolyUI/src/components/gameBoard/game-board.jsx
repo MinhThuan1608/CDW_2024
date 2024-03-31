@@ -1,5 +1,4 @@
 import React from 'react';
-import { getCharacter } from '../../help';
 import Ranks from './bits/Ranks';
 import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';

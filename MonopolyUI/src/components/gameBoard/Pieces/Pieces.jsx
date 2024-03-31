@@ -1,28 +1,56 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import './Pieces.css';
 import Piece from "./Piece";
+import { copyPosition, createPosition } from "../help";
+import { useAppContext } from "../../../contexts/Context";
+import {makeNewMove} from "../../../reducer/action/move";
 
 const Piceces = () => {
-    const position = new Array(8).fill('').map(x => new Array(8).fill(''))
+    const ref = useRef()
 
-    position[0][0] = 'wr'
-    position[1][7] = 'wn'
-    position[2][7] = 'wr'
-    position[3][7] = 'wr'
-    position[0][0] = 'wr'
-    position[7][7] = 'br'
+    const {appState, dispatch} = useAppContext()
+    const currentPosition = appState.position
 
-    console.log(position)
+    const calculateCoords = e => {
+        const {width, left, top} = ref.current.getBoundingClientRect()
+        const size = width/8
+        const y = Math.floor((e.clientX - left) / size)
+        const x = 7 - Math.floor((e.clientY - top) / size)
+        return {x, y}
+    }
 
-    return <div className="pieces">
-        {position.map((r, rank) =>
+    const onDrop = e => {
+        // e.preventDefault()
+        const newPosition = copyPosition(currentPosition)
+        const {x, y} = calculateCoords(e)
+        const [p, rank, file] = e.dataTransfer.getData('text').split(',')
+        
+        newPosition[rank][file] =''
+        newPosition[x][y] = p
+        
+        dispatch(makeNewMove({newPosition}))
+        // console.log(newPosition )
+        // console.log(x, y)
+        // console.log(appState.turn)
+    }
+    const onDragOver = e => {
+        e.preventDefault()
+    }
+
+    return <div
+        className="pieces"
+        ref = {ref}
+        onDrop={onDrop}
+        onDragOver={onDragOver}>
+
+        {currentPosition.map((r, rank) =>
             r.map((f, file) =>
-                position[rank][file]
+                currentPosition[rank][file]
                     ? <Piece
-                        key={rank+'-'+file}
+                        key={rank + '-' + file}
                         rank={rank}
                         file={file}
-                        piece={position[rank][file]}
+                        piece={currentPosition[rank][file]}
                     />
                     : null
             ))}

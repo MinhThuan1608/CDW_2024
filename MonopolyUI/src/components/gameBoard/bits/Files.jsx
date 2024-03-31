@@ -1,6 +1,6 @@
 import React from 'react';
 import './Files.css';
-import { getCharacter } from '../../../help';
+import { getCharacter } from '../help';
 
 const Files = ({files}) => {
 
