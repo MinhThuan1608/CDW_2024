@@ -27,7 +27,6 @@ const CreateCharacter = () => {
     };
     return (
         <div id="create-character-form">
-            {/* <input type="hidden" name="avatar" id="avatar-hidden" value=""/> */}
             <div className="main-container-cha">
                 <div className="left-container-cha">
                     <div className="choose-avatar-container">

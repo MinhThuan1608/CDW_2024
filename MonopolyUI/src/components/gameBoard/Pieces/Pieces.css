@@ -1,0 +1,36 @@
+.pieces{
+    position: absolute;
+    top: 0;
+    left: calc(.25*var(--tile-size));
+    right: 0;
+    bottom:  calc(.25*var(--tile-size));
+}
+.piece{
+    width: 12.5%;
+    height: 12.5%;
+    position: absolute;
+    background-size: 100%;
+}
+.piece.bk {background-image: url('../../../assert/images/icon/bk.png');}
+.piece.bq {background-image: url('../../../assert/images/icon/bq.png');}
+.piece.br {background-image: url('../../../assert/images/icon/br.png');}
+.piece.bb {background-image: url('../../../assert/images/icon/bb.png');}
+.piece.bn {background-image: url('../../../assert/images/icon/bn.png');}
+.piece.bp {background-image: url('../../../assert/images/icon/bp.png');}
+
+.piece.wk {background-image: url('../../../assert/images/icon/wk.png');}
+.piece.wq {background-image: url('../../../assert/images/icon/wq.png');}
+.piece.wr {background-image: url('../../../assert/images/icon/wr.png');}
+.piece.wb {background-image: url('../../../assert/images/icon/wb.png');}
+.piece.wn {background-image: url('../../../assert/images/icon/wn.png');}
+.piece.wp {background-image: url('../../../assert/images/icon/wp.png');}
+
+
+.piece.p-07 {transform: translate(0%, 0%);}
+.piece.p-17 {transform: translate(100%, 0%);}
+.piece.p-27 {transform: translate(200%, 0%);}
+.piece.p-37 {transform: translate(300%, 0%);}
+.piece.p-47 {transform: translate(400%, 0%);}
+.piece.p-57 {transform: translate(500%, 0%);}
+.piece.p-67 {transform: translate(600%, 0%);}
+.piece.p-77 {transform: translate(700%, 0%);}
