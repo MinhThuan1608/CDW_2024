@@ -3,6 +3,7 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.OnlineService;
+import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import com.fit.monopolysbapi.monopolysocketapi.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OnlineController {
     private final OnlineService onlineService;
+    private final RoomService roomService;
     private final UserService userService;
     private final UserUtil userUtil;
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -52,6 +54,7 @@ public class OnlineController {
         User user = (User) token.getPrincipal();
         if (user != null) {
             onlineService.removeUser(user);
+//            roomService.leaveAllRoom(user);
             simpMessagingTemplate.convertAndSend("/topic/user/online", onlineService.getOnlineUsers());
         }
     }

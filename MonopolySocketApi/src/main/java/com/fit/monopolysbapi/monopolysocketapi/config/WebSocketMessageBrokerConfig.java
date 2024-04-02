@@ -31,4 +31,6 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(inBoundChannelInterceptor);
     }
+
+
 }

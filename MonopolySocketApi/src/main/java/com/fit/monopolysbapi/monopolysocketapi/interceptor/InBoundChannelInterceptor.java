@@ -17,6 +17,7 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -33,19 +34,18 @@ public class InBoundChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        System.out.println(message);
         String destination = (String) headerAccessor.getHeader("simpDestination");
-        System.out.println(destination);
-        if (destination!=null && destination.equals("/app/room/join"))  {
+        AntPathMatcher matcher = new AntPathMatcher();
+        if (destination != null && matcher.match("/*/game/room/*", destination)) {
             UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
             User user = (User) token.getPrincipal();
-            System.out.println(1);
-            System.out.println(message.getPayload());
-            System.out.println(2);
-//            System.out.println(request);
-//            if (roomService.checkJoinRoom(request)) roomService.joinRoom(user, request.getRoomId());
-//            else return null;
-            return message;
+            String roomId = destination.substring(destination.lastIndexOf("/")+1);
+            if (roomService.isUserInRoom(user.getId(), roomId)) {
+                System.out.println("user "+user.getId()+" is in room "+roomId);
+                return message;
+            }
+            System.out.println("user not in room");
+            return null;
         }
         return message;
     }
