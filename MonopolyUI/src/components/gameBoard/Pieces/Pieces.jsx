@@ -1,37 +1,47 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import './Pieces.css';
 import Piece from "./Piece";
 import { copyPosition, createPosition } from "../help";
 import { useAppContext } from "../../../contexts/Context";
-import {makeNewMove} from "../../../reducer/action/move";
+import { clearCandidates, makeNewMove, savePiece } from "../../../reducer/action/move";
+import { SocketContext } from "../../../App";
 
 const Piceces = () => {
     const ref = useRef()
+    const {providerState2} = useContext(SocketContext)
 
-    const {appState, dispatch} = useAppContext()
-    const currentPosition = appState.position
+    const { appState, dispatch } = useAppContext()
+    const currentPosition = appState.position[appState.position.length - 1]
 
     const calculateCoords = e => {
-        const {width, left, top} = ref.current.getBoundingClientRect()
-        const size = width/8
+        const { width, left, top } = ref.current.getBoundingClientRect()
+        const size = width / 8
         const y = Math.floor((e.clientX - left) / size)
         const x = 7 - Math.floor((e.clientY - top) / size)
-        return {x, y}
+        return { x, y }
     }
 
     const onDrop = e => {
-        // e.preventDefault()
+        e.preventDefault()
         const newPosition = copyPosition(currentPosition)
-        const {x, y} = calculateCoords(e)
+        const { x, y } = calculateCoords(e)
         const [p, rank, file] = e.dataTransfer.getData('text').split(',')
-        
-        newPosition[rank][file] =''
-        newPosition[x][y] = p
-        
-        dispatch(makeNewMove({newPosition}))
-        // console.log(newPosition )
-        // console.log(x, y)
-        // console.log(appState.turn)
+
+        if (appState.candidateMoves?.find(m => m[0] === x && m[1] === y)) {
+           if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
+                newPosition[rank][y] = ''
+           
+            newPosition[Number(rank)][Number(file)] = ''
+            newPosition[x][y] = p
+
+            dispatch(makeNewMove({ newPosition }))
+            dispatch(savePiece({p}))
+
+        }
+
+        dispatch(clearCandidates())
+
+        console.log(providerState2)
     }
     const onDragOver = e => {
         e.preventDefault()
@@ -39,7 +49,7 @@ const Piceces = () => {
 
     return <div
         className="pieces"
-        ref = {ref}
+        ref={ref}
         onDrop={onDrop}
         onDragOver={onDragOver}>
 

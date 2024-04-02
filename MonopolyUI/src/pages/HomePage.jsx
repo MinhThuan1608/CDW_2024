@@ -1,8 +1,8 @@
 import React from 'react';
 import '../assert/style/home.css';
-import HomeTop from '../components/home-top';
-import HomeMiddle from '../components/home-middle';
-import HomeBottom from '../components/home-bottom';
+import HomeTop from '../components/homePackage/home-top';
+import HomeMiddle from '../components/homePackage/home-middle';
+import HomeBottom from '../components/homePackage/home-bottom';
 import { useState } from 'react';
 
 

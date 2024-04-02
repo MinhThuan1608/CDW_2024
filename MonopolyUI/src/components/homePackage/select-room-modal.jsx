@@ -14,7 +14,10 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     const rooms = [{ roomId: 'a12', roomName: 'huong', havePass: false },
     { roomId: 'd12', roomName: 'thuan', havePass: false },
     { roomId: 'f45', roomName: 'thuy', havePass: true },
-    { roomId: 'g34', roomName: 'quay', havePass: false }];
+    { roomId: 'g34', roomName: 'quay', havePass: false },
+    { roomId: 'g35', roomName: 'quay', havePass: false },
+    { roomId: 'g36', roomName: 'quay', havePass: false }
+    ];
 
     // Hàm xử lý khi ấn nút đóng modal
     const handleCloseModal = () => {

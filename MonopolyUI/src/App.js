@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WaitRoom from "./pages/WaitRoom";
 import HomePage from "./pages/HomePage";
@@ -10,6 +10,8 @@ import AppContext from "./contexts/Context";
 import { initGameState } from "./components/gameBoard/constants";
 import {reducer} from "./reducer/reducer";
 
+export const SocketContext = createContext();
+
 
 function App() {
   const [appState, dispatch] = useReducer(reducer, initGameState)
@@ -17,7 +19,13 @@ function App() {
     appState,
     dispatch
   }
+  const providerState2 = {
+    appState,
+    dispatch
+  }
   return (
+    <SocketContext.Provider value={providerState2}> 
+
     <AppContext.Provider value={providerState}>
       <div>
         <BrowserRouter>
@@ -32,6 +40,7 @@ function App() {
         </BrowserRouter>
       </div>
     </AppContext.Provider>
+    </SocketContext.Provider>
 
   );
 }
