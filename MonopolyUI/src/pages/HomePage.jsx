@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../assert/style/home.css';
 import HomeTop from '../components/homePackage/home-top';
 import HomeMiddle from '../components/homePackage/home-middle';
@@ -11,6 +11,13 @@ const HomePage = () => {
   const [showModalCreateRoom, setShowModalCreateRoom] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
 
+  useEffect(()=>{
+    const accessToken = sessionStorage.getItem('access_token');
+    if (!accessToken){
+      window.location = '/login'
+    }
+  })
+
   return (
     <div className='main-container'>
       <HomeTop />
@@ -18,7 +25,7 @@ const HomePage = () => {
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag}
-        setShowModalBag={setShowModalBag} />
+        setShowModalBag={setShowModalBag}/>
       <HomeBottom showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag}

@@ -4,20 +4,11 @@ import { faCrown, faSignOut, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-const WaitRoomCenter = () => {
+const WaitRoomCenter = ({socket,roomId,listMessage}) => {
     return (
        <div className="center-part">
          <div className="center-part-left">
-            <div className="center-part-user center-part-userfst">
-                <div className="img-frame-player"></div>
-                <p className="player-name player-br-fst">nhims</p>
-                <FontAwesomeIcon icon={faTrash} className="icon-delete-user"/>
-            </div>
-            <div className="center-part-user center-part-usersed">
-                <div className="img-frame-player"></div>
-                <p className="player-name player-br-sed">huong</p>
-                <FontAwesomeIcon icon={faTrash} className="icon-delete-user"/>
-            </div>
+           
             <div className="center-part-user center-part-userthr">
                 <div className="img-frame-player"></div>
                 <p className="player-name player-br-thr">thuan</p>
@@ -30,7 +21,7 @@ const WaitRoomCenter = () => {
                 <FontAwesomeIcon icon={faSignOut} className="icon-delete-user"/>
             </div>
         </div>
-        <ChatSide/>
+        <ChatSide socket={socket} roomId={roomId} listMessage={listMessage} />
        </div>
     );
 }

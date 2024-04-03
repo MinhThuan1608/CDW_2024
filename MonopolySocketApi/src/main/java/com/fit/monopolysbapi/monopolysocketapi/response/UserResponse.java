@@ -18,4 +18,18 @@ public class UserResponse {
     private boolean isNonLocked;
     private Role role;
     private String token;
+
+    @Override
+    public String toString() {
+        return "UserResponse{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar=" + avatar +
+                ", isConfirmEmail=" + isConfirmEmail +
+                ", isNonLocked=" + isNonLocked +
+                ", role=" + role +
+                ", token='" + token + '\'' +
+                '}';
+    }
 }

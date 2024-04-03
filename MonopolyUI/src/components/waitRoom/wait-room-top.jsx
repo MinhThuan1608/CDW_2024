@@ -35,10 +35,10 @@ const WaitRoom = () => {
                     <p>private table</p>
                 </div>
                 <div className="web-options">
-                    <div className="icon-container">
+                    <div className="icon-container" style={{opacity: 0}}>
                         <FontAwesomeIcon icon={faCartPlus} className="setting-icon" />
                     </div>
-                    <div className="icon-container">
+                    <div className="icon-container" style={{opacity: 0}}>
                         <FontAwesomeIcon icon={faBars} className="setting-icon" />
                     </div>
                     <div className="icon-container">

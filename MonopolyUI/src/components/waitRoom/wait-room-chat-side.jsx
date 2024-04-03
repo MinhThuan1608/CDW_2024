@@ -1,32 +1,74 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
-const ChatSide = () => {
-    const listMessage = [
-        { time: '16:04', username: 'Thuy', content: 'Điểm sơ qua phần thông số, máy sở hữu bộ 3 camera sau với camera' },
-        { time: '16:05', username: 'Thuan', content: 'Mới đầu phân vân giữa Oppo với Xiaomi 13t' },
-        { time: '16:06', username: 'Thuy', content: 'Điểm sơ qua phần thông số, máy sở hữu bộ 3 camera sau với camera chính có độ phân giải 64' },
-        { time: '16:07', username: 'Thuan', content: 'Điện thoại OPPO dòng Reno từ trước đến nay luôn dành sự đặc biệt về phần camera' }]
+const ChatSide = ({ socket, roomId, listMessage }) => {
+    const [messageValue, setMessageValue] = useState('')
+
+    const messRef = useRef()
+    const ownerRoom = JSON.parse(sessionStorage.getItem('user'))
+
+    const formatDate = (data) => {
+
+        // Tạo một đối tượng Date từ chuỗi ngày
+        const dateObj = new Date(data);
+
+        // Lấy giờ và phút
+        const hour = dateObj.getUTCHours();
+        const minute = dateObj.getUTCMinutes();
+
+        
+        return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
+
+    }
+
+    const handleSendMessage = () => {
+        console.log(socket)
+        socket.publish({
+            destination: '/app/game/room/' + roomId,
+            body: JSON.stringify({
+                messageType: 'MESSAGE',
+                content: messageValue
+            })
+        });
+
+        setMessageValue('')
+        messRef.current.focus()
+    }
+    
+    const handleSendMessageEnter = (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage()
+        }
+    }
+
+
+
     return (
         <div className="chat-room-part">
             <p className="title-chat">chat</p>
-            <div className="messageList force-overflow scrollbar">
+            <div className="messageList force-overflow scrollbar"   >
                 {listMessage.map((message, index) => (
-                    <div className={`message ${message.username === 'Thuy' ? 'messageOwner' : ''}`} key={index}>
-                        <div className={`messageBlock ${message.username === 'Thuy' ? 'messageBlockOwner' : ''}`}>
-                            <span className={`sendName ${message.username === 'Thuy' ? 'player-br-forth' : 'player-br-thr'}`}>{message.username}</span>
-                            <span className="sendTime">{message.time}</span>
+                    <div className={`message ${message.sender.id === ownerRoom.id ? 'messageOwner' : ''}`} key={index}>
+                        <div className={`messageBlock ${message.sender.id === ownerRoom.id ? 'messageBlockOwner' : ''}`}>
+                            <span className={`sendName ${message.sender.id === ownerRoom.id ? 'player-br-forth' : 'player-br-thr'}`}>
+                                {message.sender.username}
+                            </span>
+                            <span className="sendTime">{formatDate(message.createAt)}</span>
                         </div>
-                        <span className={`messageContent ${message.username === 'Thuy' ? 'player-br-forth messageContentOwner' : 'player-br-thr'}`}>{message.content}</span>
+                        <span className={`messageContent ${message.sender.id === ownerRoom.id ? 'player-br-forth messageContentOwner' : 'player-br-thr'}`}>{message.content}</span>
                     </div>
                 ))}
 
             </div>
             <div className="sendMessDiv">
-                <input type="text" className='inputMess' />
+                <input type="text" className='inputMess'
+                    value={messageValue}
+                    onChange={e => setMessageValue(e.target.value)}
+                    ref={messRef}
+                    onKeyUp={ e => handleSendMessageEnter(e)} />
 
-                <button className='sendBtn'>
+                <button className='sendBtn' onClick={handleSendMessage}>
                     <FontAwesomeIcon icon={faPaperPlane} className="icon-send-mess" />
                 </button>
             </div>

@@ -8,13 +8,13 @@ import { SocketContext } from "../../../App";
 
 const Piceces = () => {
     const ref = useRef()
-    const {providerState2} = useContext(SocketContext)
 
     const { appState, dispatch } = useAppContext()
     const currentPosition = appState.position[appState.position.length - 1]
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
+        console.log(ref.current.getBoundingClientRect())
         const size = width / 8
         const y = Math.floor((e.clientX - left) / size)
         const x = 7 - Math.floor((e.clientY - top) / size)
@@ -26,22 +26,23 @@ const Piceces = () => {
         const newPosition = copyPosition(currentPosition)
         const { x, y } = calculateCoords(e)
         const [p, rank, file] = e.dataTransfer.getData('text').split(',')
-
+        
         if (appState.candidateMoves?.find(m => m[0] === x && m[1] === y)) {
-           if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
-                newPosition[rank][y] = ''
-           
-            newPosition[Number(rank)][Number(file)] = ''
-            newPosition[x][y] = p
-
-            dispatch(makeNewMove({ newPosition }))
-            dispatch(savePiece({p}))
-
+            if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
+            newPosition[rank][y] = ''
+        
+        newPosition[Number(rank)][Number(file)] = ''
+        newPosition[x][y] = p
+        
+        dispatch(makeNewMove({ newPosition }))
+        dispatch(savePiece({p}))
+        
+        // publish lên socket 
+        console.log(rank,file)
+        console.log(x,y + "moi")
         }
 
         dispatch(clearCandidates())
-
-        console.log(providerState2)
     }
     const onDragOver = e => {
         e.preventDefault()

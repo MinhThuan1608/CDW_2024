@@ -18,11 +18,15 @@ public class OnlineService {
     }
 
     public void addUser(UserResponse user) {
-        if (userInServer.stream().noneMatch(u -> user.getId().equals(u.getId())))
+        if (userInServer.stream().noneMatch(u -> user.getId().equals(u.getId()))) {
+            System.out.println(user);
             userInServer.add(user);
+        }
     }
 
     public void removeUser(User user) {
-        userInServer.removeIf(u -> u.getId().equals(user.getId()));
+        System.out.println("rm user: " + user);
+        if (userInServer.size() > 0)
+            userInServer.removeIf(u -> u.getId().equals(user.getId()));
     }
 }
