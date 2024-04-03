@@ -13,7 +13,6 @@ const WaitRoom = () => {
     const { socket, setSocket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
     const [listMessage, setListMessage] = useState([]);
-
     useEffect(() => {
         if (socket){
             // console.log('subcribe room ', roomId)

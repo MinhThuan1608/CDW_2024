@@ -24,6 +24,9 @@ function App() {
   // socket context
   const [socket, setSocket] = useState(null);
 
+  // chat side
+
+
   useEffect(() => {
     var accessToken = sessionStorage.getItem('access_token');
     if (accessToken && !socket) {
@@ -66,11 +69,11 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/wait-room/:roomId" element={<WaitRoom />} />
+              <Route path="/wait-room/:roomId" element={<WaitRoom/>} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game" element={<GamePage />} />
+              <Route path="/game" element={<GamePage/>} />
             </Routes>
           </BrowserRouter>
         </div>
