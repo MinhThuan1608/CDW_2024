@@ -115,7 +115,7 @@ const CreateCharacter = () => {
                 </div>
                 <div className="right-container-cha">
                     <div className="title-container">
-                        <p className="title">CỜ TỶ PHÚ</p>
+                        <p className="title">♛ CỜ VUA ♛</p>
                     </div>
                     <div className="avatar-review-container">
                         <img src={avt.data} alt="avatar" id="avatar-review" />

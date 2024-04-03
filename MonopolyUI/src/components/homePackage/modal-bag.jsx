@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
-import dice from '../assert/images/icon/dice.png';
-import meo from '../assert/images/avatar/meo.jpg';
-import schoolbag from '../assert/images/icon/school-bag.png';
+import dice from '../../assert/images/icon/dice.png';
+import meo from '../../assert/images/avatar/meo.jpg';
+import schoolbag from '../../assert/images/icon/school-bag.png';
 
 
 const ModalBag = ({ showModalBag, setShowModalBag }) => {
@@ -24,7 +24,7 @@ const ModalBag = ({ showModalBag, setShowModalBag }) => {
                         <h5 className="modal-title" id="exampleModalLongTitle">Túi đồ</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleCloseModal}></button>
                     </div>
-                    <div className="modal-body modal-height">
+                    <div className="modal-body-bag modal-height">
                         <div className="modal-left-container">
                             <div className="item-container chosen" title="Basic dices" data-bs-toggle="tooltip" id="">
                                 <img src={dice} alt="item" className="item-image" />

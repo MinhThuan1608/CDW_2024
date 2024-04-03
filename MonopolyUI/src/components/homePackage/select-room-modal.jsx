@@ -1,19 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
-import { GetAllRoom, JoinRoom } from '../api_caller/room';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUser, faUserAlt, faUserClock, faUsersLine } from '@fortawesome/free-solid-svg-icons';
-import { SocketContext } from '../App';
-
-
+import { GetAllRoom, JoinRoom } from '../../api_caller/room';
+import { SocketContext } from '../../App';
 
 const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJoinRoomModal }) => {
     const [filteredRooms, setFilteredRooms] = useState([]); // State để lưu danh sách phòng sau khi lọc
     const [rooms, setRooms] = useState([])
     const [roomChosen, setRoomChosen] = useState(null)
     const [password, setPassword] = useState('')
-    const {socket, setSocket} = useContext(SocketContext);
+    const { socket, setSocket } = useContext(SocketContext);
 
     useEffect(() => {
         const fecthData = async () => {
@@ -26,13 +24,13 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
         fecthData();
     }, [])
 
-    useEffect(()=>{
-        if (socket){
+    useEffect(() => {
+        if (socket) {
             socket.subscribe('/topic/room/get-all', (message) => {
                 setRooms(JSON.parse(message.body))
             });
         }
-    },[socket])
+    }, [socket])
 
     // Hàm xử lý khi ấn nút đóng modal
     const handleCloseModal = () => {
@@ -44,8 +42,10 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     const closeJoinRoomModal = () => {
         setShowJoinRoomModal(false);
     };
+
+    // hàm xử lý tham gia phòng k có pass
     const handleJoinRoom = async (room) => {
-        if (room.numUser>1) {
+        if (room.numUser > 1) {
             alert('Phòng full ời má!')
             return;
         }
@@ -55,27 +55,32 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
             return;
         }
         const res = await JoinRoom(room.id, "");
-        if (res){
+        if (res) {
             window.location = `/wait-room/${room.id}`
         } else {
             alert('Error')
         }
     }
+    // hàm xử lý tham gia phòng có pass
     const handleJoinRoomWithPass = async () => {
-        if (!password){
+        if (!password) {
             const errorMessage = document.querySelector('.error-message');
             errorMessage.innerHTML = "Mật khẩu không được bỏ trống";
             errorMessage.style.display = "block";
             return;
         }
         const res = await JoinRoom(roomChosen.id, password);
-        if (res){
+        if (res) {
             window.location = `/wait-room/${roomChosen.id}`
         } else {
             alert('Error')
         }
     };
-
+    const handleFilterRoomFnc = (id) => {
+        console.log(rooms)
+       setFilteredRooms(rooms.filter(room => room.id.toLowerCase().includes(id.toLowerCase()) ||
+       room.roomName.toLowerCase().includes(id.toLowerCase())))
+    }
 
     return (
         <div
@@ -95,14 +100,13 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                             <FloatingLabel className="mb-3 search-room-input" controlId="floatingInput"
                                 label="Nhập ID">
                                 <Form.Control type="text" placeholder="Nhập ID"
-                                    onChange={e => setFilteredRooms(rooms.filter(room => room.roomId.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                                        room.roomName.toLowerCase().includes(e.target.value.toLowerCase())))} />
+                                    onChange={e => handleFilterRoomFnc(e.target.value)} />
                             </FloatingLabel>
                         </div>
                         <div className="listRoom">
                             {(filteredRooms.length > 0 ? filteredRooms : rooms).map((room) => (
 
-                                <div key={room.id} id={room.id} className="room" onClick={()=> handleJoinRoom(room)}>
+                                <div key={room.id} id={room.id} className="room" onClick={() => handleJoinRoom(room)}>
                                     {room.roomName}
                                     <div style={{ display: 'flex' }}>
                                         {Array.from({ length: room.numUser }, (_, index) => (
@@ -128,7 +132,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                     <Modal.Body >
                         <div className="createRoom">
                             <FloatingLabel controlId="floatingInput" label="Nhập password" className="mb-3">
-                                <Form.Control type="password" placeholder="Nhập password" onChange={(event) => setPassword(event.target.value)}/>
+                                <Form.Control type="password" placeholder="Nhập password" onChange={(event) => setPassword(event.target.value)} />
                             </FloatingLabel>
                             <p className="error-message"></p>
                             <Button className='joinRoom' onClick={handleJoinRoomWithPass}>Vào</Button>

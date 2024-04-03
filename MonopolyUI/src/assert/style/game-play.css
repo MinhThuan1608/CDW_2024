@@ -1,0 +1,89 @@
+@import './constant.css';
+.container-gameplay{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.chat-div{
+    margin-left: 20px;
+    width: 35%;
+}
+.board{
+    display: grid;
+    grid-template-columns: calc(.25* var(--tile-size)) calc(8* var(--tile-size));
+    margin: 32px 0;
+    position: relative;
+}
+.tiles{
+    display: grid;
+    grid-template-columns: repeat(8, var(--tile-size));
+    grid-template-rows: repeat(8, var(--tile-size));
+    width:calc(8 *var(--tile-size));
+}
+.tile{
+    padding: 12px;
+    margin: 0;
+    position: relative;
+}
+.tile--light{
+    background-color: var(--light-tile);
+}
+.tile--dark{
+    background-color: var(--dark-tile);
+}
+.highlight::after{
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(.5*var(--tile-size));
+    height: calc(.5*var(--tile-size));
+    border-radius: 50%;
+    top: 25%;
+    left: 25%;
+    background-color: var(--highlight);
+    /* background-color: red; */
+}
+.attacking::after{
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(var(--tile-size) - 5px);
+    height: calc(var(--tile-size) - 5px);
+    border-radius: 50%;
+    top: 3%;
+    left: 3%;
+
+    border: 4px solid var(--highlight);
+    /* border: 4px solid red; */
+}
+/* khung người chơi */
+.control-game{
+    position: absolute;
+    background-color: aliceblue;
+    height: 100px;
+    width: 10%;
+    padding: 12px;
+    border-radius: 5px;
+}
+.control-game-one{
+    bottom: 5px;
+    left: 5px;
+}
+.control-game-two{
+    top: 5px;
+    right: 5px;
+
+}
+.turn-player{
+    text-align: center;
+}
+.countdown-timer {
+    font-size: 18px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#timer {
+    color: red;
+    font-weight: bold;
+}

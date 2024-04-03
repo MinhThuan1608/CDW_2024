@@ -1,0 +1,7 @@
+const actionsTypes = {
+    'GENERATE_CANDIDATE_MOVES' : 'GENERATE_CANDIDATE_MOVES',
+    'CLEAR_CANDIDATE_MOVES' : 'CLEAR_CANDIDATE_MOVES',
+    'NEW_MOVE'  : 'NEW_MOVE',
+    'SAVE_PIECE_NAME' : 'SAVE_PIECE_NAME',
+} 
+export default actionsTypes

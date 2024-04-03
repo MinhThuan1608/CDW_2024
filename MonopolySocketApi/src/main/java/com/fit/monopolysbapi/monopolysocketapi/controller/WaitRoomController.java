@@ -80,7 +80,12 @@ public class WaitRoomController {
                         .createAt(new Date()).sender(user).build();
                 break;
             case MESSAGE:
-
+                newMessage = WaitRoomMessage.builder()
+                        .users(room.getUsers())
+                        .messageType(WaitRoomMessage.RoomMessageType.MESSAGE)
+                        .content(waitRoomMessage.getContent())
+                        .createAt(new Date())
+                        .sender(user).build();
                 break;
             case START_GAME:
 
@@ -88,6 +93,7 @@ public class WaitRoomController {
             default:
                 break;
         }
+        System.out.println("gửi về cái này \t" +newMessage );
         simpMessagingTemplate.convertAndSend("/topic/game/room/"+roomId, newMessage);
 
     }

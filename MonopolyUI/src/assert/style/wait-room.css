@@ -6,19 +6,18 @@
 /* TOP */
 .top-part {
     display: flex;
-    flex-direction: column;
-}
-.top-part-one {
-    display: flex;
+    margin-top: 12px;
     justify-content: space-between;
 }
+
 .score-and-money {
     position: relative;
     width: 30%;
     background: #ffffff;
     border-radius: 10px;
     border-top-right-radius: 10px;
-    margin: 12px;
+    margin: 12px 0;
+    width: 30%;
 }
 
 .top-name-user {
@@ -40,7 +39,6 @@
     border: #ffffff 3px solid;
     width: 100px;
     height: 100px;
-    background-image: url("/src/assert/images/avatar/meo.jpg");
     background-repeat: no-repeat;
     background-size: contain;
     background-color: #6e19dc;
@@ -60,21 +58,28 @@
     padding: 0 8px;
 }
 
-.lable-room p {
+.lable-room {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 40%;
+}
+
+.lable {
     background: #ecb103;
     text-transform: uppercase;
     text-align: center;
     padding: 24px 120px;
-    margin-top: 12px;
+    margin: 12px;
     border-radius: 5px;
     color: #ffffff;
 }
 
 .web-options {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-end;
+    margin-top: 12px;
     width: 30%;
-    margin: 12px 0;
 }
 
 .icon-container {
@@ -91,28 +96,27 @@
     background-color: #ff0066;
 }
 
-
-.top-part-two{
-    display: flex;
-    justify-content: space-evenly;
-}
-.password-div{
+.password-div {
     background-color: #0a83d8;
     color: #ffffff;
     display: flex;
     justify-content: space-evenly;
+    margin: 0 12px;
 }
-.password-div input{
-    padding: 8px;
+
+.password-div input {
+    padding: 4px 0;
     text-align: center;
-    font-size: 26px;
+    font-size: 18px;
     font-weight: 600;
 }
-.options-div{
+
+.options-div {
     display: flex;
     justify-content: space-between;
 }
-.options-btn{
+
+.options-btn {
     margin: 0 8px;
     border: 2px solid #ffffff;
     border-radius: 5px;
@@ -122,7 +126,8 @@
     text-transform: uppercase;
     color: #ffffff;
 }
-.options-btn, .password-div{
+
+.options-btn {
     padding: 8px 32px;
 }
 
@@ -132,6 +137,7 @@
     justify-content: space-evenly;
     margin-top: 8px;
 }
+
 .center-part-left {
     height: 50%;
     display: flex;
@@ -148,14 +154,14 @@
     height: 300px;
     background-color: #eadacb;
     margin: 12px;
-   
+
 }
 
 .player-name {
     position: absolute;
     top: -8px;
-    left: 2px;
-    width: 100%;
+    left: 40px;
+    width: 79%;
     text-transform: uppercase;
     text-align: center;
     padding: 12px 0;
@@ -180,12 +186,11 @@
 
 .img-frame-player {
     position: absolute;
-    top: -16px;
-    left: -16px;
+    top: -14px;
+    left: -5px;
     border: #ffffff 3px solid;
     width: 70px;
     height: 70px;
-    background-image: url("/src/assert/images/avatar/meo.jpg");
     background-repeat: no-repeat;
     background-size: contain;
     border-radius: 10px;
@@ -195,14 +200,15 @@
 .main-room-player {
     position: absolute;
     top: -29px;
-    left: -29px;
+    left: -18px;
     text-align: center;
     color: #ffd000;
     font-size: 32px;
     z-index: 1;
     transform: rotate(-27deg);
 }
-.icon-delete-user{
+
+.icon-delete-user {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -210,18 +216,46 @@
     font-size: 26px;
     z-index: 1;
 }
+.btn-invite{
+    border: none;
+    background-color: transparent;
+}
+.icon-add-user{
+        position: absolute;
+        top: 31%;
+        right: 23%;
+        color: #000000;
+        height: 35%;
+        z-index: 1;
+}
+.icon-chess{
+    position: absolute;
+    top: 31%;
+    right: 23%;
+    height: 35%;
+    cursor: pointer;
+}
+.icon-chess-white{
+    color: #ffffff;
+    
+}
+.icon-chess-black{
+    color: #000000;
+    
+}
 /* chat side */
-.chat-room-part{
+.chat-room-part {
     position: relative;
     border: solid 2px #ffffff;
     border-radius: 15px;
-    width: 350px;
+    width: 400px;
     height: 310px;
     background-color: #eadacb;
     margin-top: 16px;
-    
+
 }
-.title-chat{
+
+.title-chat {
     text-transform: uppercase;
     text-align: center;
     color: #000000;
@@ -229,7 +263,7 @@
     margin: 0;
 }
 
-.sendMessDiv{
+.sendMessDiv {
     position: absolute;
     display: flex;
     justify-content: space-around;
@@ -237,13 +271,15 @@
     bottom: 12px;
     width: 100%;
 }
+
 .inputMess {
     width: 100%;
     border: none;
     border-radius: 5px;
     outline: none;
 }
-.sendBtn{
+
+.sendBtn {
     background-color: #0a83d8;
     color: #ffffff;
     border: none;
@@ -251,10 +287,12 @@
     margin: 0 12px;
     cursor: pointer;
 }
-.icon-send-mess{
+
+.icon-send-mess {
     font-size: 14px;
 }
-.messageList{
+
+.messageList {
     border-top: 2px solid #ffffff;
     border-bottom: 2px solid #ffffff;
     margin: 0;
@@ -275,37 +313,44 @@
     background-color: #ffffff;
 }
 
-.message{
+.message {
     display: flex;
     flex-direction: column;
     margin: 4px 0;
     margin-right: 120px;
 }
-.messageOwner{
+
+.messageOwner {
     margin-left: 120px;
     margin-right: 4px;
 }
-.messageBlock{
+
+.messageBlock {
     display: flex;
     justify-content: left;
     align-items: center;
 }
-.messageBlockOwner{
+
+.messageBlockOwner {
     justify-content: right;
     flex-direction: row-reverse;
     text-align: left;
 }
-.sendTime, .sendName{
-font-size: 8px;
-font-weight: 400;
-margin-left: 4px;
+
+.sendTime,
+.sendName {
+    font-size: 8px;
+    font-weight: 400;
+    margin-left: 4px;
 }
-.sendName{
+
+.sendName {
     padding: 2px;
     border-radius: 3px;
     text-transform: uppercase;
 }
-.messageContent{
+
+.messageContent {
     display: flex;
     font-size: 12px;
     font-weight: 300;
@@ -315,15 +360,18 @@ margin-left: 4px;
     justify-content: flex-start;
     padding: 0 4px;
 }
-.messageContentOwner{
-   justify-content: flex-end;
+
+.messageContentOwner {
+    justify-content: flex-end;
 }
+
 /* =================== */
 /* =======BOTTOM============ */
 .bottom-part {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 24px;
 }
 
 .btn-play-game {
@@ -337,8 +385,81 @@ margin-left: 4px;
     font-size: 15px;
 }
 
+/* list user online */
+.online-part {
+    position: relative;
+    border: solid 2px #ffffff;
+    border-radius: 15px;
+    width: 300px;
+    height: 310px;
+    background-color: #eadacb;
+    margin-top: 16px;
+
+}
+.userList{
+    margin: 0;
+    height: 270px;
+    padding: 0px 2px;
+    overflow-y: auto;
+}
+.userList::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 15px;
+}
+
+.userList::-webkit-scrollbar-thumb {
+    background-color: #0a83d8;
+    border-radius: 15px;
+}
+
+.userList::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border-radius: 15px;
+}
+.user-card {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.img-frame-player-onl {
+    border: #ffffff 3px solid;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 12px;
+}
+
+.online-status {
+    position: absolute;
+    background-color: #8aa905;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px #ffffff solid;
+    left: 46px;
+    top: 49px;
+}
+.join{   
+    position: absolute;
+    background-color: #8aa905;
+    border-radius: 5px;
+    right: 12px;
+    top: 26px;
+    padding: 2px 4px;
+    font-size: 14px;
+}
 
 /* HOVER */
-.setting-icon:hover, .icon-send-mess:hover , .options-btn:hover, .btn-play-game:hover, .sendBtn:hover{
+.setting-icon:hover,
+.icon-send-mess:hover,
+.options-btn:hover,
+.btn-play-game:hover,
+.icon-chess-white:hover,
+.sendBtn:hover {
     filter: drop-shadow(0 0 4px #F3F8FF);
+}
+
+.user-card:hover {
+    background-color: #0a83d8;
 }
