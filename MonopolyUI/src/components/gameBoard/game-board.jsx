@@ -6,7 +6,7 @@ import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
-import { makeNewMove } from '../../reducer/action/move';
+import { clearCandidates, makeNewMove, savePiece } from '../../reducer/action/move';
 
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -18,7 +18,6 @@ const GameBoard = () => {
 
     const { appState, dispatch } = useAppContext()
     const position = appState.position[appState.position.length - 1]
-    // console.log(position)
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -40,8 +39,9 @@ const GameBoard = () => {
                 console.log(messResponse.pieces)
                 switch (messResponse.messageType) {
                     case 'MOVE':
-                        
-                        // dispatch(makeNewMove(messResponse.pieces))        
+                        let newPosition = messResponse.pieces
+                        dispatch(makeNewMove({newPosition}))
+                        dispatch(clearCandidates())
                         break
                     default:
                         break
@@ -64,7 +64,7 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId}/>
+            <Piceces roomId={roomId} />
             <Files files={files} />
 
         </div>

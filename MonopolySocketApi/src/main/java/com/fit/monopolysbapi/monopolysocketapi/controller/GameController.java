@@ -37,33 +37,31 @@ public class GameController {
         ChessMessage responseMessage = null;
         Room room = roomService.getRoomById(roomId);
         GameBoard gameBoard = room.getGameBoard();
-        String[][] piecesResponse = new String[GameBoard.ROW][GameBoard.COL];
-        for (int i = 0; i < piecesResponse.length; i++)
-            for (int j = 0; j < piecesResponse.length; j++)
-                piecesResponse[i][j] = gameBoard.getPieces()[i][j] == null ? "" : gameBoard.getPieces()[i][j].getName();
         switch (chessMessage.getMessageType()) {
             case MOVE:
-                System.out.println("chạy dô ko");
                 if (user.getId().equals(room.getUsers().get(0).getId())) {
+
                     // Xử lý việc di chuyển quân cờ
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
-
+                    System.out.println("is ok move? " +gameBoard.isValidMove(move));
+                    System.out.println("x,y "+move);
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move);
+                        System.out.println("ok move");
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(nextTurn)
-                                .pieces(piecesResponse)
+                                .pieces(gameBoard.getPiecesResponse())
                                 .build();
                     } else {
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(gameBoard.getTurn())
-                                .pieces(piecesResponse)
+                                .pieces(gameBoard.getPiecesResponse())
                                 .build();
                     }
 
@@ -71,7 +69,7 @@ public class GameController {
                     responseMessage = ChessMessage.builder()
                             .messageType(ChessMessage.ChessMessageType.MOVE)
                             .turn(gameBoard.getTurn())
-                            .pieces(piecesResponse)
+                            .pieces(gameBoard.getPiecesResponse())
                             .build();
                 }
 

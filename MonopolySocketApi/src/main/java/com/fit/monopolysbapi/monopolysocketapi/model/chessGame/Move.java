@@ -29,4 +29,16 @@ public class Move {
 
 
     }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "oldRow=" + oldRow +
+                ", oldCol=" + oldCol +
+                ", newRow=" + newRow +
+                ", newCol=" + newCol +
+                ", piece=" + piece +
+                ", capture=" + capture +
+                '}';
+    }
 }

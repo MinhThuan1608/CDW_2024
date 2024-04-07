@@ -120,15 +120,19 @@ public class GameBoard {
 
     public boolean isValidMove(Move move) {
         if (sameTeam(move.piece, move.capture)) {
+            System.out.println("same team");
             return false;
         }
         if (!move.piece.isValidMovement(move.newRow, move.newCol)) {
+            System.out.println("NoValidMovement");
             return false;
         }
         if (move.piece.moveCollidesWithPiece(move.newRow, move.newCol)) {
+            System.out.println("moveCollidesWithPiece");
             return false;
         }
         if(checkScaner.isKingChecked(move)){
+            System.out.println("isKingChecked");
             return false;
         }
         return true;
@@ -173,6 +177,14 @@ public class GameBoard {
 
     public boolean isCheckmate() {
         return true;
+    }
+
+    public String[][] getPiecesResponse(){
+        String[][] piecesResponse = new String[ROW][COL];
+        for (int i = 0; i < ROW; i++)
+            for (int j = 0; j < COL; j++)
+                piecesResponse[i][j] = pieces[i][j] == null ? "" : pieces[i][j].getName();
+        return piecesResponse;
     }
 
 //    public boolean validMove(int oldX, int oldY, int newX, int newY) {
