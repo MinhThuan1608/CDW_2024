@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import WaitRoom from "./pages/WaitRoom";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -15,16 +15,16 @@ import { Client } from "@stomp/stompjs";
 export const SocketContext = React.createContext();
 
 function App() {
+  // socket context
+  const [socket, setSocket] = useState(null);
+
+
   // app state context
   const [appState, dispatch] = useReducer(reducer, initGameState)
   const providerState = {
     appState,
     dispatch
   }
-  // socket context
-  const [socket, setSocket] = useState(null);
-
-  // chat side
 
 
   useEffect(() => {
@@ -45,16 +45,17 @@ function App() {
         client.subscribe('/topic/user/online', (message) => { //recieve an array of user who online
           console.log(JSON.parse(message.body));
         });
-      // gửi thông báo lên để server biết mình đang onl 
+        // gửi thông báo lên để server biết mình đang onl 
         client.publish({
           destination: '/app/user/online',
           body: ""
         });
+
       };
       client.onStompError = (error) => {
         console.error('Error in connecting WebSocket', error);
       };
-// bắt đầu kết nối
+      // bắt đầu kết nối
       client.activate();
 
     }
@@ -69,11 +70,11 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/wait-room/:roomId" element={<WaitRoom/>} />
+              <Route path="/wait-room/:roomId" element={<WaitRoom />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game" element={<GamePage/>} />
+              <Route path="/game" element={<GamePage />} />
             </Routes>
           </BrowserRouter>
         </div>

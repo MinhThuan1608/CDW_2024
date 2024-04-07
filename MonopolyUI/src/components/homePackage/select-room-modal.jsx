@@ -27,6 +27,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     useEffect(() => {
         if (socket) {
             socket.subscribe('/topic/room/get-all', (message) => {
+                console.log(message)
                 setRooms(JSON.parse(message.body))
             });
         }

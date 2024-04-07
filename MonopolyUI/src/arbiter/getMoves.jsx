@@ -15,13 +15,16 @@ export const getRookMoves = ({ position, rank, file, piece }) => {
             const x = rank + (i * dir[0])
             const y = file + (i * dir[1])
 
+            // không xác định thì dừng
             if (position?.[x]?.[y] === undefined)
                 break
 
+                // nếu là quân địch thì tấn công
             if (position[x][y].startsWith(enemy)) {
                 moves.push([x, y])
                 break
             }
+            // nếu là quân mình thì ko vượt qua đc
             if (position[x][y].startsWith(us))
                 break
 

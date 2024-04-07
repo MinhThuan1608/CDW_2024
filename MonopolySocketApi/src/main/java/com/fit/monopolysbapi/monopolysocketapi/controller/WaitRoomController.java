@@ -3,10 +3,12 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.model.WaitRoomMessage;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.request.CreateRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
+import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +69,7 @@ public class WaitRoomController {
         User user = (User) token.getPrincipal();
         Room room = roomService.getRoomById(roomId);
         WaitRoomMessage newMessage = null;
+        GameBoard gameBoard = new GameBoard();
         switch (waitRoomMessage.getMessageType()) {
             case JOIN:
                 newMessage = WaitRoomMessage.builder()
@@ -88,7 +91,15 @@ public class WaitRoomController {
                         .sender(user).build();
                 break;
             case START_GAME:
+               newMessage = WaitRoomMessage.builder()
+                       .users(room.getUsers())
+                       .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
+                       .content(waitRoomMessage.getContent())
+                       .createAt(new Date())
+                       .sender(user)
+                       .pieces(gameBoard.initGame()).build();
 
+                System.out.println("d nè==============================");
                 break;
             default:
                 break;
