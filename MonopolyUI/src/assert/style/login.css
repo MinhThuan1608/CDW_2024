@@ -65,17 +65,17 @@
 }
 
 .input-text.error{
-    border:2px solid red;
+    border:2px solid #EF4040;
 }
 
 #error-message{
-    color: red;
+    color: #EF4040;
     font-style: italic;
     display: none;
 }
 
 .error-message{
-    color: red;
+    color: #EF4040;
     font-style: italic;
     display: none;
 }

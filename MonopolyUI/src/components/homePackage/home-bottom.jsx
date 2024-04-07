@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-import shopImg from '../assert/images/icon/shops.png';
-import schoolBag from '../assert/images/icon/school-bag.png';
+import shopImg from '../../assert/images/icon/shops.png';
+import schoolBag from '../../assert/images/icon/school-bag.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 

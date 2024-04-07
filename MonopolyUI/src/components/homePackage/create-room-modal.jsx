@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
-import { CreateRoom } from '../api_caller/room';
-import { SocketContext } from '../App';
+import { CreateRoom } from '../../api_caller/room';
+import { SocketContext } from '../../App';
 
 
 const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {

@@ -191,9 +191,10 @@
 }
 
 /* modal  */
-.modal-body {
+.modal-body-bag {
     display: flex;
     height: 70vh;
+    margin: 14px 12px;
 }
 
 .modal-body.modal-height {
@@ -276,7 +277,6 @@
     width: 40%;
     height: auto;
     display: flex;
-    align-items: center;
     justify-content: center;
     margin-right: 10px;
     overflow: hidden;
@@ -349,9 +349,11 @@
 
 /* modal chọn phòng */
 .modal-body {
-    height: 50vh;
     flex-direction: column;
     align-items: center;
+    display: flex;
+    height: 60vh;
+    margin: 14px 12px;
 }
 
 .search-room {
