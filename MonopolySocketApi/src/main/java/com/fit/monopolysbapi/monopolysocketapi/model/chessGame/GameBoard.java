@@ -5,26 +5,28 @@ import lombok.*;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
+@Builder
 public class GameBoard {
     private Piece[][] pieces;
-    private final int col = 8;
-    private final int row = 8;
-    private final int tileSize = 25;
+    public static final int COL = 8;
+    public static final int ROW = 8;
+    public static final int TILE_SIZE = 25;
 
     private int enPassantTile = -1;
     private Piece selectedPiece;
+    private String turn;
 
-    private final CheckScaner checkScaner = new CheckScaner(this);
+    private CheckScaner checkScaner = new CheckScaner(this);
 
     public GameBoard(){
+        this.turn = "w";
         initGame();
     }
-
     public Piece getPiece(int row, int col) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if ((pieces[i][j].getRow() == row) && (pieces[i][j].getCol() == col))
+                if ((pieces[i][j] != null) && (pieces[i][j].getRow() == row) && (pieces[i][j].getCol() == col))
                     return pieces[i][j];
 
             }
@@ -33,7 +35,7 @@ public class GameBoard {
     }
 
     public int getTileNum(int row, int col) {
-        return row * this.row + col;
+        return row * this.ROW + col;
     }
 
     Piece findKing(boolean isWhite) {
@@ -57,8 +59,8 @@ public class GameBoard {
             move.piece.row = move.newRow;
             move.piece.col = move.newCol;
 
-            move.piece.yPos = move.newRow * tileSize;
-            move.piece.xPos = move.newCol * tileSize;
+//            move.piece.yPos = move.newRow * TILE_SIZE;
+//            move.piece.xPos = move.newCol * TILE_SIZE;
 
             move.piece.isFirstMove = false;
             capture(move);
@@ -76,7 +78,7 @@ public class GameBoard {
                 rook = getPiece(move.piece.row, 0);
                 rook.col = 3;
             }
-            rook.xPos = rook.col * tileSize;
+//            rook.xPos = rook.col * TILE_SIZE;
         }
     }
 
@@ -118,15 +120,19 @@ public class GameBoard {
 
     public boolean isValidMove(Move move) {
         if (sameTeam(move.piece, move.capture)) {
+            System.out.println("same team");
             return false;
         }
         if (!move.piece.isValidMovement(move.newRow, move.newCol)) {
+            System.out.println("NoValidMovement");
             return false;
         }
         if (move.piece.moveCollidesWithPiece(move.newRow, move.newCol)) {
+            System.out.println("moveCollidesWithPiece");
             return false;
         }
         if(checkScaner.isKingChecked(move)){
+            System.out.println("isKingChecked");
             return false;
         }
         return true;
@@ -139,12 +145,13 @@ public class GameBoard {
         return p1.isWhite == p2.isWhite;
     }
 
-    public Piece[][] initGame() {
-        pieces = new Piece[col][row];
+    public void initGame() {
+        pieces = new Piece[COL][ROW];
 
         for (int i = 0; i < 8; i++) {
-            pieces[6][i] =  new Pawn(this, 6, i, true);
+            pieces[6][i] =  new Pawn(this, 6, i, false);
             pieces[1][i] = new Pawn(this, 1, i, true);
+
         }
 
         pieces[0][0] = new Rook(this, 0, 0, true);
@@ -156,6 +163,7 @@ public class GameBoard {
         pieces[0][6] = new Knight(this, 0, 6, true);
         pieces[0][7] = new Rook(this, 0, 7, true);
 
+
         pieces[7][0] = new Rook(this, 7, 0, false);
         pieces[7][1] = new Knight(this, 7, 1, false);
         pieces[7][2] = new Bishop(this, 7, 2, false);
@@ -165,11 +173,18 @@ public class GameBoard {
         pieces[7][6] = new Knight(this, 7, 6, false);
         pieces[7][7] = new Rook(this, 7, 7, false);
 
-        return pieces;
     }
 
     public boolean isCheckmate() {
         return true;
+    }
+
+    public String[][] getPiecesResponse(){
+        String[][] piecesResponse = new String[ROW][COL];
+        for (int i = 0; i < ROW; i++)
+            for (int j = 0; j < COL; j++)
+                piecesResponse[i][j] = pieces[i][j] == null ? "" : pieces[i][j].getName();
+        return piecesResponse;
     }
 
 //    public boolean validMove(int oldX, int oldY, int newX, int newY) {

@@ -38,38 +38,38 @@ public class WaitRoomController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping("/room/create")
-    public ResponseEntity createRoom(@RequestBody CreateRoomRequest request, Authentication authentication){
+    public ResponseEntity createRoom(@RequestBody CreateRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         RoomResponse newRoom = roomService.createRoom(request, user);
         System.out.println(newRoom);
-        simpMessagingTemplate.convertAndSend( "/topic/room/get-all", roomService.getRoomsResponse());
+        simpMessagingTemplate.convertAndSend("/topic/room/get-all", roomService.getRoomsResponse());
         return ResponseEntity.ok(new AbstractResponse(200, "Create room successfully", newRoom));
     }
 
     @GetMapping("/room/all")
-    public ResponseEntity getRooms(){
+    public ResponseEntity getRooms() {
         return ResponseEntity.ok(new AbstractResponse(200, "Get room successfully", roomService.getRoomsResponse()));
     }
 
     @PostMapping("/room/join")
-    public ResponseEntity joinRoom(@RequestBody JoinRoomRequest request, Authentication authentication){
+    public ResponseEntity joinRoom(@RequestBody JoinRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         if (roomService.checkJoinRoom(request)) {
             roomService.joinRoom(user, request.getRoomId());
-            simpMessagingTemplate.convertAndSend( "/topic/room/get-all", roomService.getRoomsResponse());
+            simpMessagingTemplate.convertAndSend("/topic/room/get-all", roomService.getRoomsResponse());
             return ResponseEntity.ok(new AbstractResponse(200, "Join room successfully", true));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Join room fail", false));
     }
 
     @MessageMapping("/game/room/{roomId}")
-    public void waitRoom(@Payload WaitRoomMessage waitRoomMessage, @DestinationVariable String roomId, Message message){
+    public void waitRoom(@Payload WaitRoomMessage waitRoomMessage, @DestinationVariable String roomId, Message message) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();
         Room room = roomService.getRoomById(roomId);
         WaitRoomMessage newMessage = null;
-        GameBoard gameBoard = new GameBoard();
+
         switch (waitRoomMessage.getMessageType()) {
             case JOIN:
                 newMessage = WaitRoomMessage.builder()
@@ -91,25 +91,22 @@ public class WaitRoomController {
                         .sender(user).build();
                 break;
             case START_GAME:
-               newMessage = WaitRoomMessage.builder()
-                       .users(room.getUsers())
-                       .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
-                       .content(waitRoomMessage.getContent())
-                       .createAt(new Date())
-                       .sender(user)
-                       .pieces(gameBoard.initGame()).build();
-
-                System.out.println("d nè==============================");
+                if(room.getUsers().size() == 2){
+                    newMessage = WaitRoomMessage.builder()
+                            .users(room.getUsers())
+                            .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
+                            .build();
+                    GameBoard gameBoard = new GameBoard();
+                    room.setGameBoard(gameBoard);
+                }
                 break;
             default:
                 break;
         }
-        System.out.println("gửi về cái này \t" +newMessage );
-        simpMessagingTemplate.convertAndSend("/topic/game/room/"+roomId, newMessage);
+        System.out.println("gửi về cái này \t" + newMessage);
+        simpMessagingTemplate.convertAndSend("/topic/game/room/" + roomId, newMessage);
 
     }
-
-
 
 
 }

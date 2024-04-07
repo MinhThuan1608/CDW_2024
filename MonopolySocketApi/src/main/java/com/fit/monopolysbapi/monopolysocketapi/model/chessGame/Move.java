@@ -5,6 +5,9 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 public class Move {
     int oldRow;
@@ -21,9 +24,21 @@ public class Move {
         this.newRow = newRow;
         this.newCol = newCol;
 
-        this.piece = piece;
+        this.piece = board.getPiece(oldRow, oldCol);
         this.capture = board.getPiece(newRow, newCol);
 
 
+    }
+
+    @Override
+    public String toString() {
+        return "Move{" +
+                "oldRow=" + oldRow +
+                ", oldCol=" + oldCol +
+                ", newRow=" + newRow +
+                ", newCol=" + newCol +
+                ", piece=" + piece +
+                ", capture=" + capture +
+                '}';
     }
 }

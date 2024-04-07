@@ -72,6 +72,7 @@ const CreateCharacter = () => {
     }
 
     const initUser = async () => {
+        validateUsername(username)
         if (valid) {
             const response = await InitUser(username, avt.id, avt.data);
             if (response !== true) {

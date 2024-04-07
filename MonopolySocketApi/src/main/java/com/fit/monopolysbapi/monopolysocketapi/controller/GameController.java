@@ -6,6 +6,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.WaitRoomMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -18,38 +19,70 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
+import java.util.Arrays;
 import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor
 public class GameController {
 
-    private final GameService gameService;
     private final RoomService roomService;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    @MessageMapping("/game/chess")
-    public void chessGameAction(@Payload ChessMessage chessMessage, Message message) {
+
+    @MessageMapping("/game/chess/{roomId}")
+    public void chessGameAction(@Payload ChessMessage chessMessage, @DestinationVariable String roomId, Message message) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();
         ChessMessage responseMessage = null;
-        GameBoard gameBoard = new GameBoard(); // Khởi tạo GameBoard từ dữ liệu đã lưu
-
+        Room room = roomService.getRoomById(roomId);
+        GameBoard gameBoard = room.getGameBoard();
         switch (chessMessage.getMessageType()) {
             case MOVE:
-                // Xử lý việc di chuyển quân cờ
-                Move move = chessMessage.getMove(); // Assume Move class is defined
-                boolean isValidMove = gameBoard.isValidMove(move); // Assume isValidMove method is defined in GameBoard class
-                if (isValidMove) {
-                    gameBoard.makeMove(move); // Assume makeMove method is defined in GameBoard class
+                if (user.getId().equals(room.getUsers().get(0).getId())) {
+
+                    // Xử lý việc di chuyển quân cờ
+                    Move move = chessMessage.getMove();
+                    move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
+                    move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
+                    System.out.println("is ok move? " +gameBoard.isValidMove(move));
+                    System.out.println("x,y "+move);
+                    if (gameBoard.isValidMove(move)) {
+                        gameBoard.makeMove(move);
+                        System.out.println("ok move");
+                        String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
+                        gameBoard.setTurn(nextTurn);
+                        responseMessage = ChessMessage.builder()
+                                .messageType(ChessMessage.ChessMessageType.MOVE)
+                                .turn(nextTurn)
+                                .pieces(gameBoard.getPiecesResponse())
+                                .build();
+                    } else {
+                        responseMessage = ChessMessage.builder()
+                                .messageType(ChessMessage.ChessMessageType.MOVE)
+                                .turn(gameBoard.getTurn())
+                                .pieces(gameBoard.getPiecesResponse())
+                                .build();
+                    }
+
+                } else {
                     responseMessage = ChessMessage.builder()
                             .messageType(ChessMessage.ChessMessageType.MOVE)
-                            .move(move)
-                            .gameBoard(gameBoard)
-                            .sender(user)
+                            .turn(gameBoard.getTurn())
+                            .pieces(gameBoard.getPiecesResponse())
                             .build();
                 }
+
                 break;
+//            case MOVE:
+//
+//                responseMessage = ChessMessage.builder()
+//                        .messageType(ChessMessage.ChessMessageType.MOVE)
+//                        .sender(user)
+//                        .content(chessMessage.getContent())
+//                        .build();
+//
+//                break;
             case RESIGN:
                 // Xử lý việc từ bỏ
                 // ...
@@ -64,20 +97,19 @@ public class GameController {
                 break;
             case CHECKMATE:
                 // Xử lý việc kiểm tra Checkmate
-                boolean isCheckmate = gameBoard.isCheckmate(); // Assume isCheckmate method is defined in GameBoard class
-                responseMessage = ChessMessage.builder()
-                        .messageType(ChessMessage.ChessMessageType.CHECKMATE)
-                        .isCheckmate(isCheckmate)
-                        .sender(user)
-                        .build();
+//                boolean isCheckmate = gameBoard.isCheckmate(); // Assume isCheckmate method is defined in GameBoard class
+//                responseMessage = ChessMessage.builder()
+//                        .messageType(ChessMessage.ChessMessageType.CHECKMATE)
+//                        .isCheckmate(isCheckmate)
+//                        .sender(user)
+//                        .build();
                 break;
             default:
                 break;
         }
 
-        simpMessagingTemplate.convertAndSend("/topic/game/chess" , responseMessage);
+        simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
     }
-
 
 
 }

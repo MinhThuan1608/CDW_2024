@@ -74,7 +74,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game" element={<GamePage />} />
+              <Route path="/game/:roomId" element={<GamePage />} />
             </Routes>
           </BrowserRouter>
         </div>

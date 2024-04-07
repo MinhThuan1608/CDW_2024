@@ -6,8 +6,7 @@ const WaitRoomBottom = (props) => {
         props.socket.publish({
             destination: '/app/game/room/' + props.roomId,
             body: JSON.stringify({
-                messageType: 'START_GAME',
-                pieces: []
+                messageType: 'START_GAME'
             })
         });
     }

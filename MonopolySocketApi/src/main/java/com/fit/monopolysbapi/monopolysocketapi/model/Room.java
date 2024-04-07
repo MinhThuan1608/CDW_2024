@@ -1,5 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.model;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import lombok.*;
 
@@ -14,7 +15,9 @@ public class Room {
     private String id;
     private String name;
     private String password;
+    private GameBoard gameBoard;
     private List<User> users;
+
 
     public boolean havePassword(){
         if (password==null) return false;

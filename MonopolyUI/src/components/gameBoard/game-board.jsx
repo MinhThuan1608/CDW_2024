@@ -5,16 +5,19 @@ import Piceces from './Pieces/Pieces';
 import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
+import { useParams } from 'react-router-dom';
+import { clearCandidates, makeNewMove, savePiece } from '../../reducer/action/move';
+
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
+    const { roomId } = useParams("roomId");
     // col
     const ranks = Array(8).fill().map((x, i) => 8 - i)
     // row
     const files = Array(8).fill().map((x, i) => i + 1)
 
-    const { appState } = useAppContext()
+    const { appState, dispatch } = useAppContext()
     const position = appState.position[appState.position.length - 1]
-    // console.log(position)
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -31,22 +34,23 @@ const GameBoard = () => {
 
     useEffect(() => {
         if (socket) {
-            // console.log('subcribe room ', roomId)
-            socket.subscribe('/top/game/chess', (message) => {
+            socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
-                console.log(messResponse);
-                // switch (messResponse.messageType) {
-                //     case 'MOVE':
-                //         console.log(messResponse)
-                //         break
-                //     default:
-                //         break
-                // }
+                console.log(messResponse.pieces)
+                switch (messResponse.messageType) {
+                    case 'MOVE':
+                        let newPosition = messResponse.pieces
+                        dispatch(makeNewMove({newPosition}))
+                        dispatch(clearCandidates())
+                        break
+                    default:
+                        break
+                }
 
 
             });
         }
-    });
+    }, [socket]);
 
     return (
 
@@ -60,7 +64,7 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces />
+            <Piceces roomId={roomId} />
             <Files files={files} />
 
         </div>

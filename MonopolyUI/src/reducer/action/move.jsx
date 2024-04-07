@@ -9,7 +9,7 @@ export const makeNewMove = ({newPosition}) => {
         type: actionsTypes.NEW_MOVE,
         payload: {newPosition},
     }
-}
+} 
 
 export const generateCandidateMoves = ({candidateMoves}) => {
     return {

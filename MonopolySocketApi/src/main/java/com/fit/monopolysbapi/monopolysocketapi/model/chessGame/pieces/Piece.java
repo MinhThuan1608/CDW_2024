@@ -8,7 +8,7 @@ import lombok.*;
 
 public class Piece {
     public int col, row;
-    public int xPos, yPos;
+//    public int xPos, yPos;
 
     public boolean isWhite;
     public String name;
