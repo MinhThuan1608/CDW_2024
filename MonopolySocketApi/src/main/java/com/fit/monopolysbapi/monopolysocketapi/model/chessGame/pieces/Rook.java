@@ -13,7 +13,7 @@ public class Rook extends Piece{
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wr" : "br";
-        this.xPos = col * board.getTileSize();
+//        this.xPos = col * board.TILE_SIZE;
 
 
     }
