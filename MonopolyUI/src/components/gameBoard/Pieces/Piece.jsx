@@ -13,8 +13,6 @@ const Piece = (
     const { turn, position : currentPosition } = appState;
     // const currentPosition = position[position.length - 1]
 
-
-
     const onDragStart = (e) => {
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text/plain', `${piece},${rank},${file}`)

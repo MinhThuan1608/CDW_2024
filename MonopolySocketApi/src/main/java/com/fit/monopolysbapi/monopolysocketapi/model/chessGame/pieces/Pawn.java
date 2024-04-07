@@ -47,4 +47,23 @@ public class Pawn extends Piece {
         }
         return false;
     }
+    public boolean moveCollidesWithPiece(int row, int col){
+        // Nếu con Pawn di chuyển xuống dưới bàn cờ
+        if(this.row > row){
+            for (int r = this.row - 1; r > row; r--){
+                if (board.getPiece(r, this.col) != null){
+                    return true;
+                }
+            }
+        }
+        // Nếu con Pawn di chuyển lên trên bàn cờ
+        if(this.row < row){
+            for (int r = this.row + 1; r < row; r++){
+                if (board.getPiece(r, this.col) != null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

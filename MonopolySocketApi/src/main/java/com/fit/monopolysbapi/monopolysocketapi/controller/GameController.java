@@ -43,14 +43,15 @@ public class GameController {
                 piecesResponse[i][j] = gameBoard.getPieces()[i][j] == null ? "" : gameBoard.getPieces()[i][j].getName();
         switch (chessMessage.getMessageType()) {
             case MOVE:
-                System.out.println("chạy dô ko");
                 if (user.getId().equals(room.getUsers().get(0).getId())) {
+                    System.out.println("chạy dô ko");
                     // Xử lý việc di chuyển quân cờ
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
 
-                    if (gameBoard.isValidMove(move)) {
+                    if (!gameBoard.isValidMove(move)) {
+                        System.out.println("hợp ệ nè");
                         gameBoard.makeMove(move);
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
@@ -60,6 +61,7 @@ public class GameController {
                                 .pieces(piecesResponse)
                                 .build();
                     } else {
+                        System.out.println("ko có hợp gì hết");
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(gameBoard.getTurn())

@@ -3,7 +3,6 @@ import './Pieces.css';
 import Piece from "./Piece";
 import { copyPosition, createPosition } from "../help";
 import { useAppContext } from "../../../contexts/Context";
-import { clearCandidates, makeNewMove, savePiece } from "../../../reducer/action/move";
 import { SocketContext } from "../../../App";
 
 const Piceces = (props) => {
@@ -13,6 +12,7 @@ const Piceces = (props) => {
     const { appState, dispatch } = useAppContext()
 
     const currentPosition = appState.position[appState.position.length - 1]
+    // console.log(currentPosition)
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
@@ -53,16 +53,15 @@ const Piceces = (props) => {
 
             })
         });
-        console.log(newPosition)
+        // console.log(newPosition)
 
         // dispatch(makeNewMove({ newPosition }))
-        dispatch(savePiece({p}))
 
         // console.log(rank,file)
         // console.log(x,y + "moi")
         }
 
-        dispatch(clearCandidates())
+        // dispatch(clearCandidates())
     }
     const onDragOver = e => {
         e.preventDefault()

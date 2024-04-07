@@ -6,7 +6,7 @@ import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
-import { makeNewMove } from '../../reducer/action/move';
+import { clearCandidates, makeNewMove } from '../../reducer/action/move';
 
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -40,8 +40,9 @@ const GameBoard = () => {
                 console.log(messResponse.pieces)
                 switch (messResponse.messageType) {
                     case 'MOVE':
-                        
-                        // dispatch(makeNewMove(messResponse.pieces))        
+                        let newPosition = messResponse.pieces
+                        dispatch(makeNewMove({newPosition}))  
+                        dispatch(clearCandidates())
                         break
                     default:
                         break

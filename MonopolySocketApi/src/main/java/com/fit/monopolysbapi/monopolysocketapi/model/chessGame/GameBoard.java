@@ -100,14 +100,11 @@ public class GameBoard {
             promotionPawn(move);
         }
 //
-//        move.piece.row = move.newRow;
-//        move.piece.col = move.newCol;
-//
-//        move.piece.yPos = move.newRow * tileSize;
-//        move.piece.xPos = move.newCol * tileSize;
-//
-//        move.piece.isFirstMove = false;
-//        capture(move);
+        move.piece.row = move.newRow;
+        move.piece.col = move.newCol;
+
+        move.piece.isFirstMove = false;
+        capture(move);
     }
 
     private void promotionPawn(Move move) {
