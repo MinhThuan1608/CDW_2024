@@ -14,7 +14,7 @@ public class King extends Piece{
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wk" : "bk";
-        this.xPos = col * board.getTileSize();
+//        this.xPos = col * board.TILE_SIZE;
 
     }
     public boolean isValidMovement(int row, int col) {

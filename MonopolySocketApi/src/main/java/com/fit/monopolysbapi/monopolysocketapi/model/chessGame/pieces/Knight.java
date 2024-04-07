@@ -13,7 +13,7 @@ public class Knight extends Piece{
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wn" : "bn";
-        this.xPos = col * board.getTileSize();
+//        this.xPos = col * board.TILE_SIZE;
     }
     public boolean isValidMovement(int row, int col){
         return Math.abs(row - this.row) * Math.abs(col - this.col) == 2;

@@ -13,8 +13,8 @@ public class Pawn extends Piece {
         this.row = row;
         this.col = col;
         this.isWhite = isWhite;
-        this.name = isWhite ? "wn" : "bn";
-        this.xPos = col * board.getTileSize();
+        this.name = isWhite ? "wp" : "bp";
+//        this.xPos = col * board.TILE_SIZE;
     }
 
     public boolean isValidMovement(int row, int col) {
@@ -40,8 +40,7 @@ public class Pawn extends Piece {
         if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row - colorIndex
                 && board.getPiece(row + colorIndex, col) != null){
             return true;
-        }
-        //        en Passant right
+        }//        en Passant right
         if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row - colorIndex
                 && board.getPiece(row + colorIndex, col) != null){
             return true;

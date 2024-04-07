@@ -13,8 +13,7 @@ public class Bishop extends Piece {
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wb" : "bb";
-        this.xPos = col * board.getTileSize();
-
+//        this.xPos = col * board.TILE_SIZE;
 
     }
 

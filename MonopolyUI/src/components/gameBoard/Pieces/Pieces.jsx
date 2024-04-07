@@ -6,7 +6,7 @@ import { useAppContext } from "../../../contexts/Context";
 import { clearCandidates, makeNewMove, savePiece } from "../../../reducer/action/move";
 import { SocketContext } from "../../../App";
 
-const Piceces = () => {
+const Piceces = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const ref = useRef()
 
@@ -30,13 +30,11 @@ const Piceces = () => {
         const [p, rank, file] = e.dataTransfer.getData('text').split(',')
         
         if (appState.candidateMoves?.find(m => m[0] === x && m[1] === y)) {
-            if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
-            newPosition[rank][y] = ''
+        //     if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
+        //     newPosition[rank][y] = ''
         
-        newPosition[Number(rank)][Number(file)] = ''
-        newPosition[x][y] = p
-        
-     
+        // newPosition[Number(rank)][Number(file)] = ''
+        // newPosition[x][y] = p
         
         // publish lên socket 
          // Publish lên server thông qua WebSocket
@@ -44,25 +42,20 @@ const Piceces = () => {
             oldRow: Number(rank),
             oldCol: Number(file),
             newRow: x,
-            newCol: y,
-            piece: {
-                col: y,
-                row: x,
-                isWhite: true,
-                name: p
-            },
-            capture: {}  // Bạn có thể cập nhật giá trị này tùy vào logic của trò chơi
+            newCol: y // Bạn có thể cập nhật giá trị này tùy vào logic của trò chơi
         };
 
         socket.publish({
-            destination: '/app/game/chess',
+            destination: '/app/game/chess/'+ props.roomId,
             body: JSON.stringify({
                 messageType: 'MOVE',
-                move: move
+                move: move,
+
             })
         });
+        console.log(newPosition)
 
-        dispatch(makeNewMove({ newPosition }))
+        // dispatch(makeNewMove({ newPosition }))
         dispatch(savePiece({p}))
 
         // console.log(rank,file)

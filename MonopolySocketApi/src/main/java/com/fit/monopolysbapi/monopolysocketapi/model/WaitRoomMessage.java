@@ -1,5 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.model;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class WaitRoomMessage {
     private RoomMessageType messageType;
     private String content;
     private Date createAt;
-    private Piece[][] pieces;
+    private GameBoard gameBoard;
     public enum RoomMessageType{
         JOIN, LEAVE, MESSAGE, START_GAME
     }

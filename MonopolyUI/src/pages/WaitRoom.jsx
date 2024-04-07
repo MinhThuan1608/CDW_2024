@@ -23,8 +23,11 @@ const WaitRoom = () => {
                     case 'MESSAGE':
                         setListMessage(prevlistMessage => [ ...prevlistMessage,  messResponse])
                     break
+                    case 'START_GAME':
+                        window.location = '/game/'+roomId
+                    break
                     default:
-                        break
+                    break
                 }
 
                 
