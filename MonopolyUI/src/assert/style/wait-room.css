@@ -462,4 +462,5 @@
 
 .user-card:hover {
     background-color: #0a83d8;
+    cursor: pointer;
 }

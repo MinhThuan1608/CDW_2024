@@ -7,14 +7,16 @@ import { clearCandidates, makeNewMove, savePiece } from "../../../reducer/action
 import { SocketContext } from "../../../App";
 
 const Piceces = () => {
+    const { socket, setSocket } = useContext(SocketContext);
     const ref = useRef()
 
     const { appState, dispatch } = useAppContext()
+
     const currentPosition = appState.position[appState.position.length - 1]
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
-        console.log(ref.current.getBoundingClientRect())
+        // console.log(ref.current.getBoundingClientRect())
         const size = width / 8
         const y = Math.floor((e.clientX - left) / size)
         const x = 7 - Math.floor((e.clientY - top) / size)
@@ -34,12 +36,37 @@ const Piceces = () => {
         newPosition[Number(rank)][Number(file)] = ''
         newPosition[x][y] = p
         
-        dispatch(makeNewMove({ newPosition }))
-        dispatch(savePiece({p}))
+     
         
         // publish lên socket 
-        console.log(rank,file)
-        console.log(x,y + "moi")
+         // Publish lên server thông qua WebSocket
+         const move = {
+            oldRow: Number(rank),
+            oldCol: Number(file),
+            newRow: x,
+            newCol: y,
+            piece: {
+                col: y,
+                row: x,
+                isWhite: true,
+                name: p
+            },
+            capture: {}  // Bạn có thể cập nhật giá trị này tùy vào logic của trò chơi
+        };
+
+        socket.publish({
+            destination: '/app/game/chess',
+            body: JSON.stringify({
+                messageType: 'MOVE',
+                move: move
+            })
+        });
+
+        dispatch(makeNewMove({ newPosition }))
+        dispatch(savePiece({p}))
+
+        // console.log(rank,file)
+        // console.log(x,y + "moi")
         }
 
         dispatch(clearCandidates())

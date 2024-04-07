@@ -23,7 +23,6 @@ const ChatSide = (props) => {
     }
 
     const handleSendMessage = () => {
-        console.log(props.socket)
         props.socket.publish({
             destination: '/app/game/room/' + props.roomId,
             body: JSON.stringify({

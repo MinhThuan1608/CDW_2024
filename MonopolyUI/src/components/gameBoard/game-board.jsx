@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import Ranks from './bits/Ranks';
 import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
 import { useAppContext } from '../../contexts/Context';
+import { SocketContext } from '../../App';
 
 const GameBoard = () => {
-
+    const { socket, setSocket } = useContext(SocketContext);
     // col
     const ranks = Array(8).fill().map((x, i) => 8 - i)
     // row
@@ -13,6 +14,7 @@ const GameBoard = () => {
 
     const { appState } = useAppContext()
     const position = appState.position[appState.position.length - 1]
+    // console.log(position)
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -26,8 +28,28 @@ const GameBoard = () => {
         }
         return c
     }
+
+    useEffect(() => {
+        if (socket) {
+            // console.log('subcribe room ', roomId)
+            socket.subscribe('/top/game/chess', (message) => {
+                const messResponse = JSON.parse(message.body);
+                console.log(messResponse);
+                // switch (messResponse.messageType) {
+                //     case 'MOVE':
+                //         console.log(messResponse)
+                //         break
+                //     default:
+                //         break
+                // }
+
+
+            });
+        }
+    });
+
     return (
-           
+
         <div className="board">
 
             <Ranks ranks={ranks} />

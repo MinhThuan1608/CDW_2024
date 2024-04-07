@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { SocketContext } from "../../App";
 import actionsTypes from "../actionsType"
 
+// const { socket, setSocket } = useContext(SocketContext);
 export const makeNewMove = ({newPosition}) => {
+   
     return {
         type: actionsTypes.NEW_MOVE,
         payload: {newPosition},

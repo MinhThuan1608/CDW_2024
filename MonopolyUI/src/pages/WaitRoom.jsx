@@ -23,10 +23,10 @@ const WaitRoom = () => {
                     case 'MESSAGE':
                         setListMessage(prevlistMessage => [ ...prevlistMessage,  messResponse])
                     break
-                    
                     default:
                         break
                 }
+
                 
             });
         }
@@ -36,7 +36,7 @@ const WaitRoom = () => {
         <div className='container'>
             <WaitRoomTop />
             <WaitRoomCenter socket={socket} roomId={roomId} listMessage={listMessage}/>
-            <WaitRoomBottom />
+            <WaitRoomBottom socket={socket} roomId={roomId}/>
         </div>
     );
 }
