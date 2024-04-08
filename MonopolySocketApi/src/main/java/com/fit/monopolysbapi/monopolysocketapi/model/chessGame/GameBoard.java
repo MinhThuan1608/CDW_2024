@@ -2,6 +2,9 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import lombok.*;
+import org.springframework.security.access.method.P;
+
+import java.util.Arrays;
 
 @Getter
 @Setter
@@ -19,10 +22,22 @@ public class GameBoard {
 
     private CheckScaner checkScaner = new CheckScaner(this);
 
-    public GameBoard(){
+    @Override
+    public String toString() {
+        return "GameBoard{" +
+                "pieces=" + Arrays.toString(pieces) +
+                ", enPassantTile=" + enPassantTile +
+                ", selectedPiece=" + selectedPiece +
+                ", turn='" + turn + '\'' +
+                ", checkScaner=" + checkScaner +
+                '}';
+    }
+
+    public GameBoard() {
         this.turn = "w";
         initGame();
     }
+
     public Piece getPiece(int row, int col) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -33,6 +48,7 @@ public class GameBoard {
         }
         return null;
     }
+
 
     public int getTileNum(int row, int col) {
         return row * this.ROW + col;
@@ -51,38 +67,38 @@ public class GameBoard {
 
     public void makeMove(Move move) {
         if (move.piece.getName().substring(1).equals("p")) {
-            movePawn(move);
-        } else if (move.piece.getName().substring(1).equals("k")){
+            pieces = movePawn(move);
+        } else if (move.piece.getName().substring(1).equals("k")) {
             moveKing(move);
-        }
-        else {
-            move.piece.row = move.newRow;
-            move.piece.col = move.newCol;
+        } else{
+//            pieces = updatePiecePosition(move.piece,move.oldRow, move.oldCol, move.newRow, move.newCol);
+            pieces[move.newRow][move.newCol] = move.piece;
+            move.piece.setRow(move.newRow);
+            move.piece.setCol(move.newCol);
 
-//            move.piece.yPos = move.newRow * TILE_SIZE;
-//            move.piece.xPos = move.newCol * TILE_SIZE;
-
+            pieces[move.oldRow][move.oldCol] = null;
             move.piece.isFirstMove = false;
-            capture(move);
         }
-
-
     }
+    public void capture(Move move) {
+        pieces[move.newRow][move.newCol] = move.piece;
+    }
+
     private void moveKing(Move move) {
-        if(Math.abs(move.piece.col - move.newCol) == 2){
+        if (Math.abs(move.piece.col - move.newCol) == 2) {
             Piece rook;
-            if(move.piece.col < move.newCol){
+            if (move.piece.col < move.newCol) {
                 rook = getPiece(move.piece.row, 7);
                 rook.col = 5;
-            }else{
+            } else {
                 rook = getPiece(move.piece.row, 0);
                 rook.col = 3;
             }
-//            rook.xPos = rook.col * TILE_SIZE;
+            pieces[rook.row][rook.col] = rook;
         }
     }
 
-    private void movePawn(Move move) {
+    private Piece[][] movePawn(Move move) {
 //        en Passant
         int colorIndex = move.piece.isWhite ? 1 : -1;
 
@@ -100,32 +116,36 @@ public class GameBoard {
             promotionPawn(move);
         }
 //
-        move.piece.row = move.newRow;
-        move.piece.col = move.newCol;
+//       pieces = updatePiecePosition(move.piece, move.oldRow, move.oldCol, move.newRow, move.newCol);
+        pieces[move.newRow][move.newCol] = move.piece;
+        move.piece.setRow(move.newRow);
+        move.piece.setCol(move.newCol);
+        pieces[move.oldRow][move.oldCol] = null;
 
         move.piece.isFirstMove = false;
-        capture(move);
+        return pieces;
     }
 
     private void promotionPawn(Move move) {
         pieces[move.newRow][move.newCol] = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
     }
 
-    public void capture(Move move) {
-        pieces[move.newRow][move.newCol] = null;
-    }
 
     public boolean isValidMove(Move move) {
         if (sameTeam(move.piece, move.capture)) {
+            System.out.println("same team");
             return false;
         }
         if (!move.piece.isValidMovement(move.newRow, move.newCol)) {
+            System.out.println("NoValidMovement");
             return false;
         }
         if (move.piece.moveCollidesWithPiece(move.newRow, move.newCol)) {
+            System.out.println("moveCollidesWithPiece");
             return false;
         }
         if(checkScaner.isKingChecked(move)){
+            System.out.println("isKingChecked");
             return false;
         }
         return true;
@@ -138,11 +158,12 @@ public class GameBoard {
         return p1.isWhite == p2.isWhite;
     }
 
+
     public void initGame() {
         pieces = new Piece[COL][ROW];
 
         for (int i = 0; i < 8; i++) {
-            pieces[6][i] =  new Pawn(this, 6, i, false);
+            pieces[6][i] = new Pawn(this, 6, i, false);
             pieces[1][i] = new Pawn(this, 1, i, true);
 
         }
@@ -172,45 +193,14 @@ public class GameBoard {
         return true;
     }
 
-//    public boolean validMove(int oldX, int oldY, int newX, int newY) {
-////   old point == new point
-//        if (oldX == newX && newY == oldY) return false;
-////vượt khỏi bàn cờ
-//        if (newX > 8 || newX < 0 ||
-//                newY > 8 || newY < 0 ||
-//                oldX > 8 || oldX < 0 ||
-//                oldY > 8 || oldY < 0) return false;
-//// vị trí cũ không xác định
-//        if (pieces[oldX][oldY] == null) return false;
-//
-////        nếu không phải con tốt và
-//        if (!(pieces[oldX][oldY].getName().substring(1).equals("p") &&
-//                (Math.abs(newY - oldY) == 1 && Math.abs(newX - oldX) == 1 &&
-//                        pieces[newX][newY].getName().substring(0, 1)
-//                                .equals(pieces[oldX][oldY].getName().substring(0, 1).equals("w") ? "b" : "w"))))
-//            if (!pieces[oldX][oldY].checkValidMove(oldX, oldY, newX, newY)) return false;
-//// chung đội
-//        if (pieces[newX][newY] != null && pieces[newX][newY].getName().substring(0, 1)
-//                .equals(pieces[oldX][oldY].getName().substring(0, 1))) return false;
-//
-//
-//        switch (pieces[oldX][oldY].getName().charAt(1)) {
-//            case 'r': // con xe bị chắn không đi tiếp được khi gặp những trường hợp này
-//                if (newX - oldX != 0) {
-//                    for (int i = oldX; i != newX; i += (newX - oldX) / Math.abs(newX - oldX)) {
-//                        if (pieces[i][newY] != null) return false;
-//                    }
-//                } else {
-//                    for (int i = oldY; i != newY; i += (newY - oldY) / Math.abs(newY - oldY)) {
-//                        if (pieces[newX][i] != null) return false;
-//                    }
-//                }
-//
-//
-//
-//        }
-//        return false;
-//    }
+    public String[][] getPiecesResponse() {
+        String[][] piecesResponse = new String[ROW][COL];
+        for (int i = 0; i < ROW; i++)
+            for (int j = 0; j < COL; j++)
+                piecesResponse[i][j] = pieces[i][j] == null ? "" : pieces[i][j].getName();
+        return piecesResponse;
+    }
+
 
 
 }

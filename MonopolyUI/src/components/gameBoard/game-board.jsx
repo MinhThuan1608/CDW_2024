@@ -6,7 +6,7 @@ import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
-import { clearCandidates, makeNewMove } from '../../reducer/action/move';
+import {  makeNewMove } from '../../reducer/action/move';
 
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -18,7 +18,6 @@ const GameBoard = () => {
 
     const { appState, dispatch } = useAppContext()
     const position = appState.position[appState.position.length - 1]
-    // console.log(position)
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -37,12 +36,13 @@ const GameBoard = () => {
         if (socket) {
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
-                console.log(messResponse.pieces)
+                console.log(messResponse)
                 switch (messResponse.messageType) {
                     case 'MOVE':
                         let newPosition = messResponse.pieces
-                        dispatch(makeNewMove({newPosition}))  
-                        dispatch(clearCandidates())
+                        let turn = messResponse.turn
+                        dispatch(makeNewMove({newPosition, turn}))
+                        // dispatch(clearCandidates())
                         break
                     default:
                         break
@@ -65,7 +65,7 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId}/>
+            <Piceces roomId={roomId} />
             <Files files={files} />
 
         </div>

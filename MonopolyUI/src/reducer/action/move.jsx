@@ -3,13 +3,13 @@ import { SocketContext } from "../../App";
 import actionsTypes from "../actionsType"
 
 // const { socket, setSocket } = useContext(SocketContext);
-export const makeNewMove = ({newPosition}) => {
+export const makeNewMove = ({newPosition, turn}) => {
    
     return {
         type: actionsTypes.NEW_MOVE,
-        payload: {newPosition},
+        payload: {newPosition, turn},
     }
-}
+} 
 
 export const generateCandidateMoves = ({candidateMoves}) => {
     return {

@@ -4,6 +4,7 @@ import Piece from "./Piece";
 import { copyPosition, createPosition } from "../help";
 import { useAppContext } from "../../../contexts/Context";
 import { SocketContext } from "../../../App";
+import { clearCandidates } from "../../../reducer/action/move";
 
 const Piceces = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -12,7 +13,6 @@ const Piceces = (props) => {
     const { appState, dispatch } = useAppContext()
 
     const currentPosition = appState.position[appState.position.length - 1]
-    // console.log(currentPosition)
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
@@ -28,40 +28,38 @@ const Piceces = (props) => {
         const newPosition = copyPosition(currentPosition)
         const { x, y } = calculateCoords(e)
         const [p, rank, file] = e.dataTransfer.getData('text').split(',')
-        
+
         if (appState.candidateMoves?.find(m => m[0] === x && m[1] === y)) {
-        //     if(p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
-        //     newPosition[rank][y] = ''
-        
-        // newPosition[Number(rank)][Number(file)] = ''
-        // newPosition[x][y] = p
-        
-        // publish lên socket 
-         // Publish lên server thông qua WebSocket
-         const move = {
-            oldRow: Number(rank),
-            oldCol: Number(file),
-            newRow: x,
-            newCol: y // Bạn có thể cập nhật giá trị này tùy vào logic của trò chơi
-        };
+            if (p.endsWith('p') && !newPosition[x][y] === '' && x !== rank && y !== file)
+                newPosition[rank][y] = ''
 
-        socket.publish({
-            destination: '/app/game/chess/'+ props.roomId,
-            body: JSON.stringify({
-                messageType: 'MOVE',
-                move: move,
+            newPosition[Number(rank)][Number(file)] = ''
+            newPosition[x][y] = p
 
-            })
-        });
-        // console.log(newPosition)
+            // publish lên socket 
+            // Publish lên server thông qua WebSocket
+            const move = {
+                oldRow: Number(rank),
+                oldCol: Number(file),
+                newRow: x,
+                newCol: y // Bạn có thể cập nhật giá trị này tùy vào logic của trò chơi
+            };
 
-        // dispatch(makeNewMove({ newPosition }))
+            socket.publish({
+                destination: '/app/game/chess/' + props.roomId,
+                body: JSON.stringify({
+                    messageType: 'MOVE',
+                    move: move,
 
-        // console.log(rank,file)
-        // console.log(x,y + "moi")
+                })
+            });
+
+            // dispatch(makeNewMove({ newPosition }))
+            // dispatch(savePiece({ p }))
+
         }
 
-        // dispatch(clearCandidates())
+        dispatch(clearCandidates())
     }
     const onDragOver = e => {
         e.preventDefault()

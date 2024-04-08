@@ -18,6 +18,7 @@ public class Room {
     private GameBoard gameBoard;
     private List<User> users;
 
+
     public boolean havePassword(){
         if (password==null) return false;
         return !password.isEmpty();

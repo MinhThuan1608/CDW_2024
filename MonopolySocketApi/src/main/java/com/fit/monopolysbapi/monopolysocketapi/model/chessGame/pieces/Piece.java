@@ -24,6 +24,10 @@ public class Piece {
     public boolean isValidMovement(int row, int col){return true;}
     public boolean moveCollidesWithPiece(int row, int col){return true;}
 
+    @Override
+    public String toString() {
+        return name;
+    }
 //    check xem từng con cờ có thể đi được những vị trí nào
 //    public boolean checkValidMove(int oldX, int oldY, int newX, int newY){
 //

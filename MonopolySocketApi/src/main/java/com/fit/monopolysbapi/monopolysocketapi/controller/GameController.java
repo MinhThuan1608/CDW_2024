@@ -37,35 +37,38 @@ public class GameController {
         ChessMessage responseMessage = null;
         Room room = roomService.getRoomById(roomId);
         GameBoard gameBoard = room.getGameBoard();
-        String[][] piecesResponse = new String[GameBoard.ROW][GameBoard.COL];
-        for (int i = 0; i < piecesResponse.length; i++)
-            for (int j = 0; j < piecesResponse.length; j++)
-                piecesResponse[i][j] = gameBoard.getPieces()[i][j] == null ? "" : gameBoard.getPieces()[i][j].getName();
         switch (chessMessage.getMessageType()) {
             case MOVE:
-                if (user.getId().equals(room.getUsers().get(0).getId())) {
+                if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn().equals("w")) ||
+                        (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn().equals("b"))) {
                     System.out.println("chạy dô ko");
                     // Xử lý việc di chuyển quân cờ
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
 
-                    if (!gameBoard.isValidMove(move)) {
-                        System.out.println("hợp ệ nè");
+                    System.out.println("is ok move? " + gameBoard.isValidMove(move));
+                    System.out.println("move đê "+move.getPiece());
+                    System.out.println("capture "+move.getCapture());
+                    if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move);
+                        System.out.println("ok move");
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
+                        System.out.println(Arrays.deepToString(gameBoard.getPiecesResponse()));
+                        System.out.println(Arrays.deepToString(room.getGameBoard().getPiecesResponse()));
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(nextTurn)
-                                .pieces(piecesResponse)
+                                .pieces(gameBoard.getPiecesResponse())
                                 .build();
+
                     } else {
                         System.out.println("ko có hợp gì hết");
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(gameBoard.getTurn())
-                                .pieces(piecesResponse)
+                                .pieces(gameBoard.getPiecesResponse())
                                 .build();
                     }
 
@@ -73,20 +76,12 @@ public class GameController {
                     responseMessage = ChessMessage.builder()
                             .messageType(ChessMessage.ChessMessageType.MOVE)
                             .turn(gameBoard.getTurn())
-                            .pieces(piecesResponse)
+                            .pieces(gameBoard.getPiecesResponse())
                             .build();
                 }
 
                 break;
-//            case MOVE:
-//
-//                responseMessage = ChessMessage.builder()
-//                        .messageType(ChessMessage.ChessMessageType.MOVE)
-//                        .sender(user)
-//                        .content(chessMessage.getContent())
-//                        .build();
-//
-//                break;
+
             case RESIGN:
                 // Xử lý việc từ bỏ
                 // ...
@@ -111,7 +106,7 @@ public class GameController {
             default:
                 break;
         }
-
+        room.setGameBoard(gameBoard);
         simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
     }
 
