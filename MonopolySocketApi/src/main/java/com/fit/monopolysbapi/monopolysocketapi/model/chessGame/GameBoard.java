@@ -85,16 +85,30 @@ public class GameBoard {
 //    }
 
     private void moveKing(Move move) {
+        System.out.println(move.getPiece());
         if (Math.abs(move.piece.col - move.newCol) == 2) {
             Piece rook;
             if (move.piece.col < move.newCol) {
                 rook = getPiece(move.piece.row, 7);
+                pieces[rook.row][7] = null;
                 rook.col = 5;
             } else {
                 rook = getPiece(move.piece.row, 0);
+                pieces[rook.row][0] = null;
                 rook.col = 3;
             }
             pieces[rook.row][rook.col] = rook;
+            move.piece.setRow(move.newRow);
+            move.piece.setCol(move.newCol);
+            pieces[move.getNewRow()][move.getNewCol()] = move.piece;
+            pieces[move.getOldRow()][move.getOldCol()] = null;
+            System.out.println(pieces[move.getNewRow()][move.getNewCol()]);
+        }else {
+            pieces[move.newRow][move.newCol] = move.piece;
+            move.piece.setRow(move.newRow);
+            move.piece.setCol(move.newCol);
+
+            pieces[move.oldRow][move.oldCol] = null;
         }
     }
 
