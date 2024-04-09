@@ -16,34 +16,8 @@ const GamePage = () => {
     const [listUsers, setlistUsers] = useState([]);
 
     // set thời gian cho game
-    const [seconds, setSeconds] = useState(30);
+    const [seconds, setSeconds] = useState(60);
 
-    useEffect(() => {
-        let timer;
-
-        // Reset thời gian và đếm ngược từ 30s về 0
-        setSeconds(30);
-
-        if (seconds > 0) {
-            timer = setInterval(() => {
-                setSeconds(prevSeconds => {
-                    if (prevSeconds > 0) {
-                        return prevSeconds - 1;
-                    } else {
-                        if (appState.turn === 'w') {
-                            appState.turn = 'b';
-                            setSeconds(30);
-                        } else {
-                            appState.turn = 'w';
-                            setSeconds(30);
-                        }
-                    }
-                });
-            }, 1000);
-        }
-
-        return () => clearInterval(timer);
-    }, [appState.turn]);
 
     useEffect(() => {
         GetUserInRoom(roomId).then(result => {

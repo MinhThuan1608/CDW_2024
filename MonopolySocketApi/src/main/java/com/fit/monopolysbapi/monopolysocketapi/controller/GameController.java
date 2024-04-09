@@ -35,22 +35,15 @@ public class GameController {
             case MOVE:
                 if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn().equals("w")) ||
                         (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn().equals("b"))) {
-                    System.out.println("chạy dô ko");
-                    // Xử lý việc di chuyển quân cờ
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
-
-                    System.out.println("is ok move? " + gameBoard.isValidMove(move));
-                    System.out.println("move đê "+ move);
-//                    System.out.println("capture "+move.getCapture());
+                    System.out.println("move: "+move);
+//                    System.out.println("promotion: "+chessMessage.getNamePromotion());
                     if (gameBoard.isValidMove(move)) {
-                        gameBoard.makeMove(move);
-                        System.out.println("ok move");
+                        gameBoard.makeMove(move, chessMessage.getNamePromotion());
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
-//                        System.out.println(Arrays.deepToString(gameBoard.getPiecesResponse()));
-//                        System.out.println(Arrays.deepToString(room.getGameBoard().getPiecesResponse()));
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(nextTurn)
@@ -58,7 +51,6 @@ public class GameController {
                                 .build();
 
                     } else {
-                        System.out.println("ko có hợp gì hết");
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(gameBoard.getTurn())

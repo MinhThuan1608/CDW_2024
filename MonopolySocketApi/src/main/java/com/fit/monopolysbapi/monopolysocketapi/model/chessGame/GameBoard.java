@@ -15,9 +15,7 @@ public class GameBoard {
     public static final int COL = 8;
     public static final int ROW = 8;
     public static final int TILE_SIZE = 25;
-
     private int enPassantTile = -1;
-    private Piece selectedPiece;
     private String turn;
 
     private CheckScaner checkScaner = new CheckScaner(this);
@@ -27,7 +25,6 @@ public class GameBoard {
         return "GameBoard{" +
                 "pieces=" + Arrays.toString(pieces) +
                 ", enPassantTile=" + enPassantTile +
-                ", selectedPiece=" + selectedPiece +
                 ", turn='" + turn + '\'' +
                 ", checkScaner=" + checkScaner +
                 '}';
@@ -55,19 +52,22 @@ public class GameBoard {
     }
 
     Piece findKing(boolean isWhite) {
+        System.out.println("king nay mau "+ isWhite);
         for (int i = 0; i < pieces.length; i++) {
             for (int j = 0; j < pieces.length; j++) {
-                if (pieces[i][j].isWhite == isWhite && pieces[i][j].getName().substring(1).equals("k")) {
+                if (pieces[i][j] != null && pieces[i][j].isWhite == isWhite && pieces[i][j].getName().substring(1).equals("k")) {
+                    System.out.println(pieces[i][j]);
                     return pieces[i][j];
                 }
             }
         }
+
         return null;
     }
 
-    public void makeMove(Move move) {
+    public void makeMove(Move move, String namePromotion) {
         if (move.piece.getName().substring(1).equals("p")) {
-            movePawn(move);
+            movePawn(move, namePromotion);
         } else if (move.piece.getName().substring(1).equals("k")) {
             moveKing(move);
         } else{
@@ -98,7 +98,7 @@ public class GameBoard {
         }
     }
 
-    private void movePawn(Move move) {
+    private void movePawn(Move move, String namePromotion) {
 //        en Passant
         int colorIndex = move.piece.isWhite ? 1 : -1;
 
@@ -117,7 +117,7 @@ public class GameBoard {
         colorIndex = move.piece.isWhite ? 7 : 0;
         if (move.newRow == colorIndex) {
             System.out.println("promotion roi");
-            promotionPawn(move);
+            promotionPawn(move, namePromotion);
         }
 //
 //       pieces = updatePiecePosition(move.piece, move.oldRow, move.oldCol, move.newRow, move.newCol);
@@ -129,8 +129,24 @@ public class GameBoard {
         move.piece.isFirstMove = false;
     }
 
-    private void promotionPawn(Move move) {
-        move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
+    private void promotionPawn(Move move, String name) {
+        switch (name){
+            case "q":
+                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
+                break;
+            case "n":
+                move.piece = new Knight(this, move.newRow, move.newCol, move.piece.isWhite);
+                break;
+            case "r":
+                move.piece = new Rook(this, move.newRow, move.newCol, move.piece.isWhite);
+                break;
+            case "b":
+                move.piece = new Bishop(this, move.newRow, move.newCol, move.piece.isWhite);
+                break;
+            default:
+                break;
+
+        }
     }
 
 
@@ -147,10 +163,10 @@ public class GameBoard {
             System.out.println("moveCollidesWithPiece");
             return false;
         }
-//        if(checkScaner.isKingChecked(move)){
-//            System.out.println("isKingChecked");
-//            return false;
-//        }
+        if(checkScaner.isKingChecked(move)){
+            System.out.println("isKingChecked");
+            return false;
+        }
         return true;
     }
 

@@ -11,6 +11,9 @@
     transform: scale(1.05);
     cursor: pointer;
 }
+.promotion-choices .piece.active{
+    background-color: var(--dark-tile);
+}
 .promotion-choices :is(.wq, .bq){
     left: 0;
 }

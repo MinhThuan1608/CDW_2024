@@ -31,15 +31,14 @@ const Piece = (
                 piece
             })
             dispatch(generateCandidateMoves({ candidateMoves }))
-
         }
     }
     const onDragOEnd = e => e.target.style.display = 'block'
     return (
         <div className={`piece ${piece} p-${file}${rank}`}
             draggable={piece[0] === turn ? true : false}
-            onDragStart={piece[0] === turn ? onDragStart : null}
-            onDragEnd={piece[0] === turn ? onDragOEnd : null}
+            onDragStart={onDragStart}
+            onDragEnd={onDragOEnd}
         />
     )
 }

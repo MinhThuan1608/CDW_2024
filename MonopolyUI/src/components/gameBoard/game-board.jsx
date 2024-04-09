@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import Ranks from './bits/Ranks';
 import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
@@ -12,6 +12,7 @@ import Popup from './Popup/Popup';
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
+    const[isSelected, setIsSelected] = useState('')
     // col
     const ranks = Array(8).fill().map((x, i) => 8 - i)
     // row
@@ -66,8 +67,9 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} />
-            <Popup/>
+            <Piceces roomId={roomId} isSelected={isSelected}/>
+
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}/>)}
             <Files files={files} />
 
         </div>

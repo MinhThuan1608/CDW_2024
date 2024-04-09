@@ -18,15 +18,19 @@ public class Pawn extends Piece {
     }
 
     public boolean isValidMovement(int row, int col) {
+        System.out.println(this);
         int colorIndex = isWhite ? 1 : -1;
 //        push 1
         if (this.col == col && row == this.row + colorIndex && board.getPiece(row, col) == null){
             System.out.println("push 1");
             return true;
         }
+
+        System.out.println(board.getPiece(row + colorIndex, col)== null);
+        System.out.println(board.getPiece(row + colorIndex, col));
 //        push 2
         if(isFirstMove && this.col == col && row == this.row + colorIndex * 2 &&
-                board.getPiece(row, col) == null && board.getPiece(row + colorIndex, col) == null){
+                board.getPiece(row, col) == null && board.getPiece(row - colorIndex, col) == null){
             System.out.println(" push 2");
             return true;
         }
@@ -68,5 +72,14 @@ public class Pawn extends Piece {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Pawn{" +
+                "col=" + col +
+                ", row=" + row +
+                ", isFirstMove=" + isFirstMove +
+                '}';
     }
 }

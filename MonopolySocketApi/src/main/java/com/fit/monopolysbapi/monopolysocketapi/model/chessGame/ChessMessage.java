@@ -17,6 +17,7 @@ public class ChessMessage {
     private Move move;
     private String[][] pieces;
     private boolean isCheckmate;
+    private String namePromotion;
     private User sender;
     private String content;
     private String turn;
