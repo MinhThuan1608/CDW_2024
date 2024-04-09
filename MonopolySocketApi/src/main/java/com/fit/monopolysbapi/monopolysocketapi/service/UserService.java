@@ -4,8 +4,6 @@ import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
 import com.fit.monopolysbapi.monopolysocketapi.model.Role;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
-import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
-import com.fit.monopolysbapi.monopolysocketapi.util.UserUtil;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +19,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserUtil userUtil;
     private final Util util;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,7 +37,7 @@ public class UserService {
     }
 
     public boolean isValidEmail(String email){
-        return userUtil.isValidEmail(email);
+        return util.isValidEmail(email);
     }
 
     public User register(String email, String password) {
@@ -60,9 +57,9 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public void initUser(User user, String username, Avatar avatar) {
+    public User initUser(User user, String username, Avatar avatar) {
         user.setUsername(username);
         user.setAvatar(avatar);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }

@@ -1,4 +1,5 @@
 package com.fit.monopolysbapi.monopolysocketapi.model;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -52,6 +53,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UserResponse getUserResponse(){
+        return UserResponse.builder().id(getId())
+                .email(getEmail())
+                .username(getUsername())
+                .avatar(getAvatar())
+                .isNonLocked(isNonLocked())
+                .isConfirmEmail(isConfirmEmail())
+                .build();
     }
 
     @Override

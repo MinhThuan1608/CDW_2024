@@ -2,12 +2,9 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.model.WaitRoomMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
-import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
-import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
@@ -18,9 +15,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-
-import java.util.Arrays;
-import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor

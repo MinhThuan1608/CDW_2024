@@ -5,31 +5,39 @@ import { faCircle, faPlus, faSignOut } from '@fortawesome/free-solid-svg-icons';
 
 
 const WaitRoomOnlineUser = (props) => {
-    const listUser = [
-        {img: userAvt, name: 'thuy', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-        {img: userAvt, name: 'thuan', status: 1},
-    ]
+    const me = JSON.parse(sessionStorage.getItem('user'))
+
+    const handleInviteUser = (id) => {
+        props.socket.publish({
+            destination: '/app/room/invite',
+            body: JSON.stringify({
+                receiverId: id,
+                roomId: props.roomId,
+                roomPass: props.roomPassword,
+                inviteMessageType: "INVITE",
+            })
+        });
+    }
+    
     return (
         <div className="online-part">
-        <p className="title-chat">Online</p>
-        <div className="userList force-overflow scrollbar">
-            {listUser.map((user, index) => (
-                <div className='user-card' key={index}>
-                    <img src={user.img} alt='user-avt' className="img-frame-player-onl"/>
-                    <div className='online-status'></div>
-                    <span className='user-card-name'>{user.name}</span>
-                    <div className="join">Mời</div>
-                </div>
-            ))}
+            <p className="title-chat">Online</p>
+            <div className="userList force-overflow scrollbar">
+                {props.userOnline.map((user, index) => 
+                    me.id !== user.id ?
+                        <div className='user-card' key={index}>
+                            <img src={user.avatar ? user.avatar.data : userAvt} alt='user-avt' className="img-frame-player-onl" />
+                            <div className='online-status'></div>
+                            <span className='user-card-name'>{user.username}</span>
+                            <button className="join" onClick={()=>handleInviteUser(user.id)}>Mời</button>
+                        </div> : <></>
+                
+
+                )}
+
+            </div>
 
         </div>
-
-    </div>
     );
 }
 export default WaitRoomOnlineUser;

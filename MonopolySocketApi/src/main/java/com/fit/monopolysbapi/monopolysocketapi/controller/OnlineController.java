@@ -5,7 +5,6 @@ import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.OnlineService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
-import com.fit.monopolysbapi.monopolysocketapi.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.Message;
@@ -29,7 +28,6 @@ public class OnlineController {
     private final OnlineService onlineService;
     private final RoomService roomService;
     private final UserService userService;
-    private final UserUtil userUtil;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/user/online")
@@ -38,7 +36,7 @@ public class OnlineController {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();
-        onlineService.addUser(userUtil.userToUserResponse(user));
+        onlineService.addUser(user.getUserResponse());
         return onlineService.getOnlineUsers();
     }
 

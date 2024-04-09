@@ -1,19 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LoginAPI } from '../api_caller/authenticate';
 import '../assert/style/login.css';
-import { Client } from '@stomp/stompjs';
-import { SocketContext } from '../App';
 
 const Login = () => {
   const [identify, setIdentify] = useState('')
   const [password, setPassword] = useState('')
+  const [timeToRedirect, setTimeToRedirect] = useState(5)
 
   const login = async () => {
     if (validateIdentify() && validatePassword()) {
       const response = await LoginAPI(identify, password);
       const errorMessage = document.querySelector('#error-message');
       if (response.id) {
-        window.location = '/'
+        if (response.username)
+          window.location = '/'
+        else window.location = '/create-character'
       } else {
         errorMessage.innerHTML = response
         errorMessage.style.display = "block"
