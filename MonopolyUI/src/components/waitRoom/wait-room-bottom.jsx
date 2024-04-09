@@ -1,14 +1,17 @@
 import React from 'react';
-
+import Swal from 'sweetalert2';
+import {toast} from 'react-toastify';
 
 const WaitRoomBottom = (props) => {
     const handleInitGame = () => {
-        props.socket.publish({
-            destination: '/app/game/room/' + props.roomId,
-            body: JSON.stringify({
-                messageType: 'START_GAME'
-            })
-        });
+        if (props.listUser.length == 2)
+            props.socket.publish({
+                destination: '/app/game/room/' + props.roomId,
+                body: JSON.stringify({
+                    messageType: 'START_GAME'
+                })
+            });
+        else toast.warn('Cần có 2 người mới có thể bắt đầu!');
     }
     return (
         <div className="bottom-part">
@@ -16,4 +19,4 @@ const WaitRoomBottom = (props) => {
         </div>
     );
 }
-export default WaitRoomBottom;
+export default WaitRoomBottom; 

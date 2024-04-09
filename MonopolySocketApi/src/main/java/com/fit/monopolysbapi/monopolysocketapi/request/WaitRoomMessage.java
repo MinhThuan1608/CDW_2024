@@ -1,5 +1,6 @@
-package com.fit.monopolysbapi.monopolysocketapi.model;
+package com.fit.monopolysbapi.monopolysocketapi.request;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import lombok.*;
@@ -20,7 +21,7 @@ public class WaitRoomMessage {
     private Date createAt;
     private GameBoard gameBoard;
     public enum RoomMessageType{
-        JOIN, LEAVE, MESSAGE, START_GAME
+        JOIN, LEAVE, MESSAGE, START_GAME, KICK, TIME_OUT
     }
 
     @Override

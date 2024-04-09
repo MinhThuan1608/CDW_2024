@@ -67,7 +67,7 @@ const GameBoard = () => {
                 )}
             </div>
             <Piceces roomId={roomId} />
-            {/* <Popup/> */}
+            <Popup/>
             <Files files={files} />
 
         </div>

@@ -2,12 +2,9 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.model.WaitRoomMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
-import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
-import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
@@ -18,9 +15,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-
-import java.util.Arrays;
-import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,8 +49,8 @@ public class GameController {
                         System.out.println("ok move");
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
-                        System.out.println(Arrays.deepToString(gameBoard.getPiecesResponse()));
-                        System.out.println(Arrays.deepToString(room.getGameBoard().getPiecesResponse()));
+//                        System.out.println(Arrays.deepToString(gameBoard.getPiecesResponse()));
+//                        System.out.println(Arrays.deepToString(room.getGameBoard().getPiecesResponse()));
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(nextTurn)
@@ -102,6 +96,10 @@ public class GameController {
 //                        .isCheckmate(isCheckmate)
 //                        .sender(user)
 //                        .build();
+                break;
+            case GET_USER_IN_ROOM:
+                // Xử lý việc thăng cấp quân cờ
+                // ...
                 break;
             default:
                 break;

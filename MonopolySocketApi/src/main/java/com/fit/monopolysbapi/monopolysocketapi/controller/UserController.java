@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
     private final AvatarService avatarService;
 
-    @PutMapping("/init")
+    @PatchMapping("/init")
     public ResponseEntity initUser(@RequestBody InitUserRequest request, Authentication authentication) {
         if (userService.isUsernameExist(request.getUsername()))
             return ResponseEntity.ok(new AbstractResponse(405, "This username have been used!!!", false));
@@ -37,8 +37,8 @@ public class UserController {
             if (imageLength>1048576) return ResponseEntity.ok(new AbstractResponse(405, "Avatar must be less than 1MB", false));
             avatar = avatarService.addAvatar(request.getAvatar());
         }
-        userService.initUser((User) authentication.getPrincipal(), request.getUsername(), avatar);
-        return ResponseEntity.ok().body(new AbstractResponse(200, "Username and avatar have been setted!", null));
+        User updatedUser = userService.initUser((User) authentication.getPrincipal(), request.getUsername(), avatar);
+        return ResponseEntity.ok().body(new AbstractResponse(200, "Username and avatar have been setted!", updatedUser.getUserResponse()));
 
     }
 

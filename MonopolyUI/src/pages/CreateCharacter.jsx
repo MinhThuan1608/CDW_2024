@@ -75,7 +75,10 @@ const CreateCharacter = () => {
         validateUsername(username)
         if (valid) {
             const response = await InitUser(username, avt.id, avt.data);
-            if (response !== true) {
+            if (response.id) {
+                sessionStorage.setItem('user', JSON.stringify(response))
+                window.location = '/'
+            } else {
                 const errorMessage = document.querySelector('.error-message');
                 errorMessage.innerHTML = response;
                 errorMessage.style.display = 'block';

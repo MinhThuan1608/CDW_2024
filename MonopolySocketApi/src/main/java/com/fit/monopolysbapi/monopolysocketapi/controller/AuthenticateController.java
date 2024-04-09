@@ -7,7 +7,6 @@ import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import com.fit.monopolysbapi.monopolysocketapi.util.JwtUtil;
-import com.fit.monopolysbapi.monopolysocketapi.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +25,6 @@ public class AuthenticateController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserUtil userUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
@@ -54,7 +52,7 @@ public class AuthenticateController {
         if (request.getPassword()==null || request.getPassword().length()<8) return ResponseEntity.status(405).body(new AbstractResponse(405, "The password must be at least 8 characters in length!", null));
         if (!request.getPassword().equals(request.getConfirmPassword())) return ResponseEntity.status(405).body(new AbstractResponse(405, "Confirm password must be same password!", null));
         User user = userService.register(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(new AbstractResponse(200, "Register successfully!", userUtil.userToUserResponse(user)));
+        return ResponseEntity.ok(new AbstractResponse(200, "Register successfully!", user.getUserResponse()));
     }
 
 }

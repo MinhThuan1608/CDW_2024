@@ -39,7 +39,7 @@ export async function InitUser(username, defaultAvatarId, avatar) {
     const urlString = `http://localhost:8001/user/init`;
 
     const response = await fetch(urlString, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + accessToken,
@@ -53,7 +53,7 @@ export async function InitUser(username, defaultAvatarId, avatar) {
 
     const responseData = await response.json()
     if (response.ok) {
-        return true; //true if ok
+        return responseData.data;
     }
     return responseData.message;// init fail
 }

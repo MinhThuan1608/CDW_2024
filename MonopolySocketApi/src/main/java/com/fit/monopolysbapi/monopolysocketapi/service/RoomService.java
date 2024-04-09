@@ -6,13 +6,15 @@ import com.fit.monopolysbapi.monopolysocketapi.request.CreateRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
-import com.fit.monopolysbapi.monopolysocketapi.util.UserUtil;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomService {
     private final Util util;
-    private final UserUtil userUtil;
     private List<Room> rooms = new ArrayList<>();
 
     public RoomResponse createRoom(CreateRoomRequest message, User owner) {
@@ -31,7 +32,8 @@ public class RoomService {
         String password = message.getPassword().equals("") ? null : message.getPassword();
         List<User> users = new ArrayList<>();
         users.add(owner);
-        Room room = Room.builder().id(id).name(message.getRoomName()).password(password).users(users).build();
+        Room room = Room.builder().id(id).name(message.getRoomName()).password(password)
+                .users(users).createAt(new Date()).build();
         rooms.add(room);
         return roomToRoomResponse(room);
     }
@@ -82,9 +84,16 @@ public class RoomService {
         Room room = getRoomById(id);
         if (room == null) return;
         List<User> users = room.getUsers();
-        users.remove(user);
+        users.removeIf(u -> u.getId().equals(user.getId()));
         if (users.size() == 0) rooms.remove(room);
         else room.setUsers(users);
+    }
+
+    public void kickUser(User owner, String roomId) {
+        Room room = getRoomById(roomId);
+        if (room == null && getRoomById(roomId).getUsers().size() < 2) return;
+        if (owner.getId().equals(getRoomById(roomId).getUsers().get(0).getId()))
+            leaveRoom(getRoomById(roomId).getUsers().get(1), roomId);
     }
 
     public void leaveAllRoom(User user) {
@@ -101,10 +110,17 @@ public class RoomService {
         if (room == null) return false;
         return room.getUsers().stream().anyMatch(u -> u.getId().equals(userId));
     }
+    public List<UserResponse> getUserInRoom(String roomId){
+        return getRoomById(roomId).getUsers().stream().map(User::getUserResponse).toList();
+    }
 
     public RoomResponse roomToRoomResponse(Room room) {
         return RoomResponse.builder().roomName(room.getName()).numUser(room.getUsers().size())
                 .id(room.getId()).havePass(room.havePassword()).build();
+    }
+
+    public void deleteRoom(String id) {
+        rooms.removeIf(room -> room.getId().equals(id));
     }
 
 }

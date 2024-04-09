@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faCircle, faEnvelope, faBell, faCoins, faGem } from '@fortawesome/free-solid-svg-icons';
 
 const HomeTop = () => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null) 
 
     useEffect(()=>{
         const userStorage = JSON.parse(sessionStorage.getItem('user'))
@@ -14,7 +14,7 @@ const HomeTop = () => {
     return (
         <div className="top-container">
         <div className="info-container">
-            <img src={userAvt} alt="avatar" id="avatar"/>
+            <img src={!user?userAvt:user.avatar?user.avatar.data:userAvt} alt="avatar" id="avatar"/>
             <div className="username-container">
                 <p id="username-title">{user?user.username:"error"}</p>
             </div>

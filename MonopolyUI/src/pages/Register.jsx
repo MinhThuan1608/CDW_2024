@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../assert/style/register.css';
 import { RegisterAPI } from '../api_caller/authenticate';
+import Swal from 'sweetalert2'
 
 
 const Register = () => {
@@ -13,7 +14,26 @@ const Register = () => {
         if (validateEmail() && validatePassword() && validateRePassword()) {
             const response = await RegisterAPI(email, password, confirmPassword);
             if (response.id) {
-                window.location = '/create-character';
+                let timerInterval;
+                Swal.fire({
+                    title: "Đăng ký thành công!",
+                    html: "Tự động chuyển về trang Đăng nhập sau <b>5</b>s...",
+                    icon: "success",
+                    timer: 5000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Math.floor(Swal.getTimerLeft() / 1000) + 1}`;
+                        }, 1000);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    window.location = '/login';
+                });
             } else {
                 const errorMessage = document.querySelector('#error-message');
                 errorMessage.innerHTML = response;
@@ -105,7 +125,7 @@ const Register = () => {
                         <p id="error-message"></p>
                         <div class="button-container">
                             <a href="/login"><button id="register" class="button" form="">Trở lại</button></a>
-                            <input type="submit" class="button" id="submit" value="Đăng ký" onClick={register}/>
+                            <input type="submit" class="button" id="submit" value="Đăng ký" onClick={register} />
                         </div>
                     </div>
                 </div>
