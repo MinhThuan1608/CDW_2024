@@ -19,6 +19,7 @@ public class Room {
     private GameBoard gameBoard;
     private List<User> users;
     private Date createAt;
+    private boolean isPlaying;
 
 
     public boolean havePassword(){
