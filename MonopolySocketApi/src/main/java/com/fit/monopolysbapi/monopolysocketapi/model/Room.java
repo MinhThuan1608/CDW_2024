@@ -4,6 +4,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ public class Room {
     private String password;
     private GameBoard gameBoard;
     private List<User> users;
+    private Date createAt;
 
 
     public boolean havePassword(){

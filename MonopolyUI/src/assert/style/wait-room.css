@@ -215,6 +215,10 @@
     color: #FF204E;
     font-size: 26px;
     z-index: 1;
+    cursor: pointer;
+}
+.icon-delete-user:hover{
+    filter: drop-shadow(0 0 4px #ff238a);
 }
 .btn-invite{
     border: none;
@@ -241,7 +245,10 @@
 }
 .icon-chess-black{
     color: #000000;
-    
+}
+
+.icon-chess-black:hover{
+    filter: drop-shadow(0 0 4px #8c8c8c);
 }
 /* chat side */
 .chat-room-part {
@@ -448,7 +455,14 @@
     top: 26px;
     padding: 2px 4px;
     font-size: 14px;
+    border-color: #8aa905;
 }
+
+.join:hover{
+    filter: drop-shadow(0 0 4px #F3F8FF);
+    cursor: pointer;
+}
+
 
 /* HOVER */
 .setting-icon:hover,
@@ -462,5 +476,5 @@
 
 .user-card:hover {
     background-color: #0a83d8;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
