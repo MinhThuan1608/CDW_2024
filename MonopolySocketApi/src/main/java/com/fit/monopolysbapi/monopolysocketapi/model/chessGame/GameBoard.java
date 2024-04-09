@@ -89,12 +89,14 @@ public class GameBoard {
             Piece rook;
             if (move.piece.col < move.newCol) {
                 rook = getPiece(move.piece.row, 7);
-                rook.col = 5;
+                rook.setCol(5);
             } else {
                 rook = getPiece(move.piece.row, 0);
-                rook.col = 3;
+                rook.setCol(3);
             }
             pieces[rook.row][rook.col] = rook;
+//            move.piece.setRow(rook.row);
+//            move.piece.setCol(rook.col);
         }
     }
 

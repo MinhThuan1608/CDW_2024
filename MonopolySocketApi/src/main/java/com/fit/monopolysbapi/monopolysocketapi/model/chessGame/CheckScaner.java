@@ -16,18 +16,6 @@ public class CheckScaner {
         System.out.println(king.row);
         int kingRow = king.row;
         int kingCol = king.col;
-//        System.out.println(hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 0, 1));
-//        System.out.println(hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 1, 0));
-//        System.out.println(hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 0, -1));
-//        System.out.println(hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, -1, 0));
-//        System.out.println(hitByBishop(move.newRow, move.newCol, king, kingRow, kingCol, -1, -1));
-//        System.out.println(hitByBishop(move.newRow, move.newCol, king, kingRow, kingCol, 1, -1));
-//
-//        System.out.println(hitByBishop(move.newRow, move.newCol, king, kingRow, kingCol, -1, 1));
-//        System.out.println(hitByBishop(move.newRow, move.newCol, king, kingRow, kingCol, 1, 1));
-//        System.out.println(hitByKnight(move.newRow, move.newCol, king, kingRow, kingCol));
-//        System.out.println(hitByPawn(move.newRow, move.newCol, king, kingRow, kingCol));
-//        System.out.println(hitByKing(king, kingRow, kingCol));
         return hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 0, 1) ||
                 hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 1, 0) ||
                 hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 0, -1) ||
