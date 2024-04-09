@@ -17,14 +17,14 @@ export const SocketContext = React.createContext();
 function App() {
   // socket context
   const [socket, setSocket] = useState(null);
-
-
+  
   // app state context
   const [appState, dispatch] = useReducer(reducer, initGameState)
   const providerState = {
     appState,
     dispatch
   }
+  const [listUsers, setlistUsers] = useState([]);
 
 
   useEffect(() => {
@@ -44,6 +44,7 @@ function App() {
         // đăng kí kết nối để lấy danh sách ai đang online
         client.subscribe('/topic/user/online', (message) => { //recieve an array of user who online
           console.log(JSON.parse(message.body));
+          setlistUsers(JSON.parse(message.body));
         });
         // gửi thông báo lên để server biết mình đang onl 
         client.publish({
@@ -74,7 +75,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game/:roomId" element={<GamePage />} />
+              <Route path="/game/:roomId" element={<GamePage listUsers={listUsers}/>} />
             </Routes>
           </BrowserRouter>
         </div>

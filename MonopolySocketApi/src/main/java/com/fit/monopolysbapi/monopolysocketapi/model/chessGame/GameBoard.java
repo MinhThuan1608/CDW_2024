@@ -67,7 +67,7 @@ public class GameBoard {
 
     public void makeMove(Move move) {
         if (move.piece.getName().substring(1).equals("p")) {
-            pieces = movePawn(move);
+            movePawn(move);
         } else if (move.piece.getName().substring(1).equals("k")) {
             moveKing(move);
         } else{
@@ -80,9 +80,9 @@ public class GameBoard {
             move.piece.isFirstMove = false;
         }
     }
-    public void capture(Move move) {
-        pieces[move.newRow][move.newCol] = move.piece;
-    }
+//    public void capture(Move move) {
+//        pieces[move.newRow][move.newCol] = move.piece;
+//    }
 
     private void moveKing(Move move) {
         if (Math.abs(move.piece.col - move.newCol) == 2) {
@@ -98,21 +98,25 @@ public class GameBoard {
         }
     }
 
-    private Piece[][] movePawn(Move move) {
+    private void movePawn(Move move) {
 //        en Passant
         int colorIndex = move.piece.isWhite ? 1 : -1;
 
         if (getTileNum(move.newRow, move.newCol) == enPassantTile) {
-            move.capture = getPiece(move.newRow + colorIndex, move.newCol);
+            System.out.println("enPass bắt nè");
+//            move.capture = getPiece(move.newRow + colorIndex, move.newCol);
+            pieces[move.newRow - colorIndex][move.newCol] = null;
         }
         if (Math.abs(move.piece.row - move.newRow) == 2) {
-            enPassantTile = getTileNum(move.newRow + colorIndex, move.newCol);
+            enPassantTile = getTileNum(move.newRow - colorIndex, move.newCol);
+            System.out.println("enPassantTile "+enPassantTile);
         } else {
             enPassantTile = -1;
         }
 //        promotion
-        colorIndex = move.piece.isWhite ? 0 : 7;
+        colorIndex = move.piece.isWhite ? 7 : 0;
         if (move.newRow == colorIndex) {
+            System.out.println("promotion roi");
             promotionPawn(move);
         }
 //
@@ -123,11 +127,10 @@ public class GameBoard {
         pieces[move.oldRow][move.oldCol] = null;
 
         move.piece.isFirstMove = false;
-        return pieces;
     }
 
     private void promotionPawn(Move move) {
-        pieces[move.newRow][move.newCol] = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
+        move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
     }
 
 
@@ -144,10 +147,10 @@ public class GameBoard {
             System.out.println("moveCollidesWithPiece");
             return false;
         }
-        if(checkScaner.isKingChecked(move)){
-            System.out.println("isKingChecked");
-            return false;
-        }
+//        if(checkScaner.isKingChecked(move)){
+//            System.out.println("isKingChecked");
+//            return false;
+//        }
         return true;
     }
 

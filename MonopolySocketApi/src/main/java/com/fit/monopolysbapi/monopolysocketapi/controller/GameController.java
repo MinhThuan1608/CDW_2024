@@ -48,8 +48,8 @@ public class GameController {
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
 
                     System.out.println("is ok move? " + gameBoard.isValidMove(move));
-                    System.out.println("move đê "+move.getPiece());
-                    System.out.println("capture "+move.getCapture());
+                    System.out.println("move đê "+ move);
+//                    System.out.println("capture "+move.getCapture());
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move);
                         System.out.println("ok move");

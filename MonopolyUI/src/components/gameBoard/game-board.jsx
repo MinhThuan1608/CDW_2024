@@ -7,6 +7,7 @@ import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
 import {  makeNewMove } from '../../reducer/action/move';
+import Popup from './Popup/Popup';
 
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -66,6 +67,7 @@ const GameBoard = () => {
                 )}
             </div>
             <Piceces roomId={roomId} />
+            {/* <Popup/> */}
             <Files files={files} />
 
         </div>

@@ -38,8 +38,6 @@ public class Move {
                 ", oldCol=" + oldCol +
                 ", newRow=" + newRow +
                 ", newCol=" + newCol +
-                ", piece=" + piece +
-                ", capture=" + capture +
                 '}';
     }
 }

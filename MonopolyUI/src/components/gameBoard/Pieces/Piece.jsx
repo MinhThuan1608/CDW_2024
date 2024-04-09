@@ -10,12 +10,14 @@ const Piece = (
 ) => {
 
     const { appState, dispatch } = useAppContext()
-    const { turn, position : currentPosition } = appState;
+    const { turn, position: currentPosition } = appState;
     // const currentPosition = position[position.length - 1]
 
     const onDragStart = (e) => {
-        e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text/plain', `${piece},${rank},${file}`)
+        // if (turn === piece[0]) {
+        e.dataTransfer.effectAllowed = 'move'
+        // }
         setTimeout(() => {
             e.target.style.display = "none"
         }, 0)
@@ -29,16 +31,15 @@ const Piece = (
                 piece
             })
             dispatch(generateCandidateMoves({ candidateMoves }))
-            
 
         }
     }
     const onDragOEnd = e => e.target.style.display = 'block'
     return (
         <div className={`piece ${piece} p-${file}${rank}`}
-            draggable={true}
-            onDragStart={onDragStart}
-            onDragEnd={onDragOEnd}
+            draggable={piece[0] === turn ? true : false}
+            onDragStart={piece[0] === turn ? onDragStart : null}
+            onDragEnd={piece[0] === turn ? onDragOEnd : null}
         />
     )
 }

@@ -21,11 +21,13 @@ public class Pawn extends Piece {
         int colorIndex = isWhite ? 1 : -1;
 //        push 1
         if (this.col == col && row == this.row + colorIndex && board.getPiece(row, col) == null){
+            System.out.println("push 1");
             return true;
         }
 //        push 2
         if(isFirstMove && this.col == col && row == this.row + colorIndex * 2 &&
                 board.getPiece(row, col) == null && board.getPiece(row + colorIndex, col) == null){
+            System.out.println(" push 2");
             return true;
         }
 //        capture left
@@ -37,12 +39,13 @@ public class Pawn extends Piece {
             return true;
         }
 //        en Passant left
-        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row - colorIndex
-                && board.getPiece(row + colorIndex, col) != null){
+        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row + colorIndex
+                && board.getPiece(row - colorIndex, col) != null){
             return true;
-        }//        en Passant right
-        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row - colorIndex
-                && board.getPiece(row + colorIndex, col) != null){
+        }
+//        en Passant right
+        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row + colorIndex
+                && board.getPiece(row - colorIndex, col) != null){
             return true;
         }
         return false;
