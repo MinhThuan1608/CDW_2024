@@ -115,6 +115,7 @@ public class WaitRoomController {
                             .build();
                     GameBoard gameBoard = new GameBoard();
                     room.setGameBoard(gameBoard);
+                    room.setPlaying(true);
                 }
                 break;
             default:
@@ -140,8 +141,7 @@ public class WaitRoomController {
     public void autoDeleteRoom() {
         if (roomService.getRooms().size() > 0)
             for (int i = 0; i < roomService.getRooms().size(); i++) {
-                System.out.println((new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()));
-                if ((new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()) > 10 * 60 * 1000) {
+                if (!roomService.getRooms().get(i).isPlaying() && (new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()) > 10 * 60 * 1000) {
                     simpMessagingTemplate.convertAndSend("/topic/game/room/" + roomService.getRooms().get(i).getId(), WaitRoomMessage.builder().messageType(WaitRoomMessage.RoomMessageType.TIME_OUT).build());
                     roomService.deleteRoom(roomService.getRooms().get(i--).getId());
                 }
