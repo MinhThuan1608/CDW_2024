@@ -28,70 +28,55 @@ public class GameController {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();
-        ChessMessage responseMessage = null;
         Room room = roomService.getRoomById(roomId);
         GameBoard gameBoard = room.getGameBoard();
+        ChessMessage responseMessage = null;
         switch (chessMessage.getMessageType()) {
+            case CONNECT:
+                responseMessage = ChessMessage.builder()
+                        .messageType(ChessMessage.ChessMessageType.MOVE)
+                        .turn(gameBoard.getTurn())
+                        .pieces(gameBoard.getPiecesResponse())
+                        .build();
+                break;
             case MOVE:
-                if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn().equals("w")) ||
-                        (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn().equals("b"))) {
+                responseMessage = ChessMessage.builder()
+                        .messageType(ChessMessage.ChessMessageType.MOVE)
+                        .turn(gameBoard.getTurn())
+                        .pieces(gameBoard.getPiecesResponse())
+                        .build();
+                if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn() == 'w') ||
+                        (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn() == 'b')) {
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
-                    System.out.println("move: "+move);
-//                    System.out.println("promotion: "+chessMessage.getNamePromotion());
+                    System.out.println("move: " + move);
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
-                        String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
-                        gameBoard.setTurn(nextTurn);
-                        responseMessage = ChessMessage.builder()
-                                .messageType(ChessMessage.ChessMessageType.MOVE)
-                                .turn(nextTurn)
-                                .pieces(gameBoard.getPiecesResponse())
-                                .build();
-
-                    } else {
-                        responseMessage = ChessMessage.builder()
-                                .messageType(ChessMessage.ChessMessageType.MOVE)
-                                .turn(gameBoard.getTurn())
-                                .pieces(gameBoard.getPiecesResponse())
-                                .build();
+                        if (gameBoard.checkWin(gameBoard.getTurn())) {
+                            responseMessage = ChessMessage.builder()
+                                    .messageType(ChessMessage.ChessMessageType.WIN)
+                                    .winnerId(user.getId())
+                                    .pieces(gameBoard.getPiecesResponse())
+                                    .build();
+                        } else {
+                            char nextTurn = gameBoard.getTurn() == 'w' ? 'b' : 'w';
+                            gameBoard.setTurn(nextTurn);
+                            responseMessage = ChessMessage.builder()
+                                    .messageType(ChessMessage.ChessMessageType.MOVE)
+                                    .turn(nextTurn)
+                                    .pieces(gameBoard.getPiecesResponse())
+                                    .build();
+                        }
                     }
 
-                } else {
-                    responseMessage = ChessMessage.builder()
-                            .messageType(ChessMessage.ChessMessageType.MOVE)
-                            .turn(gameBoard.getTurn())
-                            .pieces(gameBoard.getPiecesResponse())
-                            .build();
                 }
+                break;
+            case GIVE_UP:
 
-                break;
-
-            case RESIGN:
-                // Xử lý việc từ bỏ
-                // ...
-                break;
-            case DRAW_OFFER:
-                // Xử lý việc đề nghị hòa
-                // ...
-                break;
-            case PIECE_PROMOTION:
-                // Xử lý việc thăng cấp quân cờ
-                // ...
-                break;
-            case CHECKMATE:
-                // Xử lý việc kiểm tra Checkmate
-//                boolean isCheckmate = gameBoard.isCheckmate(); // Assume isCheckmate method is defined in GameBoard class
-//                responseMessage = ChessMessage.builder()
-//                        .messageType(ChessMessage.ChessMessageType.CHECKMATE)
-//                        .isCheckmate(isCheckmate)
-//                        .sender(user)
-//                        .build();
                 break;
             case GET_USER_IN_ROOM:
-                // Xử lý việc thăng cấp quân cờ
-                // ...
+
                 break;
             default:
                 break;

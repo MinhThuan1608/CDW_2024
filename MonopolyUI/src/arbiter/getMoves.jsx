@@ -1,3 +1,5 @@
+import { isKingAttacked } from "./checkScanner"
+
 export const getRookMoves = ({ position, rank, file, piece }) => {
     const moves = []
     const us = piece[0]
@@ -15,21 +17,17 @@ export const getRookMoves = ({ position, rank, file, piece }) => {
             const x = rank + (i * dir[0])
             const y = file + (i * dir[1])
 
-            // không xác định thì dừng
             if (position?.[x]?.[y] === undefined)
                 break
-
-            // nếu là quân địch thì tấn công
             if (position[x][y].startsWith(enemy)) {
-                moves.push([x, y])
+                if (!isKingAttacked(position, [x, y], piece, rank, file))
+                    moves.push([x, y])
                 break
             }
-            // nếu là quân mình thì ko vượt qua đc
             if (position[x][y].startsWith(us))
                 break
-
-
-            moves.push([x, y])
+            if (!isKingAttacked(position, [x, y], piece, rank, file))
+                moves.push([x, y])
         }
     })
 
@@ -52,7 +50,8 @@ export const getKnightMoves = ({ position, rank, file }) => {
     candidates.forEach(c => {
         const cell = position?.[rank + c[0]]?.[file + c[1]]
         if (cell !== undefined && [cell.startsWith(enemy) || cell === ''])
-            moves.push([rank + c[0], file + c[1]])
+            if (!isKingAttacked(position, [rank + c[0], file + c[1]], position[rank][file], rank, file))
+                moves.push([rank + c[0], file + c[1]])
     })
     return moves
 }
@@ -78,14 +77,15 @@ export const getBishopMoves = ({ position, rank, file, piece }) => {
                 break
 
             if (position[x][y].startsWith(enemy)) {
-                moves.push([x, y])
+                if (!isKingAttacked(position, [x, y], piece, rank, file))
+                    moves.push([x, y])
                 break
             }
             if (position[x][y].startsWith(us))
                 break
 
-
-            moves.push([x, y])
+            if (!isKingAttacked(position, [x, y], piece, rank, file))
+                moves.push([x, y])
         }
     })
 
@@ -116,21 +116,26 @@ export const getKingMoves = ({ position, rank, file, piece }) => {
         const y = file + dir[1]
 
         if (position?.[x]?.[y] !== undefined && !position[x][y].startsWith(us))
-            moves.push([x, y])
+            if (!isKingAttacked(position, [x, y], piece, rank, file))
+                moves.push([x, y])
 
     })
 
     let rowCastle = piece.startsWith('w') ? 0 : 7;
-    let rookCol = piece.substring[0] == 'w' ? 0 : 7;
-    if (file == 4 && rank == rowCastle) {
+    let rookCol = piece.substring[0] === 'w' ? 0 : 7;
+    if (file === 4 && rank === rowCastle) {
         console.log(position?.[rowCastle]?.[7]?.endsWith('r'))
-        if (position?.[rowCastle]?.[7]?.endsWith('r') &&
-            position[rowCastle][5] === '' &&
-            position[rowCastle][6] === '') moves.push([rowCastle, 6])
+        if (position?.[rowCastle]?.[7]?.endsWith('r') && position[rowCastle][5] === '' && position[rowCastle][6] === '') {
+            if (!isKingAttacked(position, [rowCastle, 6], piece, rank, file))
+                moves.push([rowCastle, 6])
+        }
         else if (position?.[rowCastle]?.[0]?.endsWith('r') &&
             position[rowCastle][1] === '' &&
             position[rowCastle][2] === '' &&
-            position[rowCastle][3] === '') moves.push([rowCastle, 2])
+            position[rowCastle][3] === '') {
+            if (!isKingAttacked(position, [rowCastle, 2], piece, rank, file))
+                moves.push([rowCastle, 2])
+        }
     }
 
     return moves
@@ -139,13 +144,17 @@ export const getPawnMoves = ({ position, rank, file, piece }) => {
     const moves = []
     const dir = piece === 'wp' ? 1 : -1
 
-    if (!position?.[rank + dir][file])
-        moves.push([rank + dir, file])
+    if (!position?.[rank + dir][file]) {
+        if (!isKingAttacked(position, [rank + dir, file], piece, rank, file))
+            moves.push([rank + dir, file])
+    }
+
 
     if (rank % 5 === 1) {
         if (position?.[rank + dir]?.[file] === '' &&
             position?.[rank + dir + dir]?.[file] === '') {
-            moves.push([rank + dir + dir, file])
+            if (!isKingAttacked(position, [rank + dir + dir, file], piece, rank, file))
+                moves.push([rank + dir + dir, file])
         }
     }
 
@@ -158,11 +167,13 @@ export const getPawnCaptures = ({ position, prevPosition, rank, file, piece }) =
 
     // capture enemy to left :  bắt tốt của địch ở bên trái
     if (position?.[rank + dir]?.[file - 1] && position?.[rank + dir]?.[file - 1].startsWith(enemy)) {
-        moves.push([rank + dir, file - 1])
+        if (!isKingAttacked(position, [rank + dir, file - 1], piece, rank, file))
+            moves.push([rank + dir, file - 1])
     }
     // capture enymy to right : bắt tốt của địch ở bên phải
     if (position?.[rank + dir]?.[file + 1] && position?.[rank + dir]?.[file + 1].startsWith(enemy)) {
-        moves.push([rank + dir, file + 1])
+        if (!isKingAttacked(position, [rank + dir, file + 1], piece, rank, file))
+            moves.push([rank + dir, file + 1])
     }
     // en-passant : bắt tốt qua đường
     const enemyPawn = dir === 1 ? 'bp' : 'wp'
@@ -175,7 +186,8 @@ export const getPawnCaptures = ({ position, prevPosition, rank, file, piece }) =
                     position?.[rank + dir + dir]?.[f] === '' &&
                     prevPosition?.[rank]?.[f] === '' &&
                     prevPosition?.[rank + dir + dir]?.[f] === enemyPawn) {
-                    moves.push([rank + dir, f])
+                    if (!isKingAttacked(position, [rank + dir, f], piece, rank, file))
+                        moves.push([rank + dir, f])
                 }
             })
         }

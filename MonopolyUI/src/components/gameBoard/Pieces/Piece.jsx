@@ -30,6 +30,7 @@ const Piece = (
                 file,
                 piece
             })
+            
             dispatch(generateCandidateMoves({ candidateMoves }))
         }
     }

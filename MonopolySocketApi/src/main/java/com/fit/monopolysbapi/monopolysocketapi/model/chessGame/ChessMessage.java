@@ -1,7 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import lombok.*;
 
 import java.util.List;
@@ -20,16 +19,16 @@ public class ChessMessage {
     private String namePromotion;
     private User sender;
     private String content;
-    private String turn;
+    private char turn;
     private List<User> users;
+    private String winnerId;
 
     public enum ChessMessageType {
+        CONNECT,
         MOVE,
-        RESIGN,
-        DRAW_OFFER,
-        PIECE_PROMOTION,
-        CHECKMATE,
-        GET_USER_IN_ROOM
+        GIVE_UP,
+        GET_USER_IN_ROOM,
+        WIN
 
     }
 }

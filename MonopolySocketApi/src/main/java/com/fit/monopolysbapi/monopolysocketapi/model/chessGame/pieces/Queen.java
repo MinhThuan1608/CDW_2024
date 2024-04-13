@@ -1,21 +1,24 @@
 package com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 
 public class Queen extends Piece {
+
     public Queen(GameBoard board, int row, int col, boolean isWhite) {
         super(board);
         this.row = row;
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wq" : "bq";
-//        this.xPos = col * board.TILE_SIZE;
-
-
+        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     }
 
     public boolean isValidMovement(int row, int col) {
@@ -94,4 +97,5 @@ public class Queen extends Piece {
         }
         return false;
     }
+
 }

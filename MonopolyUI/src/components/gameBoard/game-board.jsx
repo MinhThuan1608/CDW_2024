@@ -4,15 +4,15 @@ import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
 import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
-
 import { useParams } from 'react-router-dom';
-import {  makeNewMove } from '../../reducer/action/move';
+import { makeNewMove } from '../../reducer/action/move';
 import Popup from './Popup/Popup';
+import { toast } from 'react-toastify';
 
 const GameBoard = () => {
     const { socket, setSocket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
-    const[isSelected, setIsSelected] = useState('')
+    const [isSelected, setIsSelected] = useState('')
     // col
     const ranks = Array(8).fill().map((x, i) => 8 - i)
     // row
@@ -20,6 +20,7 @@ const GameBoard = () => {
 
     const { appState, dispatch } = useAppContext()
     const position = appState.position[appState.position.length - 1]
+    const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -40,18 +41,27 @@ const GameBoard = () => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse)
                 switch (messResponse.messageType) {
+                    case 'WIN':
+                        if (me?.id === messResponse.winnerId)
+                            toast('Chúc mừng, bạn đã chiến thắng <3');
+                        else toast('Tiếc ghê, bạn thua mất rồi... hichic');
                     case 'MOVE':
                         let newPosition = messResponse.pieces
                         let turn = messResponse.turn
-                        dispatch(makeNewMove({newPosition, turn}))
-                        // dispatch(clearCandidates())
+                        if (newPosition)
+                            dispatch(makeNewMove({ newPosition, turn }))
                         break
+
                     default:
                         break
                 }
-
-
             });
+            socket.publish({
+                destination: '/app/game/chess/' + roomId,
+                body: JSON.stringify({
+                    messageType: 'CONNECT'
+                })
+            })
         }
     }, [socket]);
 
@@ -67,9 +77,9 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected}/>
+            <Piceces roomId={roomId} isSelected={isSelected} />
 
-            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}/>)}
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} />)}
             <Files files={files} />
 
         </div>

@@ -21,7 +21,8 @@ const GamePage = () => {
 
     useEffect(() => {
         GetUserInRoom(roomId).then(result => {
-            setlistUsers(result)
+            if (result.length === 0) window.location = '/'
+            else setlistUsers(result)
         })
     }, []);
 
@@ -43,7 +44,7 @@ const GamePage = () => {
                     <p></p>
                 </p>
                 <div className="player-turn">
-                    {listUsers.map((user, index) => (
+                    {listUsers?.map((user, index) => (
                         <div className={`control-game ${appState.turn === (index === 0 ? 'w' : 'b') ? 'active' : ''}`} key={index}>
                             <p></p>
                             <div className=""></div>

@@ -4,6 +4,9 @@ import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 
@@ -14,8 +17,7 @@ public class King extends Piece {
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wk" : "bk";
-//        this.xPos = col * board.TILE_SIZE;
-
+        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     }
 
     public boolean isValidMovement(int row, int col) {
@@ -46,19 +48,25 @@ public class King extends Piece {
     }
 
     public boolean moveCollidesWithPiece(int row, int col) {
-//        for (int r = this.row - 1; r <= this.row + 1; r++) {
-//            for (int c = this.col - 1; c <= this.col + 1; c++) {
-//                if (r == this.row && c == this.col) {
-//                    continue;
-//                }
-//
-//                if (r >= 0 && r < 8 && c >= 0 && c < 8) {
-//                    if (board.getPiece(r, c) != null) {
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
         return false;
+    }
+
+    @Override
+    public List<Move> getMoveHint() {
+        List<Move> hints = new ArrayList<>();
+        int x, y;
+        Move move;
+        Piece piece;
+        for (int[] direction : directions) {
+            x = row + direction[0];
+            y = col + direction[1];
+            if (x < 0 || x >= 8 || y < 0 || y >= 8) continue;
+            piece = board.getPiece(x, y);
+            if (piece != null && piece.getColor() == this.getColor()) continue;
+            move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();
+            if (!board.getCheckScaner().isKingChecked(move))
+                hints.add(move);
+        }
+        return hints;
     }
 }

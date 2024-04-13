@@ -17,7 +17,7 @@ public class Move {
 
     Piece piece;
     Piece capture;
-    GameBoard board;
+//    GameBoard board;
 
     public Move(GameBoard board, Piece piece, int newRow, int newCol) {
         this.oldRow = piece.row;

@@ -11,7 +11,7 @@ const WaitRoomBottom = (props) => {
                     messageType: 'START_GAME'
                 })
             });
-        else toast.warn('Cần có 2 người mới có thể bắt đầu!');
+        else toast.warn('Cần có 2 người mới chơi được!');
     }
     return (
         <div className="bottom-part">

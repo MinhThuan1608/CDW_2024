@@ -2,9 +2,9 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import lombok.*;
-import org.springframework.security.access.method.P;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,9 +16,9 @@ public class GameBoard {
     public static final int ROW = 8;
     public static final int TILE_SIZE = 25;
     private int enPassantTile = -1;
-    private String turn;
+    private char turn;
 
-    private CheckScaner checkScaner = new CheckScaner(this);
+    private CheckScanner checkScaner = new CheckScanner(this);
 
     @Override
     public String toString() {
@@ -31,7 +31,7 @@ public class GameBoard {
     }
 
     public GameBoard() {
-        this.turn = "w";
+        this.turn = 'w';
         initGame();
     }
 
@@ -51,17 +51,14 @@ public class GameBoard {
         return row * this.ROW + col;
     }
 
-    Piece findKing(boolean isWhite) {
-        System.out.println("king nay mau "+ isWhite);
+    public Piece findKing(boolean isWhite) {
         for (int i = 0; i < pieces.length; i++) {
             for (int j = 0; j < pieces.length; j++) {
                 if (pieces[i][j] != null && pieces[i][j].isWhite == isWhite && pieces[i][j].getName().substring(1).equals("k")) {
-                    System.out.println(pieces[i][j]);
                     return pieces[i][j];
                 }
             }
         }
-
         return null;
     }
 
@@ -70,8 +67,7 @@ public class GameBoard {
             movePawn(move, namePromotion);
         } else if (move.piece.getName().substring(1).equals("k")) {
             moveKing(move);
-        } else{
-//            pieces = updatePiecePosition(move.piece,move.oldRow, move.oldCol, move.newRow, move.newCol);
+        } else {
             pieces[move.newRow][move.newCol] = move.piece;
             move.piece.setRow(move.newRow);
             move.piece.setCol(move.newCol);
@@ -80,12 +76,8 @@ public class GameBoard {
             move.piece.isFirstMove = false;
         }
     }
-//    public void capture(Move move) {
-//        pieces[move.newRow][move.newCol] = move.piece;
-//    }
 
     private void moveKing(Move move) {
-        System.out.println(move.getPiece());
         if (Math.abs(move.piece.col - move.newCol) == 2) {
             Piece rook;
             if (move.piece.col < move.newCol) {
@@ -102,39 +94,28 @@ public class GameBoard {
             move.piece.setCol(move.newCol);
             pieces[move.getNewRow()][move.getNewCol()] = move.piece;
             pieces[move.getOldRow()][move.getOldCol()] = null;
-            System.out.println(pieces[move.getNewRow()][move.getNewCol()]);
-        }else {
+        } else {
             pieces[move.newRow][move.newCol] = move.piece;
             move.piece.setRow(move.newRow);
             move.piece.setCol(move.newCol);
-
             pieces[move.oldRow][move.oldCol] = null;
         }
     }
 
     private void movePawn(Move move, String namePromotion) {
-//        en Passant
         int colorIndex = move.piece.isWhite ? 1 : -1;
-
         if (getTileNum(move.newRow, move.newCol) == enPassantTile) {
-            System.out.println("enPass bắt nè");
-//            move.capture = getPiece(move.newRow + colorIndex, move.newCol);
             pieces[move.newRow - colorIndex][move.newCol] = null;
         }
         if (Math.abs(move.piece.row - move.newRow) == 2) {
             enPassantTile = getTileNum(move.newRow - colorIndex, move.newCol);
-            System.out.println("enPassantTile "+enPassantTile);
         } else {
             enPassantTile = -1;
         }
-//        promotion
         colorIndex = move.piece.isWhite ? 7 : 0;
         if (move.newRow == colorIndex) {
-            System.out.println("promotion roi");
             promotionPawn(move, namePromotion);
         }
-//
-//       pieces = updatePiecePosition(move.piece, move.oldRow, move.oldCol, move.newRow, move.newCol);
         pieces[move.newRow][move.newCol] = move.piece;
         move.piece.setRow(move.newRow);
         move.piece.setCol(move.newCol);
@@ -144,7 +125,7 @@ public class GameBoard {
     }
 
     private void promotionPawn(Move move, String name) {
-        switch (name){
+        switch (name) {
             case "q":
                 move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
@@ -177,7 +158,7 @@ public class GameBoard {
             System.out.println("moveCollidesWithPiece");
             return false;
         }
-        if(checkScaner.isKingChecked(move)){
+        if (checkScaner.isKingChecked(move)) {
             System.out.println("isKingChecked");
             return false;
         }
@@ -234,6 +215,21 @@ public class GameBoard {
         return piecesResponse;
     }
 
-
+    public boolean checkWin(char winnerColor) {
+        char closer = winnerColor == 'w' ? 'b' : 'w';
+        for (Piece[] row : pieces) {
+            for (Piece piece : row) {
+                if (piece != null && piece.getColor() == closer) {
+                    List<Move> hints = piece.getMoveHint();
+                    if (hints.size() > 0) {
+                        System.out.println(piece);
+                        System.out.println(hints);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
 }

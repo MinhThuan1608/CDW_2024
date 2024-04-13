@@ -60,7 +60,6 @@ const Piceces = (props) => {
                     body: JSON.stringify({
                         messageType: 'MOVE',
                         move: move,
-
                     })
                 });
             }

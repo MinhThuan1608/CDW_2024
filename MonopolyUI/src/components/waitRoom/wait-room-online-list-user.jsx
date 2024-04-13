@@ -30,7 +30,7 @@ const WaitRoomOnlineUser = (props) => {
                             <div className='online-status'></div>
                             <span className='user-card-name'>{user.username}</span>
                             <button className="join" onClick={()=>handleInviteUser(user.id)}>Mời</button>
-                        </div> : <></>
+                        </div> : <div key={index} style={{display: 'none'}}></div>
                 
 
                 )}

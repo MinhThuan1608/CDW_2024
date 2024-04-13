@@ -95,9 +95,9 @@ export async function GetUserInRoom(roomId) {
 
     const responseData = await response.json()
     if (response.ok) {
-        if (responseData.data != null || responseData.data != "")
-            return responseData.data; //true if you can join this room and else
-        return false;
+        if (responseData.data != null && responseData.data != false)
+            return responseData.data;
+        return [];
     }
-    return false;
+    return [];
 }
