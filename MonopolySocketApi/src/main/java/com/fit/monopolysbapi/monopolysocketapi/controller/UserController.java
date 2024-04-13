@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,4 +57,16 @@ public class UserController {
         return ResponseEntity.ok(new AbstractResponse(200, "Successfully!", avatars));
     }
 
+    @GetMapping("/verify_email/{userId}")
+    public ResponseEntity verifyEmail(@PathVariable String userId, @RequestParam String token) throws NoSuchAlgorithmException {
+        User user = null;
+        Optional<User> userOptional = userService.getUserById(userId);
+        if (userOptional.isPresent()) user = userOptional.get();
+        if (user.isConfirmEmail())
+            return ResponseEntity.ok(new AbstractResponse(405, "This account's email have been verified", false));
+        if (!userService.checkVerifyEmailToken(user, token))
+            return ResponseEntity.ok(new AbstractResponse(401, "Wrong token!", false));
+        userService.verifyEmail(user);
+        return ResponseEntity.ok("Xác thực thành công!");
+    }
 }

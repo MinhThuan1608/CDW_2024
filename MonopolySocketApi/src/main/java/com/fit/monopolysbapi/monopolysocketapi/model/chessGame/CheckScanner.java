@@ -16,7 +16,7 @@ public class CheckScanner {
         assert king != null;
         int kingRow = king.row;
         int kingCol = king.col;
-        if (move.piece.name.substring(1).equals("k")) {
+        if (move.piece.name != null && move.piece.name.substring(1).equals("k")) {
             kingRow = move.newRow;
             kingCol = move.newCol;
         }

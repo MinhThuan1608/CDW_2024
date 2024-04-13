@@ -1,5 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.InviteMessage;
@@ -89,7 +90,6 @@ public class WaitRoomController {
         User user = (User) token.getPrincipal();
         Room room = roomService.getRoomById(roomId);
         WaitRoomMessage newMessage = null;
-
         switch (waitRoomMessage.getMessageType()) {
             case JOIN:
                 newMessage = WaitRoomMessage.builder()
@@ -119,9 +119,7 @@ public class WaitRoomController {
                             .users(room.getUsers())
                             .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
                             .build();
-                    GameBoard gameBoard = new GameBoard();
-                    room.setGameBoard(gameBoard);
-                    room.setPlaying(true);
+                    roomService.startGame(room);
                 }
                 break;
             default:

@@ -20,19 +20,36 @@ public class GameBoard {
 
     private CheckScanner checkScaner = new CheckScanner(this);
 
-    @Override
-    public String toString() {
-        return "GameBoard{" +
-                "pieces=" + Arrays.toString(pieces) +
-                ", enPassantTile=" + enPassantTile +
-                ", turn='" + turn + '\'' +
-                ", checkScaner=" + checkScaner +
-                '}';
-    }
-
     public GameBoard() {
         this.turn = 'w';
         initGame();
+    }
+
+    public void initGame() {
+        pieces = new Piece[COL][ROW];
+        for (int i = 0; i < 8; i++) {
+            pieces[6][i] = new Pawn(this, 6, i, false);
+            pieces[1][i] = new Pawn(this, 1, i, true);
+
+        }
+        pieces[0][0] = new Rook(this, 0, 0, true);
+        pieces[0][1] = new Knight(this, 0, 1, true);
+        pieces[0][2] = new Bishop(this, 0, 2, true);
+        pieces[0][3] = new Queen(this, 0, 3, true);
+        pieces[0][4] = new King(this, 0, 4, true);
+        pieces[0][5] = new Bishop(this, 0, 5, true);
+        pieces[0][6] = new Knight(this, 0, 6, true);
+        pieces[0][7] = new Rook(this, 0, 7, true);
+
+
+        pieces[7][0] = new Rook(this, 7, 0, false);
+        pieces[7][1] = new Knight(this, 7, 1, false);
+        pieces[7][2] = new Bishop(this, 7, 2, false);
+        pieces[7][3] = new Queen(this, 7, 3, false);
+        pieces[7][4] = new King(this, 7, 4, false);
+        pieces[7][5] = new Bishop(this, 7, 5, false);
+        pieces[7][6] = new Knight(this, 7, 6, false);
+        pieces[7][7] = new Rook(this, 7, 7, false);
     }
 
     public Piece getPiece(int row, int col) {
@@ -40,7 +57,6 @@ public class GameBoard {
             for (int j = 0; j < 8; j++) {
                 if ((pieces[i][j] != null) && (pieces[i][j].getRow() == row) && (pieces[i][j].getCol() == col))
                     return pieces[i][j];
-
             }
         }
         return null;
@@ -144,7 +160,6 @@ public class GameBoard {
         }
     }
 
-
     public boolean isValidMove(Move move) {
         if (sameTeam(move.piece, move.capture)) {
             System.out.println("same team");
@@ -172,37 +187,6 @@ public class GameBoard {
         return p1.isWhite == p2.isWhite;
     }
 
-
-    public void initGame() {
-        pieces = new Piece[COL][ROW];
-
-        for (int i = 0; i < 8; i++) {
-            pieces[6][i] = new Pawn(this, 6, i, false);
-            pieces[1][i] = new Pawn(this, 1, i, true);
-
-        }
-
-        pieces[0][0] = new Rook(this, 0, 0, true);
-        pieces[0][1] = new Knight(this, 0, 1, true);
-        pieces[0][2] = new Bishop(this, 0, 2, true);
-        pieces[0][3] = new Queen(this, 0, 3, true);
-        pieces[0][4] = new King(this, 0, 4, true);
-        pieces[0][5] = new Bishop(this, 0, 5, true);
-        pieces[0][6] = new Knight(this, 0, 6, true);
-        pieces[0][7] = new Rook(this, 0, 7, true);
-
-
-        pieces[7][0] = new Rook(this, 7, 0, false);
-        pieces[7][1] = new Knight(this, 7, 1, false);
-        pieces[7][2] = new Bishop(this, 7, 2, false);
-        pieces[7][3] = new Queen(this, 7, 3, false);
-        pieces[7][4] = new King(this, 7, 4, false);
-        pieces[7][5] = new Bishop(this, 7, 5, false);
-        pieces[7][6] = new Knight(this, 7, 6, false);
-        pieces[7][7] = new Rook(this, 7, 7, false);
-
-    }
-
     public boolean isCheckmate() {
         return true;
     }
@@ -215,21 +199,24 @@ public class GameBoard {
         return piecesResponse;
     }
 
-    public boolean checkWin(char winnerColor) {
+    public boolean hasNoStepToPlay(char winnerColor) {
         char closer = winnerColor == 'w' ? 'b' : 'w';
         for (Piece[] row : pieces) {
             for (Piece piece : row) {
                 if (piece != null && piece.getColor() == closer) {
                     List<Move> hints = piece.getMoveHint();
                     if (hints.size() > 0) {
-                        System.out.println(piece);
-                        System.out.println(hints);
                         return false;
                     }
                 }
             }
         }
         return true;
+    }
+
+    public boolean isChecked(char teamColor){
+        Move noneMove = Move.builder().newRow(-1).newCol(-1).oldRow(-1).oldCol(-1).piece(Piece.builder().isWhite(teamColor == 'w').build()).build();
+        return checkScaner.isKingChecked(noneMove);
     }
 
 }

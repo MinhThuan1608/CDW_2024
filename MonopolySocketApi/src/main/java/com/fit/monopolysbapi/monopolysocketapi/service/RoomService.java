@@ -2,16 +2,14 @@ package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.request.CreateRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomService {
     private final Util util;
+    private final OnlineService onlineService;
     private List<Room> rooms = new ArrayList<>();
 
     public RoomResponse createRoom(CreateRoomRequest message, User owner) {
@@ -70,6 +69,12 @@ public class RoomService {
         return true;
     }
 
+    public Room getRoomUserIn(String userId){
+        Optional<Room> roomOptional =  rooms.stream().filter(r -> r.getUsers().stream().anyMatch(u -> u.getId().equals(userId))).findFirst();
+        if (roomOptional.isPresent()) return roomOptional.get();
+        return null;
+    }
+
     public void joinRoom(User user, String id) {
         Room room = getRoomById(id);
         if (room == null) return;
@@ -77,6 +82,7 @@ public class RoomService {
         if (users.stream().noneMatch(u -> u.getId().equals(user.getId()))) {
             users.add(user);
             room.setUsers(users);
+            onlineService.setStatus(user.getId(), UserResponse.Status.IN_ROOM);
         }
     }
 
@@ -85,6 +91,7 @@ public class RoomService {
         if (room == null) return;
         List<User> users = room.getUsers();
         users.removeIf(u -> u.getId().equals(user.getId()));
+        onlineService.setStatus(user.getId(), UserResponse.Status.ONLINE);
         if (users.size() == 0) rooms.remove(room);
         else room.setUsers(users);
     }
@@ -94,15 +101,6 @@ public class RoomService {
         if (room == null && getRoomById(roomId).getUsers().size() < 2) return;
         if (owner.getId().equals(getRoomById(roomId).getUsers().get(0).getId()))
             leaveRoom(getRoomById(roomId).getUsers().get(1), roomId);
-    }
-
-    public void leaveAllRoom(User user) {
-        rooms.forEach(room -> {
-            List<User> users = room.getUsers();
-            users.removeIf(u -> u.getId().equals(user.getId()));
-            if (users.size() == 0) rooms.remove(room);
-            else room.setUsers(users);
-        });
     }
 
     public boolean isUserInRoom(String userId, String roomId) {
@@ -120,7 +118,22 @@ public class RoomService {
     }
 
     public void deleteRoom(String id) {
+        List<UserResponse> users = getUserInRoom(id);
+        for (UserResponse u: users){
+            onlineService.setStatus(u.getId(), UserResponse.Status.ONLINE);
+        }
         rooms.removeIf(room -> room.getId().equals(id));
+    }
+
+    public void startGame(Room room){
+        GameBoard gameBoard = new GameBoard();
+        room.setGameBoard(gameBoard);
+        room.setPlaying(true);
+        room.setCreateAt(new Date(System.currentTimeMillis()));
+        List<User> users = room.getUsers();
+        for (User u: users){
+            onlineService.setStatus(u.getId(), UserResponse.Status.IN_GAME);
+        }
     }
 
 }

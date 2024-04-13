@@ -21,7 +21,6 @@ public class Room {
     private Date createAt;
     private boolean isPlaying;
 
-
     public boolean havePassword(){
         if (password==null) return false;
         return !password.isEmpty();

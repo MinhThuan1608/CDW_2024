@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.NoSuchAlgorithmException;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/authenticate")
@@ -46,12 +48,13 @@ public class AuthenticateController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws NoSuchAlgorithmException {
         if (!userService.isValidEmail(request.getEmail())) return ResponseEntity.status(405).body(new AbstractResponse(405, "Your email is invalid!", null));
         if (userService.isEmailExist(request.getEmail())) return ResponseEntity.status(405).body(new AbstractResponse(405, "Your email have been used!", null));
         if (request.getPassword()==null || request.getPassword().length()<8) return ResponseEntity.status(405).body(new AbstractResponse(405, "The password must be at least 8 characters in length!", null));
         if (!request.getPassword().equals(request.getConfirmPassword())) return ResponseEntity.status(405).body(new AbstractResponse(405, "Confirm password must be same password!", null));
         User user = userService.register(request.getEmail(), request.getPassword());
+        userService.sendVerifyMail(user);
         return ResponseEntity.ok(new AbstractResponse(200, "Register successfully!", user.getUserResponse()));
     }
 

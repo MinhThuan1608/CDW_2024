@@ -45,6 +45,10 @@ const GameBoard = () => {
                         if (me?.id === messResponse.winnerId)
                             toast('Chúc mừng, bạn đã chiến thắng <3');
                         else toast('Tiếc ghê, bạn thua mất rồi... hichic');
+                        toast('Bạn sẽ được chuyển về trang phòng chờ sau 5s');
+                        setTimeout(()=>{
+                            window.location ='/wait-room/'+roomId;
+                        }, 5000)
                     case 'MOVE':
                         let newPosition = messResponse.pieces
                         let turn = messResponse.turn

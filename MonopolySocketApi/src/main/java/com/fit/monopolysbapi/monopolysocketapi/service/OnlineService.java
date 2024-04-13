@@ -5,8 +5,10 @@ import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,14 +21,19 @@ public class OnlineService {
 
     public void addUser(UserResponse user) {
         if (userInServer.stream().noneMatch(u -> user.getId().equals(u.getId()))) {
-            System.out.println(user);
             userInServer.add(user);
         }
     }
 
     public void removeUser(User user) {
-        System.out.println("rm user: " + user);
         if (userInServer.size() > 0)
             userInServer.removeIf(u -> u.getId().equals(user.getId()));
+    }
+
+    public void setStatus(String userId, UserResponse.Status status){
+        UserResponse userResponse = null;
+        Optional<UserResponse> userOptional = userInServer.stream().filter(u -> u.getId().equals(userId)).findFirst();
+        if (userOptional.isPresent()) userResponse = userOptional.get();
+        userResponse.setStatus(status);
     }
 }

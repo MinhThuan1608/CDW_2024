@@ -5,6 +5,10 @@ import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
+import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
+import com.fit.monopolysbapi.monopolysocketapi.service.OnlineService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
@@ -21,6 +25,8 @@ import org.springframework.stereotype.Controller;
 public class GameController {
 
     private final RoomService roomService;
+    private final GameService gameService;
+    private final OnlineService onlineService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/game/chess/{roomId}")
@@ -53,14 +59,27 @@ public class GameController {
                     System.out.println("move: " + move);
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
-                        if (gameBoard.checkWin(gameBoard.getTurn())) {
+                        char nextTurn = gameBoard.getTurn() == 'w' ? 'b' : 'w';
+                        boolean isEnemyChecked = gameBoard.isChecked(nextTurn);
+                        boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(gameBoard.getTurn());
+                        if (isEnemyHasNoStepToPlay && isEnemyChecked) {
+                            User closer = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
+                            gameService.save(user, closer, room.getCreateAt());
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.WIN)
                                     .winnerId(user.getId())
                                     .pieces(gameBoard.getPiecesResponse())
                                     .build();
+                            gameBoard = null;
+                            room.setPlaying(false);
+                            onlineService.setStatus(user.getId(), UserResponse.Status.IN_ROOM);
+                            onlineService.setStatus(closer.getId(), UserResponse.Status.IN_ROOM);
+                        } else if (isEnemyHasNoStepToPlay){
+                            responseMessage = ChessMessage.builder()
+                                    .messageType(ChessMessage.ChessMessageType.DRAW)
+                                    .pieces(gameBoard.getPiecesResponse())
+                                    .build();
                         } else {
-                            char nextTurn = gameBoard.getTurn() == 'w' ? 'b' : 'w';
                             gameBoard.setTurn(nextTurn);
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.MOVE)

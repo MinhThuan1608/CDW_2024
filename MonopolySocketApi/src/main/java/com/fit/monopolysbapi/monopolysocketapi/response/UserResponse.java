@@ -18,6 +18,11 @@ public class UserResponse {
     private boolean isNonLocked;
     private Role role;
     private String token;
+    private Status status;
+
+    public enum Status{
+        ONLINE, IN_ROOM, IN_GAME
+    }
 
     @Override
     public String toString() {

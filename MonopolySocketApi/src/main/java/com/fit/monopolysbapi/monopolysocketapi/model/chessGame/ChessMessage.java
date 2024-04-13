@@ -28,7 +28,8 @@ public class ChessMessage {
         MOVE,
         GIVE_UP,
         GET_USER_IN_ROOM,
-        WIN
+        WIN,
+        DRAW
 
     }
 }

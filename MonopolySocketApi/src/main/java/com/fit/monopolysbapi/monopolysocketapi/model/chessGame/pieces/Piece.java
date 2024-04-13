@@ -9,7 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Piece {
     public int col, row;
     public boolean isWhite;

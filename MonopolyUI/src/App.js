@@ -48,6 +48,7 @@ function App() {
         setSocket(client)
 
         client.subscribe('/topic/user/online', (message) => {
+          console.log(JSON.parse(message.body))
           setUserOnline(JSON.parse(message.body));
         });
 
@@ -94,7 +95,7 @@ function App() {
               <Route path="/game/:roomId" element={<GamePage/>} />
             </Routes>
           </BrowserRouter>
-          <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" stacked />
+          <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
         </div>
       </AppContext.Provider>
 
