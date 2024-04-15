@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatSide from './wait-room-chat-side';
-import { faChess, faCrown, faPlus, faSignOut, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChess, faCrown, faPlus, faSignOut, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import WaitRoomOnlineUser from './wait-room-online-list-user';
 import userAvt from '../../assert/images/avatar/meo.jpg';
@@ -8,9 +8,7 @@ import userAvt from '../../assert/images/avatar/meo.jpg';
 
 const WaitRoomCenter = (props) => {
     const me = JSON.parse(sessionStorage.getItem('user'))
-    const handleInvitePlayer = () => {
-        alert('mời dô chơi')
-    }
+
     const handleKickUser = () => {
         props.socket.publish({
             destination: '/app/game/room/' + props.roomId,
@@ -53,9 +51,9 @@ const WaitRoomCenter = (props) => {
                     <div className="center-part-user center-part-userthr">
                         {/* <div className="img-frame-player"  style={{backgroundImage: `url(${userAvt})`}}></div> */}
                         {/* <p className="player-name player-br-thr"></p> */}
-                        <button className='btn-invite' onClick={handleInvitePlayer}>
-                            <FontAwesomeIcon icon={faPlus} className="icon-add-user" />
-                        </button>
+                        <div>
+                            <FontAwesomeIcon icon={faUser} className="icon-add-user" />
+                        </div>
                     </div>
                 }
 

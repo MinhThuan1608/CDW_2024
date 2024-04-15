@@ -25,8 +25,10 @@ public class Piece {
 
     @Override
     public String toString() {
-        return name;
+        return "Piece{" +
+                "col=" + col +
+                ", row=" + row +
+                ", name='" + name + '\'' +
+                '}';
     }
-
-
 }

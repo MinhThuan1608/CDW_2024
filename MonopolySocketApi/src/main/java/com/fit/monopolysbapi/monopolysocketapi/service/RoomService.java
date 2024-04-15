@@ -26,7 +26,6 @@ public class RoomService {
     private List<Room> rooms = new ArrayList<>();
 
     public RoomResponse createRoom(CreateRoomRequest message, User owner) {
-//        if (isRoomExistsByName(message.getRoomName())) return null;
         String id = util.generateId();
         while (isRoomExistsById(id)) id = util.generateId();
         String password = message.getPassword().equals("") ? null : message.getPassword();

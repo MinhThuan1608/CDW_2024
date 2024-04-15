@@ -14,7 +14,6 @@ public class King extends Piece {
         this.col = col;
         this.isWhite = isWhite;
         this.name = isWhite ? "wk" : "bk";
-//        this.xPos = col * board.TILE_SIZE;
 
     }
 
@@ -46,19 +45,6 @@ public class King extends Piece {
     }
 
     public boolean moveCollidesWithPiece(int row, int col) {
-        for (int r = this.row - 1; r <= this.row + 1; r++) {
-            for (int c = this.col - 1; c <= this.col + 1; c++) {
-                if (r == this.row && c == this.col) {
-                    continue;
-                }
-
-                if (r >= 0 && r < 8 && c >= 0 && c < 8) {
-                    if (board.getPiece(r, c) != null) {
-                        return true;
-                    }
-                }
-            }
-        }
         return false;
     }
 }

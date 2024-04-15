@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.security.access.method.P;
 
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Getter
 @Setter
@@ -17,6 +19,10 @@ public class GameBoard {
     public static final int TILE_SIZE = 25;
     private int enPassantTile = -1;
     private String turn;
+    private boolean isWin;
+    private int timer;
+    private Timer countdownTimer;
+    private int countdownResetCounter;
 
     private CheckScaner checkScaner = new CheckScaner(this);
 
@@ -32,7 +38,38 @@ public class GameBoard {
 
     public GameBoard() {
         this.turn = "w";
+        this.timer = 15;
         initGame();
+        startTimer();
+    }
+    public void startTimer() {
+        if (countdownTimer != null) {
+            countdownTimer.cancel();
+        }
+
+        countdownTimer = new Timer();
+        countdownTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (timer > 0) {
+                    timer--;
+                    System.out.println("Timer: " + timer);
+                } else {
+                    countdownResetCounter++;
+                    if (countdownResetCounter >= 3) {
+                        countdownTimer.cancel();
+                        System.out.println("quá 3 lần reset");
+//                        isWin = false;
+                    } else {
+                        turn = turn.equals("w") ? "b" : "w";
+                        timer = 15;
+                        System.out.println("Timer reset to 60");
+                        System.out.println(turn);
+                    }
+
+                }
+            }
+        }, 1000, 1000); // Giảm giá trị của timer mỗi giây (1000ms)
     }
 
     public Piece getPiece(int row, int col) {
@@ -85,18 +122,30 @@ public class GameBoard {
 //    }
 
     private void moveKing(Move move) {
+        System.out.println(move.getPiece());
         if (Math.abs(move.piece.col - move.newCol) == 2) {
             Piece rook;
             if (move.piece.col < move.newCol) {
                 rook = getPiece(move.piece.row, 7);
-                rook.setCol(5);
+                pieces[rook.row][7] = null;
+                rook.col = 5;
             } else {
                 rook = getPiece(move.piece.row, 0);
-                rook.setCol(3);
+                pieces[rook.row][0] = null;
+                rook.col = 3;
             }
             pieces[rook.row][rook.col] = rook;
-//            move.piece.setRow(rook.row);
-//            move.piece.setCol(rook.col);
+            move.piece.setRow(move.newRow);
+            move.piece.setCol(move.newCol);
+            pieces[move.getNewRow()][move.getNewCol()] = move.piece;
+            pieces[move.getOldRow()][move.getOldCol()] = null;
+            System.out.println(pieces[move.getNewRow()][move.getNewCol()]);
+        }else {
+            pieces[move.newRow][move.newCol] = move.piece;
+            move.piece.setRow(move.newRow);
+            move.piece.setCol(move.newCol);
+
+            pieces[move.oldRow][move.oldCol] = null;
         }
     }
 
@@ -179,6 +228,9 @@ public class GameBoard {
         return p1.isWhite == p2.isWhite;
     }
 
+    public boolean checkWin(Move move) {
+        return getPiece(move.getNewRow(), move.getNewCol()).getName().equals("k");
+    }
 
     public void initGame() {
         pieces = new Piece[COL][ROW];

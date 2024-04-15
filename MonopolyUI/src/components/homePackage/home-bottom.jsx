@@ -6,35 +6,40 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 
-const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCreateRoom, showModalBag, setShowModalBag}) => {
+const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCreateRoom, showModalBag, setShowModalBag,showModalShop, setShowModalShop}) => {
 
     // Hàm xử lý khi ấn vào ô chọn phòng
     const handleOpenModal = () => {
-        if(!showModalCreateRoom && !showModalBag){
+        if(!showModalCreateRoom && !showModalBag && !showModalShop){
             setShowModal(true);
         }
     };
     const handleOpenModalCreateRoom = () => {
-        if(!showModal && !showModalBag){
+        if(!showModal && !showModalBag && !showModalShop){
             setShowModalCreateRoom(true);
         }
     };
     const handleOpenModalBag = () => {
-        if(!showModal && !showModalCreateRoom){
+        if(!showModal && !showModalCreateRoom && !showModalShop){
             setShowModalBag(true);
+        }
+    };
+    const handleOpenModalShop = () => {
+        if(!showModal && !showModalCreateRoom && !showModalBag){
+            setShowModalShop(true);
         }
     };
     return (
         <div className="bottom-container">
             <div className="util-container">
                 <div className="shop-container">
-                    <img src={shopImg} alt="shop" className="util-icon" id="shop-image" data-bs-toggle="tooltip//"
-                        title="Cửa hàng" />
+                    <img src={shopImg} alt="shop" className="util-icon" id="shop-image"
+                        title="Cửa hàng" onClick={handleOpenModalShop}/>
                     <FontAwesomeIcon icon={faCircle} className="dot" id="shop-dot" />
                 </div>
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image" data-bs-toggle="modal//"
-                        data-bs-target="#bagModal" onClick={handleOpenModalBag}/>
+                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image" 
+                     onClick={handleOpenModalBag}/>
                     <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
                 </div>
             </div>

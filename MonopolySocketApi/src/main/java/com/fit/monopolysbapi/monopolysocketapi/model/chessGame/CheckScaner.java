@@ -80,15 +80,6 @@ public class CheckScaner {
     }
 
     private boolean hitByKing(Piece king, int kingRow, int kingCol) {
-        System.out.println((board.getPiece(kingRow - 1, kingCol - 1)));
-        System.out.println((board.getPiece(kingRow - 1, kingCol + 1)));
-        System.out.println((board.getPiece(kingRow - 1, kingCol)));
-
-        System.out.println(checkKing(board.getPiece(kingRow, kingCol - 1), king));
-        System.out.println(checkKing(board.getPiece(kingRow, kingCol + 1), king));
-        System.out.println(checkKing(board.getPiece(kingRow + 1, kingCol - 1), king));
-        System.out.println(checkKing(board.getPiece(kingRow + 1, kingCol + 1), king));
-        System.out.println(checkKing(board.getPiece(kingRow + 1, kingCol), king));
 
         return checkKing(board.getPiece(kingRow - 1, kingCol - 1), king) ||
                 checkKing(board.getPiece(kingRow - 1, kingCol + 1), king) ||

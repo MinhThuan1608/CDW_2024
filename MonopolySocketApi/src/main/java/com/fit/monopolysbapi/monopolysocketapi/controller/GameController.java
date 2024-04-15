@@ -2,11 +2,13 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.ChessMessage;
+import com.fit.monopolysbapi.monopolysocketapi.request.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
+import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,7 +16,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,18 +45,21 @@ public class GameController {
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
-                    System.out.println("move: "+move);
-//                    System.out.println("promotion: "+chessMessage.getNamePromotion());
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
+                        boolean isWin = gameBoard.checkWin(move);
                         String nextTurn = gameBoard.getTurn().equals("w") ? "b" : "w";
                         gameBoard.setTurn(nextTurn);
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
                                 .turn(nextTurn)
                                 .pieces(gameBoard.getPiecesResponse())
+                                .isWin(isWin)
                                 .build();
-
+//                                .timer(60)
+//                        ====================
+                        gameBoard.setTimer(15);
+                        gameBoard.startTimer();
                     } else {
                         responseMessage = ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.MOVE)
@@ -89,15 +99,49 @@ public class GameController {
 //                        .sender(user)
 //                        .build();
                 break;
-            case GET_USER_IN_ROOM:
-                // Xử lý việc thăng cấp quân cờ
-                // ...
+            case MESSAGE:
+                responseMessage = ChessMessage.builder()
+                        .users(room.getUsers())
+                        .messageType(ChessMessage.ChessMessageType.MESSAGE)
+                        .content(chessMessage.getContent())
+                        .createAt(new Date())
+                        .sender(user).build();
                 break;
             default:
                 break;
         }
         room.setGameBoard(gameBoard);
         simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
+    }
+    @GetMapping("/room/game/{roomId}/time")
+    public ResponseEntity getTimmer(@PathVariable String roomId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null){
+            return ResponseEntity.ok(new AbstractResponse(200, "Get time ok", roomService.getRoomById(roomId).getGameBoard().getTimer()));
+        }
+        return ResponseEntity.ok(new AbstractResponse(200, "Get time fail", false));
+    }
+
+    @MessageMapping("/game/chess/chat/{roomId}")
+    public void chessGameChat(@Payload ChessMessage chessMessage, @DestinationVariable String roomId, Message message) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
+        User user = (User) token.getPrincipal();
+        ChessMessage responseMessage = null;
+        Room room = roomService.getRoomById(roomId);
+        switch (chessMessage.getMessageType()) {
+            case MESSAGE:
+                responseMessage = ChessMessage.builder()
+                        .users(room.getUsers())
+                        .messageType(ChessMessage.ChessMessageType.MESSAGE)
+                        .content(chessMessage.getContent())
+                        .createAt(new Date())
+                        .sender(user).build();
+                break;
+            default:
+                break;
+        }
+        simpMessagingTemplate.convertAndSend("/topic/game/chess/chat/" + roomId, responseMessage);
     }
 
 

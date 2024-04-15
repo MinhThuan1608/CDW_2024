@@ -1,9 +1,11 @@
-package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
+package com.fit.monopolysbapi.monopolysocketapi.request;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -16,12 +18,14 @@ public class ChessMessage {
     private ChessMessageType messageType;
     private Move move;
     private String[][] pieces;
-    private boolean isCheckmate;
+    private boolean isWin;
     private String namePromotion;
     private User sender;
     private String content;
     private String turn;
+    private int timer;
     private List<User> users;
+    private Date createAt;
 
     public enum ChessMessageType {
         MOVE,
@@ -29,7 +33,8 @@ public class ChessMessage {
         DRAW_OFFER,
         PIECE_PROMOTION,
         CHECKMATE,
-        GET_USER_IN_ROOM
+        MESSAGE,
+        TIME
 
     }
 }

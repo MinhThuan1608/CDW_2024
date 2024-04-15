@@ -1,19 +1,19 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useRef } from 'react';
-import { formatDate } from '../gameBoard/help';
+import { formatDate } from './help';
 
-const ChatSide = (props) => {
+const GameChat = (props) => {
     const [messageValue, setMessageValue] = useState('')
 
     const messRef = useRef()
     const ownerRoom = JSON.parse(sessionStorage.getItem('user'))
 
-
-
+    // console.log(props.listMessageInGame)
     const handleSendMessage = () => {
+        console.log(messageValue)
         props.socket.publish({
-            destination: '/app/game/room/' + props.roomId,
+            destination: '/app/game/chess/chat/' + props.roomId,
             body: JSON.stringify({
                 messageType: 'MESSAGE',
                 content: messageValue
@@ -36,7 +36,7 @@ const ChatSide = (props) => {
         <div className="chat-room-part">
             <p className="title-chat">chat</p>
             <div className="messageList force-overflow scrollbar"   >
-                {props.listMessage.map((message, index) => (
+                {props.listMessageInGame.map((message, index) => (
                     <div className={`message ${message.sender.id === ownerRoom.id ? 'messageOwner' : ''}`} key={index}>
                         <div className={`messageBlock ${message.sender.id === ownerRoom.id ? 'messageBlockOwner' : ''}`}>
                             <span className="sendTime">{formatDate(message.createAt)}</span>
@@ -66,4 +66,4 @@ const ChatSide = (props) => {
         </div>
     );
 }
-export default ChatSide;
+export default GameChat;

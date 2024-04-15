@@ -143,7 +143,8 @@
     display: flex;
     justify-content: space-evenly;
     margin-top: 12px;
-    /* border: 2px solid #ffffff; */
+    /* border: 2px solid #8aa905; */
+
 }
 
 .center-part-user {
@@ -218,39 +219,42 @@
     z-index: 1;
     cursor: pointer;
 }
-.icon-delete-user:hover{
+
+.icon-delete-user:hover {
     filter: drop-shadow(0 0 4px #ff238a);
 }
-.btn-invite{
-    border: none;
-    background-color: transparent;
+
+
+.icon-add-user {
+    position: absolute;
+    top: 31%;
+    right: 23%;
+    color: #000000;
+    height: 35%;
+    z-index: 1;
 }
-.icon-add-user{
-        position: absolute;
-        top: 31%;
-        right: 23%;
-        color: #000000;
-        height: 35%;
-        z-index: 1;
-}
-.icon-chess{
+
+.icon-chess {
     position: absolute;
     top: 31%;
     right: 23%;
     height: 35%;
     cursor: pointer;
 }
-.icon-chess-white{
+
+.icon-chess-white {
     color: #ffffff;
-    
+
 }
-.icon-chess-black{
+
+.icon-chess-black {
     color: #000000;
 }
 
-.icon-chess-black:hover{
+.icon-chess-black:hover {
     filter: drop-shadow(0 0 4px #8c8c8c);
 }
+
 /* chat side */
 .chat-room-part {
     position: relative;
@@ -307,6 +311,8 @@
     height: 230px;
     padding: 0px 2px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .messageList::-webkit-scrollbar {
@@ -325,24 +331,21 @@
     display: flex;
     flex-direction: column;
     margin: 4px 0;
-    margin-right: 120px;
+    align-items: flex-start; 
+   
 }
 
 .messageOwner {
-    margin-left: 120px;
-    margin-right: 4px;
+    justify-content: flex-end;
+    align-items: flex-end; 
 }
 
 .messageBlock {
-    display: flex;
-    justify-content: left;
-    align-items: center;
+    align-items: left;
 }
 
 .messageBlockOwner {
-    justify-content: right;
-    flex-direction: row-reverse;
-    text-align: left;
+    align-items: right;
 }
 
 .sendTime,
@@ -365,13 +368,13 @@
     margin: 4px;
     border-radius: 5px;
     align-items: center;
-    justify-content: flex-start;
     padding: 0 4px;
+    max-width: 200px;
+    word-wrap: break-word; /* Xuống dòng khi vượt quá chiều rộng */
+    word-break: break-word; 
+
 }
 
-.messageContentOwner {
-    justify-content: flex-end;
-}
 
 /* =================== */
 /* =======BOTTOM============ */
@@ -404,12 +407,14 @@
     margin-top: 16px;
 
 }
-.userList{
+
+.userList {
     margin: 0;
     height: 270px;
     padding: 0px 2px;
     overflow-y: auto;
 }
+
 .userList::-webkit-scrollbar {
     width: 8px;
     border-radius: 15px;
@@ -424,6 +429,7 @@
     background-color: #ffffff;
     border-radius: 15px;
 }
+
 .user-card {
     display: flex;
     align-items: center;
@@ -448,7 +454,8 @@
     left: 46px;
     top: 49px;
 }
-.join{   
+
+.join {
     position: absolute;
     background-color: #8aa905;
     border-radius: 5px;
@@ -459,7 +466,7 @@
     border-color: #8aa905;
 }
 
-.join:hover{
+.join:hover {
     filter: drop-shadow(0 0 4px #F3F8FF);
     cursor: pointer;
 }

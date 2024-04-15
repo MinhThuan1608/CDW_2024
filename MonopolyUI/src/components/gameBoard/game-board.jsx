@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import {  makeNewMove } from '../../reducer/action/move';
 import Popup from './Popup/Popup';
 
-const GameBoard = () => {
+const GameBoard = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
     const[isSelected, setIsSelected] = useState('')
@@ -67,7 +67,7 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected}/>
+            <Piceces roomId={roomId} isSelected={isSelected} listUsers={props.listUsers}/>
 
             {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}/>)}
             <Files files={files} />

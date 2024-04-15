@@ -4,7 +4,7 @@ import Piece from "./Piece";
 import { copyPosition, createPosition } from "../help";
 import { useAppContext } from "../../../contexts/Context";
 import { SocketContext } from "../../../App";
-import { clearCandidates } from "../../../reducer/action/move";
+import { clearCandidates, savePiece } from "../../../reducer/action/move";
 
 let movePromotion = {}
 const Piceces = (props) => {
@@ -67,7 +67,9 @@ const Piceces = (props) => {
 
         }
 
+        dispatch(savePiece({rank, file, x, y}))
         dispatch(clearCandidates())
+
     }
 
     const onDragOver = e => {
@@ -104,6 +106,7 @@ const Piceces = (props) => {
                         rank={rank}
                         file={file}
                         piece={currentPosition[rank][file]}
+                        listUsers={props.listUsers}
                     />
                     : null
             ))}

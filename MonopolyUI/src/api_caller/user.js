@@ -57,3 +57,44 @@ export async function InitUser(username, defaultAvatarId, avatar) {
     }
     return responseData.message;// init fail
 }
+export async function EditProfile(username, avatar) {
+    const urlString = `http://localhost:8001/user/editprofile`;
+
+    const response = await fetch(urlString, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+        body: JSON.stringify({
+            username: username,
+            defaultAvatarId: null,
+            avatar: avatar
+        })
+    });
+
+    const responseData = await response.json()
+    // const responseData = await response
+    console.log(responseData)
+    if (response.ok) {
+        return responseData.data;
+    }
+    return responseData.message;// init fail
+}
+export async function GetBag(username) {
+    const urlString = `http://localhost:8001/user/bag/${username}`;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+    const responseData = await response.json()
+ 
+    if (response.ok) {
+        return responseData.data;
+    }
+    return responseData.message;
+}

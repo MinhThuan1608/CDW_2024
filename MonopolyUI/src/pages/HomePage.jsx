@@ -13,6 +13,9 @@ const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalCreateRoom, setShowModalCreateRoom] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
+  const [showModalProfile, setShowModalProfile] = useState(false);
+  const [showModalShop, setShowModalShop] = useState(false);
+
   const { socket } = useContext(SocketContext)
   const me = JSON.parse(sessionStorage.getItem('user'))
 
@@ -40,7 +43,7 @@ const HomePage = () => {
             }).then((result) => {
               if (result.isConfirmed) {
                 JoinRoom(inviteMessage.roomId, inviteMessage.roomPass).then(result => {
-                  if (result){
+                  if (result) {
                     window.location = `/wait-room/${inviteMessage.roomId}`
                   } else Swal.fire("Có lỗi xảy ra!", "Thông cảm xíu nhaaa", "error");
                 })
@@ -48,10 +51,10 @@ const HomePage = () => {
                 socket.publish({
                   destination: '/app/room/invite',
                   body: JSON.stringify({
-                      receiverId: inviteMessage.sender.id,
-                      inviteMessageType: "DECLINE",
+                    receiverId: inviteMessage.sender.id,
+                    inviteMessageType: "DECLINE",
                   })
-              });
+                });
               }
             });
             break
@@ -63,17 +66,24 @@ const HomePage = () => {
   }, [socket])
 
   return (
-    <div className='main-container'>
-      <HomeTop />
+    <div className='home-container'>
+      <HomeTop
+        showModal={showModal}
+        showModalCreateRoom={showModalCreateRoom}
+        showModalBag={showModalBag}
+        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />
       <HomeMiddle
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
-        showModalBag={showModalBag}
-        setShowModalBag={setShowModalBag} />
-      <HomeBottom showModal={showModal} setShowModal={setShowModal}
+        showModalBag={showModalBag} setShowModalBag={setShowModalBag}
+        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
+        showModalShop={showModalShop} setShowModalShop={setShowModalShop} />
+      <HomeBottom
+        showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
-        showModalBag={showModalBag}
-        setShowModalBag={setShowModalBag} />
+        showModalBag={showModalBag} setShowModalBag={setShowModalBag}
+        showModalShop={showModalShop} setShowModalShop={setShowModalShop}
+      />
     </div>
   );
 }

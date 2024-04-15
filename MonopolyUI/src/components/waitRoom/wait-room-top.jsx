@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import userAvt from '../../assert/images/avatar/user.png';
+import userAvt from '../../assert/images/avatar/meo.jpg';
 import { faXmark, faGear, faCoins, faEyeSlash, faEye, faCopy } from '@fortawesome/free-solid-svg-icons';
 
 
