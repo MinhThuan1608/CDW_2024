@@ -5,7 +5,7 @@ import PromotionBox from './PromotionBox/PromotionBox';
 const Popup = (props) => {
     const{appState} = useAppContext()
     const handleUpdatePawn = () => {
-        appState.completePromotionChoose = true
+        props.setCompletePromotionChoose(true)
         appState.isPromotion = false;
     }
     return <div className="popup">

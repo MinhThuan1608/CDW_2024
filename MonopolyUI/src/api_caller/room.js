@@ -101,3 +101,21 @@ export async function GetUserInRoom(roomId) {
     }
     return [];
 }
+
+export async function GetRoomMeIn() {
+    const urlString = `http://localhost:8001/room/me`;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    const responseData = await response.json()
+    if (response.ok) {
+        return responseData.data;
+    }
+    return null;
+}

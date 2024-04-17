@@ -19,4 +19,15 @@ public class InviteMessage {
     public enum InviteMessageType{
         INVITE, DECLINE
     }
+
+    @Override
+    public String toString() {
+        return "InviteMessage{" +
+                "sender=" + sender +
+                ", receiverId='" + receiverId + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", roomPass='" + roomPass + '\'' +
+                ", inviteMessageType=" + inviteMessageType +
+                '}';
+    }
 }

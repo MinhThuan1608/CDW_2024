@@ -3,32 +3,25 @@ import userAvt from '../../assert/images/avatar/user.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faCircle, faEnvelope, faBell, faCoins, faGem } from '@fortawesome/free-solid-svg-icons';
 
-const HomeTop = () => {
-    const [user, setUser] = useState(null) 
-
-    useEffect(()=>{
-        const userStorage = JSON.parse(sessionStorage.getItem('user'))
-        setUser(userStorage)
-    }, [])
-
+const HomeTop = (props) => {
     return (
         <div className="top-container">
         <div className="info-container">
-            <img src={!user?userAvt:user.avatar?user.avatar.data:userAvt} alt="avatar" id="avatar"/>
+            <img src={props.me?.avatar?props.me.avatar.data:userAvt} alt="avatar" id="avatar"/>
             <div className="username-container">
-                <p id="username-title">{user?user.username:"error"}</p>
+                <p id="username-title">{props.me?.username}</p>
             </div>
         </div>
         <div className="money-container">
             <div className="coin-container">
                 <i className="fa-solid fa-coins "></i>
             <FontAwesomeIcon icon={faCoins} className="money-icon"/>
-                <p className="money coin">999,999,999</p>
+                <p className="money coin">{props.me?.money}</p>
             </div>
-            <div className="diamond-container">
+            {/* <div className="diamond-container">
             <FontAwesomeIcon icon={faGem} className="gem-icon"/>
                 <p className="money gem">999,999</p>
-            </div>
+            </div> */}
         </div>
         <div className="setting-container">
             <div className="icon-container">

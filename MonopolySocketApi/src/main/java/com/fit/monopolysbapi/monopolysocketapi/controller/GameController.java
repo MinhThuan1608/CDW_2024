@@ -20,13 +20,14 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
+import java.util.Date;
+
 @Controller
 @RequiredArgsConstructor
 public class GameController {
 
     private final RoomService roomService;
     private final GameService gameService;
-    private final OnlineService onlineService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/game/chess/{roomId}")
@@ -39,16 +40,19 @@ public class GameController {
         ChessMessage responseMessage = null;
         switch (chessMessage.getMessageType()) {
             case CONNECT:
-                responseMessage = ChessMessage.builder()
-                        .messageType(ChessMessage.ChessMessageType.MOVE)
-                        .turn(gameBoard.getTurn())
-                        .pieces(gameBoard.getPiecesResponse())
-                        .build();
+                if (gameBoard != null)
+                    responseMessage = ChessMessage.builder()
+                            .messageType(ChessMessage.ChessMessageType.MOVE)
+                            .turn(gameBoard.getTurn())
+                            .hints(gameBoard.getHintsResponse())
+                            .pieces(gameBoard.getPiecesResponse())
+                            .build();
                 break;
             case MOVE:
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.MOVE)
                         .turn(gameBoard.getTurn())
+                        .hints(gameBoard.getHintsResponse())
                         .pieces(gameBoard.getPiecesResponse())
                         .build();
                 if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn() == 'w') ||
@@ -59,36 +63,36 @@ public class GameController {
                     System.out.println("move: " + move);
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
-                        char nextTurn = gameBoard.getTurn() == 'w' ? 'b' : 'w';
+                        char nextTurn = gameBoard.getNextTurn();
                         boolean isEnemyChecked = gameBoard.isChecked(nextTurn);
-                        boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(gameBoard.getTurn());
+                        boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(nextTurn);
                         if (isEnemyHasNoStepToPlay && isEnemyChecked) {
                             User closer = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
-                            gameService.save(user, closer, room.getCreateAt());
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.WIN)
                                     .winnerId(user.getId())
                                     .pieces(gameBoard.getPiecesResponse())
                                     .build();
-                            gameBoard = null;
-                            room.setPlaying(false);
-                            onlineService.setStatus(user.getId(), UserResponse.Status.IN_ROOM);
-                            onlineService.setStatus(closer.getId(), UserResponse.Status.IN_ROOM);
-                        } else if (isEnemyHasNoStepToPlay){
+                            simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
+                            gameService.matchEnd(room, user, closer, true);
+                            return;
+                        } else if (isEnemyHasNoStepToPlay) {
+                            User otherUser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.DRAW)
                                     .pieces(gameBoard.getPiecesResponse())
                                     .build();
+                            gameService.matchEnd(room, user, otherUser, false);
                         } else {
                             gameBoard.setTurn(nextTurn);
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.MOVE)
                                     .turn(nextTurn)
                                     .pieces(gameBoard.getPiecesResponse())
+                                    .hints(gameBoard.getHintsResponse())
                                     .build();
                         }
                     }
-
                 }
                 break;
             case GIVE_UP:

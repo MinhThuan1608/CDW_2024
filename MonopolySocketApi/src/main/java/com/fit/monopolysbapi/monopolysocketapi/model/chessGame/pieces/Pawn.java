@@ -54,22 +54,21 @@ public class Pawn extends Piece {
     }
 
     public boolean moveCollidesWithPiece(int row, int col) {
-        // Nếu con Pawn di chuyển xuống dưới bàn cờ
+        int rowDirection = isWhite ? 1 : -1;
         if (this.row > row) {
-            for (int r = this.row - 1; r > row; r--) {
+            for (int r = this.row + rowDirection; r != row; r += rowDirection) {
                 if (board.getPiece(r, this.col) != null) {
                     return true;
                 }
             }
         }
-        // Nếu con Pawn di chuyển lên trên bàn cờ
-        if (this.row < row) {
-            for (int r = this.row + 1; r < row; r++) {
-                if (board.getPiece(r, this.col) != null) {
-                    return true;
-                }
-            }
-        }
+//        if (this.row < row) {
+//            for (int r = this.row + 1; r < row; r++) {
+//                if (board.getPiece(r, this.col) != null) {
+//                    return true;
+//                }
+//            }
+//        }
         return false;
     }
 
@@ -78,7 +77,7 @@ public class Pawn extends Piece {
         List<Move> hints = new ArrayList<>();
         int rowDirection = isWhite ? 1 : -1;
         Move move;
-        int[][] directions = {{row + rowDirection, col}, {row + rowDirection + rowDirection, col},
+        int[][] directions = {{row + rowDirection, col}, {row + rowDirection * 2, col},
                 {row + rowDirection, col - 1}, {row + rowDirection, col + 1}};
         for (int[] direction : directions) {
             if (isValidMovement(direction[0], direction[1]) && !moveCollidesWithPiece(direction[0], direction[1])) {
@@ -87,7 +86,7 @@ public class Pawn extends Piece {
                         .oldRow(row)
                         .oldCol(col)
                         .piece(this).build();
-                if (!board.getCheckScaner().isKingChecked(move))
+                if (!board.getCheckScanner().isKingChecked(move))
                     hints.add(move);
             }
         }

@@ -18,7 +18,7 @@ public class WaitRoomMessage {
     private User sender;
     private RoomMessageType messageType;
     private String content;
-    private Date createAt;
+    private String createAt;
     private GameBoard gameBoard;
     public enum RoomMessageType{
         JOIN, LEAVE, MESSAGE, START_GAME, KICK, TIME_OUT

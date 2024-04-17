@@ -6,21 +6,21 @@ import HomeBottom from '../components/homePackage/home-bottom';
 import { useState } from 'react';
 import { SocketContext } from '../App';
 import Swal from 'sweetalert2';
-import { JoinRoom } from '../api_caller/room';
+import { GetRoomMeIn, JoinRoom } from '../api_caller/room';
+import { GetMe } from '../api_caller/user';
 
 
-const HomePage = () => {
+const HomePage = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalCreateRoom, setShowModalCreateRoom] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
   const { socket } = useContext(SocketContext)
-  const me = JSON.parse(sessionStorage.getItem('user'))
 
   useEffect(() => {
-    if (socket) {
-      socket.subscribe(`/user/${me.id}/topic/room/invite`, (message) => {
+    if (socket && props.me.id) {
+      console.log(`/user/${props.me.id}/topic/room/invite`)
+      socket.subscribe(`/user/${props.me.id}/topic/room/invite`, (message) => {
         const inviteMessage = JSON.parse(message.body)
-        console.log("private invite")
         console.log(inviteMessage)
         switch (inviteMessage.inviteMessageType) {
           case "INVITE":
@@ -40,7 +40,7 @@ const HomePage = () => {
             }).then((result) => {
               if (result.isConfirmed) {
                 JoinRoom(inviteMessage.roomId, inviteMessage.roomPass).then(result => {
-                  if (result){
+                  if (result) {
                     window.location = `/wait-room/${inviteMessage.roomId}`
                   } else Swal.fire("Có lỗi xảy ra!", "Thông cảm xíu nhaaa", "error");
                 })
@@ -48,10 +48,10 @@ const HomePage = () => {
                 socket.publish({
                   destination: '/app/room/invite',
                   body: JSON.stringify({
-                      receiverId: inviteMessage.sender.id,
-                      inviteMessageType: "DECLINE",
+                    receiverId: inviteMessage.sender.id,
+                    inviteMessageType: "DECLINE",
                   })
-              });
+                });
               }
             });
             break
@@ -60,11 +60,11 @@ const HomePage = () => {
         }
       });
     }
-  }, [socket])
+  }, [socket, props.me])
 
   return (
     <div className='main-container'>
-      <HomeTop />
+      <HomeTop me={props.me}/>
       <HomeMiddle
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}

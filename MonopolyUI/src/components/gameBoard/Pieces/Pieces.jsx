@@ -4,7 +4,7 @@ import Piece from "./Piece";
 import { copyPosition, createPosition } from "../help";
 import { useAppContext } from "../../../contexts/Context";
 import { SocketContext } from "../../../App";
-import { clearCandidates } from "../../../reducer/action/move";
+import { clearCandidates, makeNewMove } from "../../../reducer/action/move";
 
 let movePromotion = {}
 const Piceces = (props) => {
@@ -18,7 +18,6 @@ const Piceces = (props) => {
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
-        // console.log(ref.current.getBoundingClientRect())
         const size = width / 8
         const y = Math.floor((e.clientX - left) / size)
         const x = 7 - Math.floor((e.clientY - top) / size)
@@ -74,8 +73,7 @@ const Piceces = (props) => {
     }
 
     useEffect(() => {
-        if (appState.completePromotionChoose && socket) {
-            console.log(movePromotion)
+        if (props.completePromotionChoose && socket) {
             socket.publish({
                 destination: '/app/game/chess/' + props.roomId,
                 body: JSON.stringify({
@@ -85,9 +83,9 @@ const Piceces = (props) => {
 
                 })
             });
-            appState.completePromotionChoose = false
+            props.setCompletePromotionChoose(false)
         }
-    }, [appState.completePromotionChoose])
+    }, [props.completePromotionChoose])
 
     return <div
         className="pieces"
@@ -103,6 +101,7 @@ const Piceces = (props) => {
                         rank={rank}
                         file={file}
                         piece={currentPosition[rank][file]}
+                        hints={props.hints}
                     />
                     : null
             ))}

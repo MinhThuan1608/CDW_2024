@@ -9,8 +9,10 @@ import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,11 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomService {
     private final Util util;
-    private final OnlineService onlineService;
     private List<Room> rooms = new ArrayList<>();
 
     public RoomResponse createRoom(CreateRoomRequest message, User owner) {
-//        if (isRoomExistsByName(message.getRoomName())) return null;
         String id = util.generateId();
         while (isRoomExistsById(id)) id = util.generateId();
         String password = message.getPassword().equals("") ? null : message.getPassword();
@@ -56,9 +56,7 @@ public class RoomService {
     }
 
     public List<RoomResponse> getRoomsResponse() {
-        return rooms.stream().map(room ->
-                RoomResponse.builder().id(room.getId()).roomName(room.getName()).numUser(room.getUsers().size())
-                        .havePass(room.havePassword()).build()).collect(Collectors.toList());
+        return rooms.stream().map(Room::getRoomResponse).collect(Collectors.toList());
     }
 
     public boolean checkJoinRoom(JoinRoomRequest request) {
@@ -80,9 +78,10 @@ public class RoomService {
         if (room == null) return;
         List<User> users = room.getUsers();
         if (users.stream().noneMatch(u -> u.getId().equals(user.getId()))) {
+            Room otherRoom = getRoomUserIn(user.getId());
+            if (otherRoom!=null) leaveRoom(user, room.getId());
             users.add(user);
             room.setUsers(users);
-            onlineService.setStatus(user.getId(), UserResponse.Status.IN_ROOM);
         }
     }
 
@@ -91,7 +90,6 @@ public class RoomService {
         if (room == null) return;
         List<User> users = room.getUsers();
         users.removeIf(u -> u.getId().equals(user.getId()));
-        onlineService.setStatus(user.getId(), UserResponse.Status.ONLINE);
         if (users.size() == 0) rooms.remove(room);
         else room.setUsers(users);
     }
@@ -118,10 +116,6 @@ public class RoomService {
     }
 
     public void deleteRoom(String id) {
-        List<UserResponse> users = getUserInRoom(id);
-        for (UserResponse u: users){
-            onlineService.setStatus(u.getId(), UserResponse.Status.ONLINE);
-        }
         rooms.removeIf(room -> room.getId().equals(id));
     }
 
@@ -129,11 +123,11 @@ public class RoomService {
         GameBoard gameBoard = new GameBoard();
         room.setGameBoard(gameBoard);
         room.setPlaying(true);
-        room.setCreateAt(new Date(System.currentTimeMillis()));
-        List<User> users = room.getUsers();
-        for (User u: users){
-            onlineService.setStatus(u.getId(), UserResponse.Status.IN_GAME);
-        }
+    }
+
+    @Bean
+    public SimpleDateFormat getSimpleDateFormat(){
+        return new SimpleDateFormat("HH:mm");
     }
 
 }

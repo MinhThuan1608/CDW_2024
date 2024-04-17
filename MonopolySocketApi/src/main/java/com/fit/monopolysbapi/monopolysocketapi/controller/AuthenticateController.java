@@ -34,7 +34,6 @@ public class AuthenticateController {
         var user = userService.getUserByUsernameOrEmail(request.getIdentify()).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         if (!user.isAccountNonLocked()) return ResponseEntity.status(403).body(new AbstractResponse(403, "Your account is blocked!", null));
         String jwtToken = jwtUtil.generateToken(user);
-        System.out.println(jwtToken);
         return ResponseEntity.ok(new AbstractResponse(200, "Login successfull!",
                 UserResponse.builder().id(user.getId())
                         .username(user.getUsername())
@@ -42,6 +41,7 @@ public class AuthenticateController {
                         .avatar(user.getAvatar())
                         .isConfirmEmail(user.isConfirmEmail())
                         .token(jwtToken)
+                        .money(user.getMoney())
                         .isConfirmEmail(user.isConfirmEmail())
                         .isNonLocked(user.isNonLocked())
                         .role(user.getRole()).build()));

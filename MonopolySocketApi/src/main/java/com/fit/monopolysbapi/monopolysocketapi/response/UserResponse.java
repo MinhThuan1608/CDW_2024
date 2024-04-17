@@ -14,6 +14,7 @@ public class UserResponse {
     private String email;
     private String username;
     private Avatar avatar;
+    private long money;
     private boolean isConfirmEmail;
     private boolean isNonLocked;
     private Role role;

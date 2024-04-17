@@ -1,6 +1,7 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
 
 const ChatSide = (props) => {
     const [messageValue, setMessageValue] = useState('')
@@ -8,33 +9,20 @@ const ChatSide = (props) => {
     const messRef = useRef()
     const ownerRoom = JSON.parse(sessionStorage.getItem('user'))
 
-    const formatDate = (data) => {
-
-        // Tạo một đối tượng Date từ chuỗi ngày
-        const dateObj = new Date(data);
-
-        // Lấy giờ và phút
-        const hour = dateObj.getUTCHours();
-        const minute = dateObj.getUTCMinutes();
-
-        
-        return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
-
-    }
-
     const handleSendMessage = () => {
-        props.socket.publish({
-            destination: '/app/game/room/' + props.roomId,
-            body: JSON.stringify({
-                messageType: 'MESSAGE',
-                content: messageValue
-            })
-        });
-
+        if (messageValue.trim() !== '')
+            props.socket.publish({
+                destination: '/app/game/room/' + props.roomId,
+                body: JSON.stringify({
+                    messageType: 'MESSAGE',
+                    content: messageValue
+                })
+            });
+        else toast.warn('Tin nhắn cần có nội dung!')
         setMessageValue('')
         messRef.current.focus()
     }
-    
+
     const handleSendMessageEnter = (e) => {
         if (e.key === 'Enter') {
             handleSendMessage()
@@ -53,7 +41,7 @@ const ChatSide = (props) => {
                             <span className={`sendName ${message.sender.id === ownerRoom.id ? 'player-br-forth' : 'player-br-thr'}`}>
                                 {message.sender.username}
                             </span>
-                            <span className="sendTime">{formatDate(message.createAt)}</span>
+                            <span className="sendTime">{message.createAt}</span>
                         </div>
                         <span className={`messageContent ${message.sender.id === ownerRoom.id ? 'player-br-forth messageContentOwner' : 'player-br-thr'}`}>{message.content}</span>
                     </div>
@@ -65,7 +53,7 @@ const ChatSide = (props) => {
                     value={messageValue}
                     onChange={e => setMessageValue(e.target.value)}
                     ref={messRef}
-                    onKeyUp={ e => handleSendMessageEnter(e)} />
+                    onKeyUp={e => handleSendMessageEnter(e)} />
 
                 <button className='sendBtn' onClick={handleSendMessage}>
                     <FontAwesomeIcon icon={faPaperPlane} className="icon-send-mess" />

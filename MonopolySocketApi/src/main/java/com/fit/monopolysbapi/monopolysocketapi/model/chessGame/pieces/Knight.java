@@ -41,7 +41,7 @@ public class Knight extends Piece {
             piece = board.getPiece(x, y);
             if (piece != null && piece.getColor() == this.getColor()) continue;
             move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();
-            if (!board.getCheckScaner().isKingChecked(move))
+            if (!board.getCheckScanner().isKingChecked(move))
                 hints.add(move);
         }
         return hints;

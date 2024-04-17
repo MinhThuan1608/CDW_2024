@@ -1,10 +1,13 @@
 package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
+import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,10 +20,12 @@ public class GameBoard {
     public static final int TILE_SIZE = 25;
     private int enPassantTile = -1;
     private char turn;
-
-    private CheckScanner checkScaner = new CheckScanner(this);
+    private Date createAt;
+    private List<Move> hints;
+    private CheckScanner checkScanner = new CheckScanner(this);
 
     public GameBoard() {
+        this.createAt = new Date();
         this.turn = 'w';
         initGame();
     }
@@ -50,6 +55,8 @@ public class GameBoard {
         pieces[7][5] = new Bishop(this, 7, 5, false);
         pieces[7][6] = new Knight(this, 7, 6, false);
         pieces[7][7] = new Rook(this, 7, 7, false);
+
+        this.hints = getNextStepHints(turn);
     }
 
     public Piece getPiece(int row, int col) {
@@ -106,16 +113,11 @@ public class GameBoard {
                 rook.col = 3;
             }
             pieces[rook.row][rook.col] = rook;
-            move.piece.setRow(move.newRow);
-            move.piece.setCol(move.newCol);
-            pieces[move.getNewRow()][move.getNewCol()] = move.piece;
-            pieces[move.getOldRow()][move.getOldCol()] = null;
-        } else {
-            pieces[move.newRow][move.newCol] = move.piece;
-            move.piece.setRow(move.newRow);
-            move.piece.setCol(move.newCol);
-            pieces[move.oldRow][move.oldCol] = null;
         }
+        move.piece.setRow(move.newRow);
+        move.piece.setCol(move.newCol);
+        pieces[move.getNewRow()][move.getNewCol()] = move.piece;
+        pieces[move.getOldRow()][move.getOldCol()] = null;
     }
 
     private void movePawn(Move move, String namePromotion) {
@@ -161,23 +163,7 @@ public class GameBoard {
     }
 
     public boolean isValidMove(Move move) {
-        if (sameTeam(move.piece, move.capture)) {
-            System.out.println("same team");
-            return false;
-        }
-        if (!move.piece.isValidMovement(move.newRow, move.newCol)) {
-            System.out.println("NoValidMovement");
-            return false;
-        }
-        if (move.piece.moveCollidesWithPiece(move.newRow, move.newCol)) {
-            System.out.println("moveCollidesWithPiece");
-            return false;
-        }
-        if (checkScaner.isKingChecked(move)) {
-            System.out.println("isKingChecked");
-            return false;
-        }
-        return true;
+        return hints.stream().anyMatch(m -> m.same(move));
     }
 
     public boolean sameTeam(Piece p1, Piece p2) {
@@ -185,10 +171,6 @@ public class GameBoard {
             return false;
         }
         return p1.isWhite == p2.isWhite;
-    }
-
-    public boolean isCheckmate() {
-        return true;
     }
 
     public String[][] getPiecesResponse() {
@@ -199,24 +181,36 @@ public class GameBoard {
         return piecesResponse;
     }
 
-    public boolean hasNoStepToPlay(char winnerColor) {
-        char closer = winnerColor == 'w' ? 'b' : 'w';
+    public boolean hasNoStepToPlay(char nextStepColor) {
+        this.hints = getNextStepHints(nextStepColor);
+        return this.hints.size() == 0;
+    }
+
+    public List<Move> getNextStepHints(char nextStepColor) {
+        List<Move> res = new ArrayList<>();
         for (Piece[] row : pieces) {
             for (Piece piece : row) {
-                if (piece != null && piece.getColor() == closer) {
+                if (piece != null && piece.getColor() == nextStepColor) {
                     List<Move> hints = piece.getMoveHint();
-                    if (hints.size() > 0) {
-                        return false;
-                    }
+                    res.addAll(hints);
                 }
             }
         }
-        return true;
+        return res;
     }
 
-    public boolean isChecked(char teamColor){
+    public boolean isChecked(char teamColor) {
         Move noneMove = Move.builder().newRow(-1).newCol(-1).oldRow(-1).oldCol(-1).piece(Piece.builder().isWhite(teamColor == 'w').build()).build();
-        return checkScaner.isKingChecked(noneMove);
+        return checkScanner.isKingChecked(noneMove);
     }
+
+    public char getNextTurn() {
+        return turn == 'w' ? 'b' : 'w';
+    }
+
+    public List<Hint> getHintsResponse(){
+        return hints.stream().map(Move::toMoveResponse).toList();
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ChessMessage {
     private char turn;
     private List<User> users;
     private String winnerId;
+    private List<Hint> hints;
 
     public enum ChessMessageType {
         CONNECT,

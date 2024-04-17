@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { switchCase } from '@babel/types';
 import Swal from 'sweetalert2';
 import { GetRoomPass } from '../api_caller/room';
+import { GetMe } from '../api_caller/user';
 import meme from '../assert/images/icon/meme-meo-khoc-2.png';
 
 
@@ -17,12 +18,12 @@ const WaitRoom = (props) => {
     const [listMessage, setListMessage] = useState([]);
     const [listUser, setListUser] = useState([]);
     const [roomPassword, setRoomPassword] = useState('');
-    const me = JSON.parse(sessionStorage.getItem('user'))
 
     useEffect(() => {
         GetRoomPass(roomId).then(res => {
             if (res != false)
                 setRoomPassword(res)
+            else window.location = '/'
         })
     }, [])
 
@@ -75,47 +76,48 @@ const WaitRoom = (props) => {
                     default:
                         break
                 }
-
-
             });
+
             socket.publish({
                 destination: '/app/game/room/' + roomId,
                 body: JSON.stringify({
                     messageType: 'JOIN'
                 })
             });
+        }
+    }, [socket])
 
-            socket.subscribe(`/user/${me.id}/topic/room/invite`, (message) => {
+    useEffect(() => {
+        if (socket && props.me.id)
+            socket.subscribe(`/user/${props.me.id}/topic/room/invite`, (message) => {
                 const inviteMessage = JSON.parse(message.body)
                 console.log("private invite")
                 console.log(inviteMessage)
                 switch (inviteMessage.inviteMessageType) {
-                  case "DECLINE":
-                    Swal.fire({
-                        title: "Bạn đã bị từ chối!",
-                        text: "Xin chia buồn cùng bạn :)))",
-                        showConfirmButton: false,
-                        timer: 5000,
-                        timerProgressBar: true,
-                        imageUrl: meme,
-                        imageWidth: 200,
-                        imageHeight: 200,
-                        imageAlt: "meme"
-                      });
-                    break
-                  default:
-                    break
+                    case "DECLINE":
+                        Swal.fire({
+                            title: "Bạn đã bị từ chối!",
+                            text: "Xin chia buồn cùng bạn :)))",
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
+                            imageUrl: meme,
+                            imageWidth: 200,
+                            imageHeight: 200,
+                            imageAlt: "meme"
+                        });
+                        break
+                    default:
+                        break
                 }
-              });
-
-        }
-    }, [socket])
+            });
+    }, [socket, props.me])
 
     return (
         <div className='container'>
-            <WaitRoomTop roomId={roomId} socket={socket} roomPassword={roomPassword} me={me}/>
-            <WaitRoomCenter socket={socket} roomId={roomId} listMessage={listMessage} listUser={listUser} userOnline={props.userOnline} roomPassword={roomPassword}/>
-            <WaitRoomBottom socket={socket} roomId={roomId} listUser={listUser}/>
+            <WaitRoomTop roomId={roomId} socket={socket} roomPassword={roomPassword} me={props.me} />
+            <WaitRoomCenter socket={socket} roomId={roomId} listMessage={listMessage} listUser={listUser} userOnline={props.userOnline} roomPassword={roomPassword} me={props.me} />
+            <WaitRoomBottom socket={socket} roomId={roomId} listUser={listUser} me={props.me} />
         </div>
     );
 }

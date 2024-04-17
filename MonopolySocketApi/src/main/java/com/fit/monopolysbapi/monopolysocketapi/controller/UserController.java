@@ -4,6 +4,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.AvatarService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,17 @@ public class UserController {
             avatar = avatarService.addAvatar(request.getAvatar());
         }
         User updatedUser = userService.initUser((User) authentication.getPrincipal(), request.getUsername(), avatar);
-        return ResponseEntity.ok().body(new AbstractResponse(200, "Username and avatar have been setted!", updatedUser.getUserResponse()));
+        return ResponseEntity.ok().body(new AbstractResponse(200, "Username and avatar have been set!", updatedUser.getUserResponse()));
 
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity getUser(Authentication authentication){
+        User userAuth = (User) authentication.getPrincipal();
+        User user = userService.getUserById(userAuth.getId()).get();
+        UserResponse userResponse = user.getUserResponse();
+        userResponse.setMoney(user.getMoney());
+        return ResponseEntity.ok(new AbstractResponse(200, "Get infomation successfully!", userResponse));
     }
 
     @GetMapping("/exists/{username}")

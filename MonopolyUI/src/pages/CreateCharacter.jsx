@@ -45,14 +45,17 @@ const CreateCharacter = () => {
         }
     };
 
+    var timeOutId;
     const handleChangeUsername = async (event) => {
         var newUsername = event.target.value;
-        setUsername(newUsername);
-        validateUsername(newUsername);
+        clearTimeout(timeOutId)
+        timeOutId = setTimeout(()=>{
+            setUsername(newUsername);
+            validateUsername(newUsername);
+        }, 500)
     }
 
     const validateUsername = async (uname) => {
-        console.log(uname)
         const errorMessage = document.querySelector('.error-message')
         if (uname) {
             const isUsernameValid = await IsUsernameValid(uname);
@@ -126,7 +129,7 @@ const CreateCharacter = () => {
                     </div>
                     <div className="username-container">
                         <div className="input-username-container">
-                            <input type="text" value={username} name="username" id="username-cha" maxLength={20} placeholder="Tên nhân vật" onChange={handleChangeUsername} />
+                            <input type="text" name="username" id="username-cha" maxLength={20} placeholder="Tên nhân vật" onChange={handleChangeUsername} />
                             <img src={dice} title="Tạo ngẫu nhiên" alt="random" className="dice" onClick={generateRandomName} />
                         </div>
                         <div className="error-container">
