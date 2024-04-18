@@ -28,6 +28,7 @@ function App() {
     dispatch
   }
 
+
   const [userOnline, setUserOnline] = useState([])
 
 
@@ -90,7 +91,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game/:roomId" element={<GamePage />} />
+              <Route path="/game/:roomId" element={<GamePage/>} />
             </Routes>
           </BrowserRouter>
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" stacked />

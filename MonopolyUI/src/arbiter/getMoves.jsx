@@ -19,7 +19,7 @@ export const getRookMoves = ({ position, rank, file, piece }) => {
             if (position?.[x]?.[y] === undefined)
                 break
 
-                // nếu là quân địch thì tấn công
+            // nếu là quân địch thì tấn công
             if (position[x][y].startsWith(enemy)) {
                 moves.push([x, y])
                 break
@@ -119,6 +119,19 @@ export const getKingMoves = ({ position, rank, file, piece }) => {
             moves.push([x, y])
 
     })
+
+    let rowCastle = piece.startsWith('w') ? 0 : 7;
+    let rookCol = piece.substring[0] == 'w' ? 0 : 7;
+    if (file == 4 && rank == rowCastle) {
+        console.log(position?.[rowCastle]?.[7]?.endsWith('r'))
+        if (position?.[rowCastle]?.[7]?.endsWith('r') &&
+            position[rowCastle][5] === '' &&
+            position[rowCastle][6] === '') moves.push([rowCastle, 6])
+        else if (position?.[rowCastle]?.[0]?.endsWith('r') &&
+            position[rowCastle][1] === '' &&
+            position[rowCastle][2] === '' &&
+            position[rowCastle][3] === '') moves.push([rowCastle, 2])
+    }
 
     return moves
 }

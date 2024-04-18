@@ -6,5 +6,7 @@ export const initGameState = {
     turn: 'w',
     candidateMoves: [],
     piece: '',
+    isPromotion: false,
+    completePromotionChoose: false,  
 }
 

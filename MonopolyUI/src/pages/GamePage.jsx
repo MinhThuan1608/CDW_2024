@@ -4,82 +4,100 @@ import GameBoard from '../components/gameBoard/game-board'
 import ChatSide from '../components/waitRoom/wait-room-chat-side';
 import { SocketContext } from '../App';
 import { useAppContext } from '../contexts/Context';
-
+import { useParams } from 'react-router-dom';
+import { GetTimmer, GetUserInRoom } from '../api_caller/room';
+import userAvt from '../assert/images/avatar/meo.jpg';
+import { faChess, faCrow, faCrown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import GameChat from '../components/gameBoard/game-chat';
+import VictoryModal from '../components/gameBoard/VictoryModal';
 
 const GamePage = () => {
     const { socket, setSocket } = useContext(SocketContext);
-
     const { appState, dispatch } = useAppContext();
-    // const { roomId } = useParams("roomId");
-    const [listMessage, setListMessage] = useState([]);
+    const { roomId } = useParams("roomId");
+    const [listMessageInGame, setListMessageInGame] = useState([]);
+    const [listUsers, setlistUsers] = useState([]);
+    const [isWin, setWin] = useState(false);
 
     // set thời gian cho game
-    const [seconds, setSeconds] = useState(30);
+    const [seconds, setSeconds] = useState();
+
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds(seconds - 1);
-            }
-        }, 1000);
+        GetUserInRoom(roomId).then(result => {
+            setlistUsers(result)
+        })
 
-        return () => clearInterval(timer);
-    }, [appState.turn]);
+    }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.subscribe('/topic/game/chess/chat/' + roomId, (message) => {
+                const messResponse = JSON.parse(message.body);
+                console.log(messResponse);
+                switch (messResponse.messageType) {
+                    case 'MESSAGE':
+                        setListMessageInGame(prevlistMessageInGame => [messResponse, ...prevlistMessageInGame])
+                        break
+
+                    default:
+                        break
+                }
+            });
+        }
+
+    }, [socket])
+
+
+    useEffect(() => {
+        if (socket) {
+            const fetchTimer = async () => {
+                await GetTimmer(roomId).then(result => {
+                    setSeconds(result)
+                })
+            };
+
+            const intervalId = setInterval(fetchTimer, 1000);
+
+            return () => {
+                clearInterval(intervalId);
+            };
+        }
+
+    }, [socket])
+
+    // =================
 
     return (
 
         <div className="container-gameplay">
+           {isWin &&  <VictoryModal listUsers={listUsers} />}
             <div className="game-board-main">
-                <GameBoard />
+                <GameBoard listUsers={listUsers} />
             </div>
             <div className="chat-div">
                 <p className="turn-player" style={{ margin: `4px 0 0 0` }}>
-                    Turn
-                    <span className='turn'> {appState.turn === 'b' ? 'Black' : 'White'}</span>
+                    <p></p>
+                    <p></p>
+                    <p className='turn'> Turn {appState.turn === 'b' ? 'Black' : 'White'}</p>
+                    <p id="timer">00:{seconds}</p>
+                    <p></p>
+                    <p></p>
                 </p>
                 <div className="player-turn">
-                    {appState.turn === 'w' ? (
-                        <>
-                        <div className="control-game active">
-                            <div className="countdown-timer">
-                                <p className="turn-player">
-                                    Thuan
-                                </p>
-                                00: <span id="timer">{seconds}</span>
-                            </div>
-                        </div>
-                        <div className="control-game">
-                        <div className="countdown-timer">
-                            <p className="turn-player">
-                                Thuy
-                            </p>
-                            00: <span id="timer">{seconds}</span>
-                        </div>
-                    </div>
-                        </>
-                    ) : (
-                        <>
-                        <div className="control-game ">
-                            <div className="countdown-timer">
-                                <p className="turn-player">
-                                    Thuan
-                                </p>
-                                00: <span id="timer">{seconds}</span>
-                            </div>
-                        </div>
-                        <div className="control-game active">
-                        <div className="countdown-timer">
-                            <p className="turn-player">
-                                Thuy
-                            </p>
-                            00: <span id="timer">{seconds}</span>
-                        </div>
-                    </div>
-                        </>
-                    )}
+                    {listUsers.map((user, index) => (
+                        <div className={`control-game ${appState.turn === (index === 0 ? 'w' : 'b') ? 'active' : ''}`} key={index}>
 
+                            <div className="img-avt" style={{ backgroundImage: `url(${user.avatar ? user.avatar.data : userAvt})` }}>
+                                {index === 0 ? <FontAwesomeIcon icon={faCrown} className="main-room-player own" /> : <></>}
+                            </div>
+                            <span className='name-player'>{user.username}</span>
+                            <FontAwesomeIcon icon={faChess} className={`icon-chess-game ${index === 0 ? 'icon-chess-white' : ''}`} />
+                        </div>
+                    ))}
                 </div>
-                <ChatSide socket={socket} listMessage={listMessage} />
+                <GameChat socket={socket} listMessageInGame={listMessageInGame} roomId={roomId} />
                 <div className="control-btn">
                     <button>Bỏ cuộc</button>
                     <button>Thoát</button>

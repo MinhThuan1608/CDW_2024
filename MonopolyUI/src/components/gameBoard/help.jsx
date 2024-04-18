@@ -24,9 +24,7 @@ export const createPosition = () => {
     position[7][5] = 'bb'
     position[7][6] = 'bn'
     position[7][7] = 'br'
-
-
-
+    
     return position
 }
 
@@ -43,47 +41,16 @@ export const copyPosition = position => {
     return newPosition
 }
 
-export const areSameColorTiles = (coords1, coords2) =>
-    (coords1.x + coords1.y) % 2 === (coords2.x + coords2.y)
+export const formatDate = (data) => {
 
+    // Tạo một đối tượng Date từ chuỗi ngày
+    const dateObj = new Date(data);
 
-export const findPieceCoords = (position, type) => {
-    let results = []
-    position.forEach((rank, i) => {
-        rank.forEach((pos, j) => {
-            if (pos === type)
-                results.push({ x: i, y: j })
-        })
-    });
-    return results
-}
+    // Lấy giờ và phút
+    const hour = dateObj.getUTCHours();
+    const minute = dateObj.getUTCMinutes();
 
-export const getNewMoveNotation = ({ piece, rank, file, x, y, position, promotesTo }) => {
-    let note = ''
+    
+    return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
 
-    rank = Number(rank)
-    file = Number(file)
-    if (piece[1] === 'k' && Math.abs(file - y) === 2) {
-        if (file < y)
-            return 'O-O'
-        else
-            return 'O-O-O'
-    }
-
-    if (piece[1] !== 'p') {
-        note += piece[1].toUpperCase()
-        if (position[x][y]) {
-            note += 'x'
-        }
-    }
-    else if (rank !== x && file !== y) {
-        note += getCharacter(file + 1) + 'x'
-    }
-
-    note += getCharacter(y + 1) + (x + 1)
-
-    if (promotesTo)
-        note += '=' + promotesTo.toUpperCase()
-
-    return note
 }

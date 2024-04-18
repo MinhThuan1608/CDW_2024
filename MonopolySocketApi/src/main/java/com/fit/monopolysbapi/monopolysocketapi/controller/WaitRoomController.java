@@ -66,14 +66,20 @@ public class WaitRoomController {
     @GetMapping("/room/{roomId}/get/pass")
     public ResponseEntity getRoomPass(@PathVariable String roomId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        System.out.println("room id: " + roomId);
-        System.out.println(roomService.getRooms());
         if (roomService.getRoomById(roomId) != null &&
                 (user.getId().equals(roomService.getRoomById(roomId).getUsers().get(0).getId()) ||
                         user.getId().equals(roomService.getRoomById(roomId).getUsers().get(1).getId()))) {
             return ResponseEntity.ok(new AbstractResponse(200, "Get room's password successfully", roomService.getRoomById(roomId).getPassword()));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get room's password fail", false));
+    }
+    @GetMapping("/room/{roomId}/user")
+    public ResponseEntity getUserInRoom(@PathVariable String roomId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        if (roomService.getRoomById(roomId) != null && roomService.isUserInRoom(user.getId(), roomId)){
+            return ResponseEntity.ok(new AbstractResponse(200, "Get user in room successfully", roomService.getUserInRoom(roomId)));
+        }
+        return ResponseEntity.ok(new AbstractResponse(200, "Get user in room fail", false));
     }
 
     @MessageMapping("/game/room/{roomId}")
@@ -115,6 +121,7 @@ public class WaitRoomController {
                             .build();
                     GameBoard gameBoard = new GameBoard();
                     room.setGameBoard(gameBoard);
+                    room.setPlaying(true);
                 }
                 break;
             default:
@@ -140,8 +147,7 @@ public class WaitRoomController {
     public void autoDeleteRoom() {
         if (roomService.getRooms().size() > 0)
             for (int i = 0; i < roomService.getRooms().size(); i++) {
-                System.out.println((new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()));
-                if ((new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()) > 10 * 60 * 1000) {
+                if (!roomService.getRooms().get(i).isPlaying() && (new Date().getTime() - roomService.getRooms().get(i).getCreateAt().getTime()) > 10 * 60 * 1000) {
                     simpMessagingTemplate.convertAndSend("/topic/game/room/" + roomService.getRooms().get(i).getId(), WaitRoomMessage.builder().messageType(WaitRoomMessage.RoomMessageType.TIME_OUT).build());
                     roomService.deleteRoom(roomService.getRooms().get(i--).getId());
                 }

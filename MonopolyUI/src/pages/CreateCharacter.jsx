@@ -38,6 +38,7 @@ const CreateCharacter = () => {
             reader.onload = (e) => {
                 const imageDataUrl = e.target.result;
                 var imageObject = { data: imageDataUrl }
+                console.log(avt.data)
                 setAvt(imageObject);
                 setListImg(prevList => [...prevList, imageObject]);
             };
@@ -73,6 +74,7 @@ const CreateCharacter = () => {
 
     const initUser = async () => {
         validateUsername(username)
+        
         if (valid) {
             const response = await InitUser(username, avt.id, avt.data);
             if (response.id) {

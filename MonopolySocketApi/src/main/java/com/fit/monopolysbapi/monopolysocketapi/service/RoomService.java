@@ -5,6 +5,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.CreateRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -25,7 +26,6 @@ public class RoomService {
     private List<Room> rooms = new ArrayList<>();
 
     public RoomResponse createRoom(CreateRoomRequest message, User owner) {
-//        if (isRoomExistsByName(message.getRoomName())) return null;
         String id = util.generateId();
         while (isRoomExistsById(id)) id = util.generateId();
         String password = message.getPassword().equals("") ? null : message.getPassword();
@@ -108,6 +108,9 @@ public class RoomService {
         Room room = getRoomById(roomId);
         if (room == null) return false;
         return room.getUsers().stream().anyMatch(u -> u.getId().equals(userId));
+    }
+    public List<UserResponse> getUserInRoom(String roomId){
+        return getRoomById(roomId).getUsers().stream().map(User::getUserResponse).toList();
     }
 
     public RoomResponse roomToRoomResponse(Room room) {

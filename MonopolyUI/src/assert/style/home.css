@@ -1,5 +1,5 @@
-.main-container {
-    height: 90vh;
+.home-container {
+    /* height: 90vh; */
     width: 90vw;
     padding: 5vh 5vw;
     margin: auto;
@@ -8,11 +8,11 @@
 }
 
 .top-container {
-    height: 10vh;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     background-color: rgba(73, 16, 139, 0.3);
-    border-radius: 5vh;
+    border-radius: 10vh;
 
 }
 
@@ -25,10 +25,12 @@
 #avatar {
     border-radius: 50%;
     height: 100%;
-    width: auto;
     border: 2px solid #ffffff;
-    margin-right: 10px;
     cursor: pointer;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    margin: auto;
+
 }
 
 #avatar:hover {
@@ -43,9 +45,8 @@
 
 #username-title {
     color: #F3F8FF;
-    padding-bottom: 10%;
     font-size: 20px;
-    margin: 0;
+    margin: 0 8px;
 }
 
 .money-container {
@@ -89,12 +90,14 @@
     height: 100%;
     justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
 }
 
 .icon-container {
     position: relative;
     margin: 0 8px;
+}
+.icon-container.final{
+    margin-right: 0;
 }
 
 .dot {
@@ -199,6 +202,21 @@
 .modal-body.modal-height {
     height: 70vh;
 }
+.modal-body-bag.modal-height.empty{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.empty-bag{
+    width: 30%;
+    height: auto;
+    object-fit: contain;
+    padding: 10px;
+}
+.empty-title{
+    font-size: 24px;
+
+}
 
 .modal-left-container {
     width: 60%;
@@ -224,18 +242,22 @@
 }
 
 .item-container {
-    width: calc(20% - 2px);
+    width: calc(24% - 2px);
     height: auto;
     border: 1px solid #2d2d2d;
     cursor: pointer;
     position: relative;
     align-items: center;
     display: flex;
+    margin: 4px;
+    border-radius: 5%;
+    padding: 8px;
 }
 
 .item-container.chosen {
-    border: 3px solid #7E30E1;
+    border: 3px solid #7E30E1; 
 }
+
 
 .item-container:hover>.item-image {
     filter: drop-shadow(0 0 5px #7E30E1);
@@ -251,7 +273,7 @@
 .item-quantity {
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 5px;
     margin: 0;
 }
 
@@ -331,6 +353,11 @@
     display: flex;
     justify-content: space-evenly;
 }
+.item-action-button-container.empty {
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}
 
 .item-action-button {
     padding: 0 20px;
@@ -347,13 +374,7 @@
 }
 
 /* modal chọn phòng */
-.modal-body {
-    flex-direction: column;
-    align-items: center;
-    display: flex;
-    height: 60vh;
-    margin: 14px 12px;
-}
+
 
 .search-room {
     display: flex;
@@ -407,7 +428,8 @@
 }
 
 .room:hover,
-.createBtn:hover {
+.createBtn:hover,
+.upload-avatar-button:hover {
     filter: drop-shadow(0 0 4px #7516f2);
 }
 
@@ -416,6 +438,8 @@
     margin: auto;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow:auto;
 }
 
 .createBtn {
@@ -452,4 +476,55 @@
     100% {
         transform: translateX(0);
     }
+}
+
+
+/* EditUserProfileModal */
+.editAvt img{
+    width: 50%;
+    height: auto;
+    aspect-ratio: 1/1;
+    min-width: 100px;
+    object-fit: cover;
+    margin: auto;
+    display: block;
+    border-radius: 50%;
+}
+.input-username-container-profile input{
+    width: calc(92% - 20px);
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    
+}
+.input-username-container-profile input:focus{
+    outline: none;
+}
+.upload-avatar-button{
+    cursor: pointer;
+    background-color: #7E30E1;
+    padding: 4px;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    margin: 12px 0;
+}
+.upload-container-profile{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.input-username-container-profile{
+    border:#7E30E1 2px solid;
+    min-width: 300px;
+    width: 50%;
+    display: flex;
+    border-radius: 5px;
+    background-color: white;
+    align-items: center;
+    margin: auto;
+}
+.createBtn{
+    background-color: #7E30E1 !important;
 }

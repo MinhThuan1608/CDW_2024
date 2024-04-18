@@ -17,6 +17,7 @@ public class Move {
 
     Piece piece;
     Piece capture;
+    GameBoard board;
 
     public Move(GameBoard board, Piece piece, int newRow, int newCol) {
         this.oldRow = piece.row;
@@ -37,8 +38,6 @@ public class Move {
                 ", oldCol=" + oldCol +
                 ", newRow=" + newRow +
                 ", newCol=" + newCol +
-                ", piece=" + piece +
-                ", capture=" + capture +
                 '}';
     }
 }

@@ -8,8 +8,7 @@ export const reducer = (state, action) => {
                 ...position,
                 action.payload.newPosition
             ]
-            turn = turn === 'w' ? 'b' : 'w' 
-
+            turn = action.payload.turn
             return {
                 ...state, 
                 position,
@@ -33,14 +32,7 @@ export const reducer = (state, action) => {
             }
         
         }
-        case actionsTypes.SAVE_PIECE_NAME : {
-            
-            return {
-                ...state, 
-                piece: action.payload.p
-            }
-        
-        }
+   
         default: 
             return state
 

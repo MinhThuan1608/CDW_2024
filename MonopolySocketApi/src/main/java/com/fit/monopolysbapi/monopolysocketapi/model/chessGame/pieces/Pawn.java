@@ -18,14 +18,20 @@ public class Pawn extends Piece {
     }
 
     public boolean isValidMovement(int row, int col) {
+        System.out.println(this);
         int colorIndex = isWhite ? 1 : -1;
 //        push 1
         if (this.col == col && row == this.row + colorIndex && board.getPiece(row, col) == null){
+            System.out.println("push 1");
             return true;
         }
+
+        System.out.println(board.getPiece(row + colorIndex, col)== null);
+        System.out.println(board.getPiece(row + colorIndex, col));
 //        push 2
         if(isFirstMove && this.col == col && row == this.row + colorIndex * 2 &&
-                board.getPiece(row, col) == null && board.getPiece(row + colorIndex, col) == null){
+                board.getPiece(row, col) == null && board.getPiece(row - colorIndex, col) == null){
+            System.out.println(" push 2");
             return true;
         }
 //        capture left
@@ -37,14 +43,43 @@ public class Pawn extends Piece {
             return true;
         }
 //        en Passant left
-        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row - colorIndex
-                && board.getPiece(row + colorIndex, col) != null){
+        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row + colorIndex
+                && board.getPiece(row - colorIndex, col) != null){
             return true;
-        }//        en Passant right
-        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row - colorIndex
-                && board.getPiece(row + colorIndex, col) != null){
+        }
+//        en Passant right
+        if(board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row + colorIndex
+                && board.getPiece(row - colorIndex, col) != null){
             return true;
         }
         return false;
+    }
+    public boolean moveCollidesWithPiece(int row, int col){
+        // Nếu con Pawn di chuyển xuống dưới bàn cờ
+        if(this.row > row){
+            for (int r = this.row - 1; r > row; r--){
+                if (board.getPiece(r, this.col) != null){
+                    return true;
+                }
+            }
+        }
+        // Nếu con Pawn di chuyển lên trên bàn cờ
+        if(this.row < row){
+            for (int r = this.row + 1; r < row; r++){
+                if (board.getPiece(r, this.col) != null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Pawn{" +
+                "col=" + col +
+                ", row=" + row +
+                ", isFirstMove=" + isFirstMove +
+                '}';
     }
 }

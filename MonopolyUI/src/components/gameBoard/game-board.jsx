@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import Ranks from './bits/Ranks';
 import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
@@ -6,11 +6,13 @@ import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
-import { clearCandidates, makeNewMove, savePiece } from '../../reducer/action/move';
+import {  makeNewMove } from '../../reducer/action/move';
+import Popup from './Popup/Popup';
 
-const GameBoard = () => {
+const GameBoard = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
+    const[isSelected, setIsSelected] = useState('')
     // col
     const ranks = Array(8).fill().map((x, i) => 8 - i)
     // row
@@ -36,12 +38,13 @@ const GameBoard = () => {
         if (socket) {
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
-                console.log(messResponse.pieces)
+                console.log(messResponse)
                 switch (messResponse.messageType) {
                     case 'MOVE':
                         let newPosition = messResponse.pieces
-                        dispatch(makeNewMove({newPosition}))
-                        dispatch(clearCandidates())
+                        let turn = messResponse.turn
+                        dispatch(makeNewMove({newPosition, turn}))
+                        // dispatch(clearCandidates())
                         break
                     default:
                         break
@@ -64,7 +67,9 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} />
+            <Piceces roomId={roomId} isSelected={isSelected} listUsers={props.listUsers}/>
+
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}/>)}
             <Files files={files} />
 
         </div>

@@ -1,6 +1,7 @@
 package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
+import com.fit.monopolysbapi.monopolysocketapi.model.Bag;
 import com.fit.monopolysbapi.monopolysocketapi.model.Role;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
@@ -61,5 +62,17 @@ public class UserService {
         user.setUsername(username);
         user.setAvatar(avatar);
         return userRepository.save(user);
+    }
+    public User changeAvatar(User user, Avatar avatar) {
+        user.setAvatar(avatar);
+        return userRepository.save(user);
+    }
+    public User getOneUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+    public Bag getBagByUserName(String username){
+        if(userRepository.existsByUsername(username))
+            return getOneUserByUsername(username).getBag();
+        return null;
     }
 }
