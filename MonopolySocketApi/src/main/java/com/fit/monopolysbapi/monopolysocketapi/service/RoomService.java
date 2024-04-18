@@ -2,17 +2,17 @@ package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Room;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.request.CreateRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.AntPathMatcher;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,9 +56,7 @@ public class RoomService {
     }
 
     public List<RoomResponse> getRoomsResponse() {
-        return rooms.stream().map(room ->
-                RoomResponse.builder().id(room.getId()).roomName(room.getName()).numUser(room.getUsers().size())
-                        .havePass(room.havePassword()).build()).collect(Collectors.toList());
+        return rooms.stream().map(Room::getRoomResponse).collect(Collectors.toList());
     }
 
     public boolean checkJoinRoom(JoinRoomRequest request) {
@@ -69,11 +67,19 @@ public class RoomService {
         return true;
     }
 
+    public Room getRoomUserIn(String userId){
+        Optional<Room> roomOptional =  rooms.stream().filter(r -> r.getUsers().stream().anyMatch(u -> u.getId().equals(userId))).findFirst();
+        if (roomOptional.isPresent()) return roomOptional.get();
+        return null;
+    }
+
     public void joinRoom(User user, String id) {
         Room room = getRoomById(id);
         if (room == null) return;
         List<User> users = room.getUsers();
         if (users.stream().noneMatch(u -> u.getId().equals(user.getId()))) {
+            Room otherRoom = getRoomUserIn(user.getId());
+            if (otherRoom!=null) leaveRoom(user, room.getId());
             users.add(user);
             room.setUsers(users);
         }
@@ -95,15 +101,6 @@ public class RoomService {
             leaveRoom(getRoomById(roomId).getUsers().get(1), roomId);
     }
 
-    public void leaveAllRoom(User user) {
-        rooms.forEach(room -> {
-            List<User> users = room.getUsers();
-            users.removeIf(u -> u.getId().equals(user.getId()));
-            if (users.size() == 0) rooms.remove(room);
-            else room.setUsers(users);
-        });
-    }
-
     public boolean isUserInRoom(String userId, String roomId) {
         Room room = getRoomById(roomId);
         if (room == null) return false;
@@ -120,6 +117,17 @@ public class RoomService {
 
     public void deleteRoom(String id) {
         rooms.removeIf(room -> room.getId().equals(id));
+    }
+
+    public void startGame(Room room){
+        GameBoard gameBoard = new GameBoard();
+        room.setGameBoard(gameBoard);
+        room.setPlaying(true);
+    }
+
+    @Bean
+    public SimpleDateFormat getSimpleDateFormat(){
+        return new SimpleDateFormat("HH:mm");
     }
 
 }

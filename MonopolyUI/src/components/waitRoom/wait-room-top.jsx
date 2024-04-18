@@ -31,11 +31,11 @@ const WaitRoom = (props) => {
                 <div className="img-frame" style={{ backgroundImage: `url(${!props.me ? userAvt : props.me.avatar ? props.me.avatar.data : userAvt})` }}>
                 </div>
                 <p className="coins">
-                    <span>999900</span>
+                    <span>{props.me.money}</span>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
                 </p>
-                <p className="coins">
-                    <span>9999</span>
+                <p className="coins" style={{opacity: 0}}>
+                    <span></span>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
                 </p>
 

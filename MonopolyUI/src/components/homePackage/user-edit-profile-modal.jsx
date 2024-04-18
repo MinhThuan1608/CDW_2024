@@ -4,18 +4,27 @@ import userAvt from '../../assert/images/avatar/meo.jpg';
 import { SocketContext } from '../../App';
 
 import dice from '../../assert/images/icon/dice.png'
-import { EditProfile, IsUsernameValid } from '../../api_caller/user';
+import { ChangeUserName, EditProfileAvatar, HaveChangeNameCard, IsUsernameValid } from '../../api_caller/user';
 import Swal from 'sweetalert2';
 
 
 const EditUserProfileModal = ({ showModalProfile, setShowModalProfile }) => {
-    const userLocal = JSON.parse(sessionStorage.getItem('user'))
+    const user = JSON.parse(sessionStorage.getItem('user'))   
 
     const [username, setUsername] = useState('')
     const [valid, setValid] = useState(false)
     const [avatar, setAvatar] = useState({});
     const [isChangeName, setIsChangeName] = useState(false);
-    const [user, setUser] = useState(null)
+
+
+    useEffect(() => {
+        const haveChangeNameCard = async () => {
+            const result = await HaveChangeNameCard(user.id);
+            setIsChangeName(result);
+
+        };
+        haveChangeNameCard()
+    }, [])
 
     const handleCloseModal = () => {
         setShowModalProfile(false);
@@ -33,14 +42,15 @@ const EditUserProfileModal = ({ showModalProfile, setShowModalProfile }) => {
             errorMessage.style.display = 'block'
             e.target.value = ""
         } else {
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 const imageDataUrl = e.target.result;
                 var imageObject = { data: imageDataUrl }
                 setAvatar(imageObject);
-                console.log(avatar.data)
-                
-                user.avatar.data = imageDataUrl;
+                // user.avatar.data = imageDataUrl;
+                const errorMessage = document.querySelector('.error-message')
+                errorMessage.innerHTML = ''
             };
             reader.readAsDataURL(image);
         }
@@ -82,36 +92,65 @@ const EditUserProfileModal = ({ showModalProfile, setShowModalProfile }) => {
         }
     }
     const changeAvt = async () => {
-        // console.log(avatar)
-        // console.log(avatar.data)
-        const response = await EditProfile(userLocal.username,avatar.data);
-        if (response.id) {
-            sessionStorage.setItem('user', JSON.stringify(response))
-            userLocal.avatar.data = avatar.data
-            Swal.fire({
-                icon: 'success',
-                text: 'Thay đổi thành công!',
-                confirmButtonText: "OK",
-                showConfirmButton: true,
-                confirmButtonColor: '#49108B',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.reload();
-                }
-            });
-            // setShowModalProfile(false)
-        } else {
+        if(avatar){
+            const response = await EditProfileAvatar(user.username, avatar.data);
+            if (response.id) {
+                sessionStorage.setItem('user', JSON.stringify(response))
+                // user.avatar.data = avatar.data
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Thay đổi thành công!',
+                    confirmButtonText: "OK",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#49108B',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+                // setShowModalProfile(false)
+            } else {
+                const errorMessage = document.querySelector('.error-message');
+                errorMessage.innerHTML = response.message;
+                errorMessage.style.display = 'block';
+            }
+           
+        }else{
             const errorMessage = document.querySelector('.error-message');
-            errorMessage.innerHTML = response;
+            errorMessage.innerHTML = "Chưa tải ảnh lên!";
             errorMessage.style.display = 'block';
         }
 
     }
 
-    useEffect(() => {
-        const userStorage = JSON.parse(sessionStorage.getItem('user'))
-        setUser(userStorage)
-    }, [])
+
+    const changeName = async () => {
+        validateUsername(username)
+
+        if (valid) {
+            const response = await ChangeUserName(username);
+            if (response.id) {
+                sessionStorage.setItem('user', JSON.stringify(response))
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Thay đổi thành công!',
+                    confirmButtonText: "OK",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#49108B',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                const errorMessage = document.querySelector('.error-message');
+                errorMessage.innerHTML = response;
+                errorMessage.style.display = 'block';
+            }
+        }
+    }
+
+
     return (
         <div
             className="modal show"
@@ -127,7 +166,7 @@ const EditUserProfileModal = ({ showModalProfile, setShowModalProfile }) => {
                     <Modal.Body >
                         <div className="createRoom">
                             <div className="editAvt">
-                                <img src={!user ? userAvt : user.avatar ? user.avatar.data : userAvt} alt="avatar" />
+                                <img src={avatar.data ? avatar.data : user.avatar ? user.avatar.data : userAvt} alt="avatar" />
 
                             </div>
                             <div className="upload-container-profile">
@@ -135,9 +174,12 @@ const EditUserProfileModal = ({ showModalProfile, setShowModalProfile }) => {
                                 <input type="file" name="avatarFile" accept="image/*" hidden id="input-avatar-file" onChange={handleImgUploaded} />
                             </div>
                             <div className="username-container">
-                                <div className="input-username-container-profile">
-                                    <input type="text" value={username ? username : userLocal.username} name="username" maxLength={20} placeholder={userLocal.username} onChange={handleChangeUsername} disabled={isChangeName ? false : true} />
-                                    <img src={dice} title="Tạo ngẫu nhiên" alt="random" className="dice" onClick={isChangeName ? generateRandomName : null} />
+                                <div className="btn-control">
+                                    <div className="input-username-container-profile">
+                                        <input type="text" value={username ? username : user.username} name="username" maxLength={20} placeholder={user.username} onChange={handleChangeUsername} disabled={isChangeName ? false : true} />
+                                        <img src={dice} title="Tạo ngẫu nhiên" alt="random" className="dice" onClick={isChangeName ? generateRandomName : null} />
+                                    </div>
+                                    {isChangeName && <Button className='createBtn' onClick={changeName}>Đổi tên</Button>}
                                 </div>
                                 <div className="error-container">
                                     <p className="error-message"></p>

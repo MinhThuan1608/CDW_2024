@@ -69,7 +69,7 @@
     background: #ecb103;
     text-transform: uppercase;
     text-align: center;
-    padding: 24px 120px;
+    padding: 24px;
     margin: 12px;
     border-radius: 5px;
     color: #ffffff;
@@ -161,12 +161,16 @@
 .player-name {
     position: absolute;
     top: -8px;
-    left: 40px;
-    width: 79%;
+    left: 38px;
+    width: 80%;
     text-transform: uppercase;
     text-align: center;
-    padding: 12px 0;
+    padding: 12px 12px 12px 32px;
+    /* padding-left: calc(65px - 21%); */
     color: #ffffff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .player-br-fst {
@@ -190,7 +194,6 @@
     top: -14px;
     left: -5px;
     border: #ffffff 3px solid;
-    background-color: #6e19dc;
     width: 70px;
     height: 70px;
     background-repeat: no-repeat;
@@ -454,8 +457,14 @@
     left: 46px;
     top: 49px;
 }
-
-.join {
+.user-card-name-container{
+    display: flex;
+    flex-direction: column;
+}
+.user-card-status{
+    font-size: 0.6rem;
+}
+.join{   
     position: absolute;
     background-color: #8aa905;
     border-radius: 5px;

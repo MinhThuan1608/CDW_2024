@@ -4,22 +4,25 @@ import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
 import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
-
 import { useParams } from 'react-router-dom';
-import {  makeNewMove } from '../../reducer/action/move';
+import {  makeNewMove, swapTurn } from '../../reducer/action/move';
 import Popup from './Popup/Popup';
+import { toast } from 'react-toastify';
 
 const GameBoard = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
-    const { roomId } = useParams("roomId");
-    const[isSelected, setIsSelected] = useState('')
-    // col
-    const ranks = Array(8).fill().map((x, i) => 8 - i)
-    // row
-    const files = Array(8).fill().map((x, i) => i + 1)
-
     const { appState, dispatch } = useAppContext()
+    const { roomId } = useParams("roomId");
+
+    const ranks = Array(8).fill().map((x, i) => 8 - i)
+    const files = Array(8).fill().map((x, i) => i + 1)
     const position = appState.position[appState.position.length - 1]
+
+    const [completePromotionChoose, setCompletePromotionChoose] = useState(false)
+    const [isSelected, setIsSelected] = useState('')
+    const [hints, setHints] = useState([])
+    const [justMoving, setJustMoving] = useState([])
+    const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -36,22 +39,64 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         if (socket) {
+
+            socket.subscribe('/topic/game/turn/' + roomId, (message) => {
+                const messResponse = JSON.parse(message.body);
+                let turn = messResponse.turn
+                // console.log(messResponse)
+                dispatch(swapTurn({turn}))
+
+            });
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse)
+                let newPosition, turn;
+                setHints(messResponse.hints)
                 switch (messResponse.messageType) {
-                    case 'MOVE':
-                        let newPosition = messResponse.pieces
-                        let turn = messResponse.turn
-                        dispatch(makeNewMove({newPosition, turn}))
-                        // dispatch(clearCandidates())
+                    case 'WIN':
+                        newPosition = messResponse.pieces
+                        turn = messResponse.turn
+                        if (newPosition)
+                            dispatch(makeNewMove({ newPosition, turn }))
+                        if (me?.id === messResponse.winnerId)
+                            toast('Chúc mừng, bạn đã chiến thắng <3');
+                        else toast('Tiếc ghê, bạn thua mất rồi... hichic');
+                        toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
+                        setTimeout(() => {
+                            window.location = '/wait-room/' + roomId;
+                        }, 10000)
                         break
+                    case 'DRAW':
+                        newPosition = messResponse.pieces
+                        turn = messResponse.turn
+                        if (newPosition)
+                            dispatch(makeNewMove({ newPosition, turn }))
+                        toast('Trận này hòa nháaa');
+                        toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
+                        setTimeout(() => {
+                            window.location = '/wait-room/' + roomId;
+                        }, 10000)
+                        break
+                    case 'MOVE':
+                        newPosition = messResponse.pieces
+                        turn = messResponse.turn
+                        if (newPosition){
+                            dispatch(makeNewMove({ newPosition, turn }))
+                            setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
+                        }
+                        break
+
                     default:
                         break
                 }
 
-
             });
+            socket.publish({
+                destination: '/app/game/chess/' + roomId,
+                body: JSON.stringify({
+                    messageType: 'CONNECT'
+                })
+            })
         }
     }, [socket]);
 
@@ -67,9 +112,9 @@ const GameBoard = (props) => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected} listUsers={props.listUsers}/>
+            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose} hints={hints} justMoving={justMoving} listUsers={props.listUsers}/>
 
-            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}/>)}
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} setCompletePromotionChoose={setCompletePromotionChoose}/>)}
             <Files files={files} />
 
         </div>

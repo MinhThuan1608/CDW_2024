@@ -32,6 +32,13 @@ export const reducer = (state, action) => {
             }
         
         }
+        case actionsTypes.SWAP_TURN : {
+            return {
+                ...state, 
+                turn : action.payload.turn
+            }
+        
+        }
    
         default: 
             return state

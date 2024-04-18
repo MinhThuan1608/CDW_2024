@@ -1,6 +1,5 @@
 package com.fit.monopolysbapi.monopolysocketapi.repository;
 
-import com.fit.monopolysbapi.monopolysocketapi.model.Bag;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

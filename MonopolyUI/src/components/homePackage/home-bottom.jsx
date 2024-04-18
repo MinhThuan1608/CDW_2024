@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import shopImg from '../../assert/images/icon/shops.png';
 import schoolBag from '../../assert/images/icon/school-bag.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { GetRoomMeIn } from '../../api_caller/room';
 
 
 const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCreateRoom, showModalBag, setShowModalBag,showModalShop, setShowModalShop}) => {
+    const [roomMeIn, setRoomMeIn] = useState(null)
 
+    useEffect(() => {
+        GetRoomMeIn().then(res => {
+            if (res) setRoomMeIn(res)
+        })
+    }, [])
     // Hàm xử lý khi ấn vào ô chọn phòng
     const handleOpenModal = () => {
         if(!showModalCreateRoom && !showModalBag && !showModalShop){
@@ -29,6 +36,16 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
             setShowModalShop(true);
         }
     };
+
+
+    const handleReturnRoom = () => {
+        window.location = '/wait-room/' + roomMeIn.id
+    }
+
+    const handleReturnGame = ()=>{
+        window.location = '/game/' + roomMeIn.id
+    }
+
     return (
         <div className="bottom-container">
             <div className="util-container">
@@ -44,11 +61,13 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
                 </div>
             </div>
             <div className="action-button-container">
-                <button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
-                <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button>
+                {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :
+                    roomMeIn ? <button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button> :
+                        <><button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
+                            <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button></>}
             </div>
 
-            
+
         </div>
     );
 }

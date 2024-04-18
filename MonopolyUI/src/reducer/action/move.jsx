@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { SocketContext } from "../../App";
 import actionsTypes from "../actionsType"
 
 export const makeNewMove = ({newPosition, turn}) => {
@@ -28,3 +26,9 @@ export const savePiece = ({rank, file, x, y}) => {
         payload: {rank, file, x, y},
     }
 }
+export const swapTurn = ({turn}) => {
+    return {
+        type: actionsTypes.SWAP_TURN,
+        payload: {turn},
+    }
+} 

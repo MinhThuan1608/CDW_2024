@@ -23,9 +23,9 @@ const ModalBag = ({ showModalBag, setShowModalBag }) => {
     // 
     useEffect(() => {
         const getBag = async () => {
-            const bag = await GetBag(user.username);
+            const bag = await GetBag(user.id);
             if (bag) {
-                setListItem(bag.product)
+                setListItem(bag)
             }
         }
         if (listItem.length === 0) getBag();
@@ -48,7 +48,7 @@ const ModalBag = ({ showModalBag, setShowModalBag }) => {
                         <div className="modal-left-container">
                             {listItem.map((item, index) => (
                                 <div key={index} className={`item-container ${itemDetail.id === item.id ? 'chosen' : ''}`} >
-                                    <img src={item.urlImage} alt="item" className="item-image" onClick={() => showDetailItem(item.id)} />
+                                    <img src={item.product.urlImage} alt="item" className="item-image" onClick={() => showDetailItem(item.id)} />
                                     <p className="item-quantity">{item.quantity}</p>
                                 </div>
                             ))}
@@ -60,15 +60,15 @@ const ModalBag = ({ showModalBag, setShowModalBag }) => {
                                     <>
                                         <div className="sort-info-chosen-item-container">
                                             <div className="item-image-review-container">
-                                                <img src={Object.keys(itemDetail).length === 0 ? listItem[0].urlImage : itemDetail.urlImage} alt="item" id="item-image-review" />
+                                                <img src={itemDetail.product.urlImage} alt="item" id="item-image-review" />
                                             </div>
                                             <div className="chosen-item-info-container">
-                                                <p className="chosen-item-name">{Object.keys(itemDetail).length === 0 ? listItem[0].name : itemDetail.name}</p>
-                                                <p className="chosen-item-quantity">Số lượng: <span id="quantity">{Object.keys(itemDetail).length === 0 ? listItem[0].quantity : itemDetail.quantity}</span></p>
+                                                <p className="chosen-item-name">{itemDetail.product.name}</p>
+                                                <p className="chosen-item-quantity">Số lượng: <span id="quantity">{itemDetail.quantity}</span></p>
                                             </div>
                                         </div>
                                         <div className="item-description-container">
-                                            <p className="description">{Object.keys(itemDetail).length === 0 ? listItem[0].description : itemDetail.description}</p>
+                                            <p className="description">{itemDetail.product.description}</p>
                                         </div>
                                         <div className="item-action-button-container">
                                             <button className="item-action-button sell-button">Bán</button>

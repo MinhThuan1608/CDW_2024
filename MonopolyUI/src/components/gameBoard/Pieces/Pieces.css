@@ -11,6 +11,9 @@
     position: absolute;
     background-size: 100%;
 }
+.piece.justMoving{
+    border: 5px solid green;
+}
 .piece.bk {background-image: url('../../../assert/images/icon/bk.png');}
 .piece.bq {background-image: url('../../../assert/images/icon/bq.png');}
 .piece.br {background-image: url('../../../assert/images/icon/br.png');}

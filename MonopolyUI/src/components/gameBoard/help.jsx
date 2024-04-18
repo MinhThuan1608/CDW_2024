@@ -54,3 +54,6 @@ export const formatDate = (data) => {
     return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
 
 }
+export const formatCurrency = (amount) => {
+    return amount.toLocaleString('en-EN');
+}

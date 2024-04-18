@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GetProduct } from '../../api_caller/shop';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoins } from '@fortawesome/free-solid-svg-icons';
+import { formatCurrency } from '../gameBoard/help';
 
 const ModalShop = ({ showModalShop, setShowModalShop }) => {
     const user = JSON.parse(sessionStorage.getItem('user'))
@@ -41,7 +43,7 @@ const ModalShop = ({ showModalShop, setShowModalShop }) => {
                             {listProduct.map((item, index) => (
                                 <div key={index} className={`item-container ${productDetail.id === item.id ? 'chosen' : ''}`} >
                                     <img src={item.urlImage} alt="item" className="item-image" onClick={() => showDetailItem(item.id)} />
-                                    <p className="item-quantity">{item.quantity}</p>
+                                    {/* <p className="item-quantity">{item.price}</p> */}
                                 </div>
                             ))}
                         </div>
@@ -51,15 +53,18 @@ const ModalShop = ({ showModalShop, setShowModalShop }) => {
                                     <>
                                         <div className="sort-info-chosen-item-container">
                                             <div className="item-image-review-container">
-                                                <img src={Object.keys(productDetail).length === 0 ? listProduct[0].urlImage : productDetail.urlImage} alt="item" id="item-image-review" />
+                                                <img src={productDetail.urlImage} alt="item" id="item-image-review" />
                                             </div>
                                             <div className="chosen-item-info-container">
                                                 <p className="chosen-item-name">{Object.keys(productDetail).length === 0 ? listProduct[0].name : productDetail.name}</p>
-                                                <p className="chosen-item-quantity">Số lượng: <span id="quantity">{Object.keys(productDetail).length === 0 ? listProduct[0].quantity : productDetail.quantity}</span></p>
+                                                <p className="chosen-item-quantity">
+                                                    Giá: <span id="quantity">{formatCurrency(productDetail.price)}</span>
+                                                    <FontAwesomeIcon icon={faCoins} className="money-icon" />
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="item-description-container">
-                                            <p className="description">{Object.keys(productDetail).length === 0 ? listProduct[0].description : productDetail.description}</p>
+                                            <p className="description">{productDetail.description}</p>
                                         </div>
                                         <div className="item-action-button-container">
                                             <button className="item-action-button use-button">Mua</button>

@@ -95,14 +95,14 @@ export async function GetUserInRoom(roomId) {
 
     const responseData = await response.json()
     if (response.ok) {
-        if (responseData.data != null || responseData.data != "")
-            return responseData.data; //true if you can join this room and else
-        return false;
+        if (responseData.data != null && responseData.data != false)
+            return responseData.data;
+        return [];
     }
     return false;
 }
 export async function GetTimmer(roomId) {
-    const urlString = `http://localhost:8001/room/game/${roomId}/time`;
+    const urlString = `http://localhost:8001/room/game/time/${roomId}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -114,9 +114,25 @@ export async function GetTimmer(roomId) {
 
     const responseData = await response.json()
     if (response.ok) {
-        if (responseData.data != null || responseData.data != "")
-            return responseData.data; //true if you can join this room and else
-        return false;
+        return responseData.data;
     }
-    return false;
+    return null;
+}
+
+export async function GetRoomMeIn() {
+    const urlString = `http://localhost:8001/room/me`;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    const responseData = await response.json()
+    if (response.ok) {
+        return responseData.data;
+    }
+    return null;
 }

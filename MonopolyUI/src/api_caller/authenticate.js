@@ -18,7 +18,7 @@ export async function LoginAPI(identify, password) {
     if (response.ok) {
         sessionStorage.setItem('access_token', responseData.data.token) //expired after 24 hours
         sessionStorage.setItem('user', JSON.stringify(responseData.data))
-        return responseData.data; //user(id, email, username, avatar, role, token, confirmEmail, nonLocked)
+        return responseData.data; //user(id, email, username, avatar, role, money, token, confirmEmail, nonLocked)
     }
     return responseData.message;
 }
