@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import '../assert/style/game-play.css';
 import GameBoard from '../components/gameBoard/game-board'
 import ChatSide from '../components/waitRoom/wait-room-chat-side';
@@ -26,7 +26,8 @@ const GamePage = () => {
 
     useEffect(() => {
         GetUserInRoom(roomId).then(result => {
-            setlistUsers(result)
+            if (result.length === 0) window.location = '/'
+            else setlistUsers(result)
         })
 
     }, []);
@@ -81,6 +82,15 @@ const GamePage = () => {
     }, [seconds === 60])
 
     // =================
+    const sendVoice = (data) => {
+        socket.publish({
+            destination: '/app/game/chess/' + roomId,
+            body: JSON.stringify({
+                messageType: 'VOICE',
+
+            })
+        });
+    }
 
     return (
 
@@ -99,7 +109,7 @@ const GamePage = () => {
                     <p></p>
                 </p>
                 <div className="player-turn">
-                    {listUsers.map((user, index) => (
+                    {listUsers?.map((user, index) => (
                         <div className={`control-game ${appState.turn === (index === 0 ? 'w' : 'b') ? 'active' : ''}`} key={index}>
 
                             <div className="img-avt" style={{ backgroundImage: `url(${user.avatar ? user.avatar.data : userAvt})` }}>

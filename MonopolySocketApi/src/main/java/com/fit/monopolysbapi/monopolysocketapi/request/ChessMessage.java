@@ -3,6 +3,7 @@ package com.fit.monopolysbapi.monopolysocketapi.request;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
+import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
 
 import java.util.Date;
@@ -22,19 +23,23 @@ public class ChessMessage {
     private String namePromotion;
     private User sender;
     private String content;
-    private String turn;
     private int timer;
     private List<User> users;
     private Date createAt;
+    private char turn;
+    private String winnerId;
+    private List<Hint> hints;
+
 
     public enum ChessMessageType {
+        CONNECT,
         MOVE,
-        RESIGN,
-        DRAW_OFFER,
-        PIECE_PROMOTION,
-        CHECKMATE,
         MESSAGE,
-        TIME
+        GIVE_UP,
+        GET_USER_IN_ROOM,
+        WIN,
+        DRAW,
+        VOICE
 
     }
 }

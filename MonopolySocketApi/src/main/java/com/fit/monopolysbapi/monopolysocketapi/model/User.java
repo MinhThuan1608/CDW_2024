@@ -22,8 +22,10 @@ public class User implements UserDetails {
     private String email;
     private String username;
     private String password;
-    @OneToOne
+    @ManyToOne
     private Avatar avatar;
+    @Column(nullable = false)
+    private long money = 0;
     private boolean isConfirmEmail;
     private boolean isNonLocked;
     @Enumerated(EnumType.STRING)
@@ -56,7 +58,8 @@ public class User implements UserDetails {
     }
 
     public UserResponse getUserResponse(){
-        return UserResponse.builder().id(getId())
+        return UserResponse.builder()
+                .id(getId())
                 .email(getEmail())
                 .username(getUsername())
                 .avatar(getAvatar())

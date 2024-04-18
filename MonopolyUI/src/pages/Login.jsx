@@ -52,8 +52,6 @@ const Login = () => {
     }
   }
 
-
-
   return (
     <div className="main-container-login">
       <div className="left-container">
@@ -65,9 +63,8 @@ const Login = () => {
         <div className="form-container">
           <div className="form-bounder">
             <p className="form-title">Đăng nhập</p>
-
             <input type="text" className="input-text" name="username" id="identify" placeholder="Username hoặc email"
-              onChange={(event) => setIdentify(event.target.value)} onBlur={validateIdentify} />
+              onChange={(event) => setIdentify(event.target.value)} onBlur={validateIdentify}/>
             <p className="error-message" id="error-identify"></p>
             <input type="password" className="input-text" name="password" id="password" placeholder="Mật khẩu"
               onChange={(event) => setPassword(event.target.value)} onBlur={validatePassword} />

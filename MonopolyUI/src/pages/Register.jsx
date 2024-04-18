@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import '../assert/style/register.css';
 import { RegisterAPI } from '../api_caller/authenticate';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import Loader from '../components/loader/loader';
 
 
 const Register = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [isLoading, setLoading] = useState(false)
     const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/;
 
     const register = async () => {
+        setLoading(true)
         if (validateEmail() && validatePassword() && validateRePassword()) {
             const response = await RegisterAPI(email, password, confirmPassword);
             if (response.id) {
@@ -31,7 +34,7 @@ const Register = () => {
                     willClose: () => {
                         clearInterval(timerInterval);
                     }
-                }).then((result) => {
+                }).then(() => {
                     window.location = '/login';
                 });
             } else {
@@ -40,6 +43,7 @@ const Register = () => {
                 errorMessage.style.display = "block";
             }
         }
+        setLoading(false)
     }
 
     const validateEmail = () => {
@@ -103,35 +107,37 @@ const Register = () => {
     }
 
     return (
-        <div class="main-container-login">
-            <div class="left-container">
-                <div class="title-container">
-                    <h1 class="title">♛ CỜ VUA ♛</h1>
+        <>
+            <div class="main-container-login">
+                <div class="left-container">
+                    <div class="title-container">
+                        <h1 class="title">♛ CỜ VUA ♛</h1>
+                    </div>
                 </div>
-            </div>
-            <div class="right-container">
-                <div class="form-container">
-                    <div class="form-bounder">
-                        <p class="form-title">Đăng ký</p>
-                        <input type="email" class="input-text" name="email" id="email" placeholder="Email"
-                            onChange={(event) => setEmail(event.target.value)} onBlur={validateEmail} />
-                        <p className="error-message" id="error-email"></p>
-                        <input type="password" class="input-text" name="password" id="password" placeholder="Mật khẩu"
-                            onChange={(event) => setPassword(event.target.value)} onBlur={validatePassword} />
-                        <p className="error-message" id="error-password"></p>
-                        <input type="password" class="input-text" name="rePassword" id="re-password" placeholder="Nhập lại mật khẩu"
-                            onChange={(event) => setConfirmPassword(event.target.value)} onBlur={validateRePassword} />
-                        <p className="error-message" id="error-re-password"></p>
-                        <p id="error-message"></p>
-                        <div class="button-container">
-                            <a href="/login"><button id="register" class="button" form="">Trở lại</button></a>
-                            <input type="submit" class="button" id="submit" value="Đăng ký" onClick={register} />
+                <div class="right-container">
+                    <div class="form-container">
+                        <div class="form-bounder">
+                            <p class="form-title">Đăng ký</p>
+                            <input type="email" class="input-text" name="email" id="email" placeholder="Email"
+                                onChange={(event) => setEmail(event.target.value)} onBlur={validateEmail} />
+                            <p className="error-message" id="error-email"></p>
+                            <input type="password" class="input-text" name="password" id="password" placeholder="Mật khẩu"
+                                onChange={(event) => setPassword(event.target.value)} onBlur={validatePassword} />
+                            <p className="error-message" id="error-password"></p>
+                            <input type="password" class="input-text" name="rePassword" id="re-password" placeholder="Nhập lại mật khẩu"
+                                onChange={(event) => setConfirmPassword(event.target.value)} onBlur={validateRePassword} />
+                            <p className="error-message" id="error-re-password"></p>
+                            <p id="error-message"></p>
+                            <div class="button-container">
+                                <a href="/login"><button id="register" class="button" form="">Trở lại</button></a>
+                                <input type="submit" class="button" id="submit" value="Đăng ký" onClick={register} />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+            <Loader isLoading={isLoading}/>
+        </>
     );
 }
 export default Register;

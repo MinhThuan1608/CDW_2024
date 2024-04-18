@@ -1,5 +1,23 @@
 const accessToken = sessionStorage.getItem('access_token');
 
+export async function GetMe() {
+    const urlString = `http://localhost:8001/user/me`;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    const responseData = await response.json()
+    if (response.ok) {
+        return responseData.data; //user
+    }
+    return null;
+}
+
 export async function IsUsernameValid(username) {
     const urlString = `http://localhost:8001/user/exists/${username}`;
 

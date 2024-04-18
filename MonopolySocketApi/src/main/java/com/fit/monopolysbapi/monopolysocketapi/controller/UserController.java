@@ -6,6 +6,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.Product;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.AvatarService;
 import com.fit.monopolysbapi.monopolysocketapi.service.ProductService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
@@ -14,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,7 +71,6 @@ public class UserController {
         User updatedUser = userService.changeAvatar((User) authentication.getPrincipal(), avatar);
         return ResponseEntity.ok().body(new AbstractResponse(200, "Avatar have been updated!", updatedUser.getUserResponse()));
 
-
     }
     @PatchMapping("/edit/name")
     public ResponseEntity editProfileName(@RequestBody InitUserRequest request, Authentication authentication) {
@@ -81,6 +83,15 @@ public class UserController {
 
     }
 
+
+    @GetMapping("/me")
+    public ResponseEntity getUser(Authentication authentication){
+        User userAuth = (User) authentication.getPrincipal();
+        User user = userService.getUserById(userAuth.getId()).get();
+        UserResponse userResponse = user.getUserResponse();
+        userResponse.setMoney(user.getMoney());
+        return ResponseEntity.ok(new AbstractResponse(200, "Get infomation successfully!", userResponse));
+    }
 
     @GetMapping("/exists/{username}")
     public ResponseEntity isUsernameExist(@PathVariable String username) {
@@ -109,4 +120,16 @@ public class UserController {
     }
 
 
+    @GetMapping("/verify_email/{userId}")
+    public ResponseEntity verifyEmail(@PathVariable String userId, @RequestParam String token) throws NoSuchAlgorithmException {
+        User user = null;
+        Optional<User> userOptional = userService.getUserById(userId);
+        if (userOptional.isPresent()) user = userOptional.get();
+        if (user.isConfirmEmail())
+            return ResponseEntity.ok(new AbstractResponse(405, "This account's email have been verified", false));
+        if (!userService.checkVerifyEmailToken(user, token))
+            return ResponseEntity.ok(new AbstractResponse(401, "Wrong token!", false));
+        userService.verifyEmail(user);
+        return ResponseEntity.ok("Xác thực thành công!");
+    }
 }

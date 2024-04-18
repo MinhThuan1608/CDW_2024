@@ -51,11 +51,13 @@
 
 .money-container {
     display: flex;
-    width: min-content;
     align-items: center;
     background-color: #b484f4;
     padding: 0 20px;
     border-radius: 10px;
+    width: 20%;
+    min-width: max-content;
+    justify-content: center;
 }
 
 .money-container>div {
@@ -190,6 +192,10 @@
 
 #create-room-button {
     background-color: #7E30E1;
+}
+
+#return-room-button {
+    background-color: #5f30e1;
 }
 
 /* modal  */

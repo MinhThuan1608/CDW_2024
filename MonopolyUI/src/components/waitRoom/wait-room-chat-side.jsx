@@ -1,7 +1,7 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useRef } from 'react';
-import { formatDate } from '../gameBoard/help';
+import { toast } from 'react-toastify';
 
 const ChatSide = (props) => {
     const [messageValue, setMessageValue] = useState('')
@@ -9,17 +9,16 @@ const ChatSide = (props) => {
     const messRef = useRef()
     const ownerRoom = JSON.parse(sessionStorage.getItem('user'))
 
-
-
     const handleSendMessage = () => {
-        props.socket.publish({
-            destination: '/app/game/room/' + props.roomId,
-            body: JSON.stringify({
-                messageType: 'MESSAGE',
-                content: messageValue
-            })
-        });
-
+        if (messageValue.trim() !== '')
+            props.socket.publish({
+                destination: '/app/game/room/' + props.roomId,
+                body: JSON.stringify({
+                    messageType: 'MESSAGE',
+                    content: messageValue
+                })
+            });
+        else toast.warn('Tin nhắn cần có nội dung!')
         setMessageValue('')
         messRef.current.focus()
     }
@@ -39,7 +38,7 @@ const ChatSide = (props) => {
                 {props.listMessage.map((message, index) => (
                     <div className={`message ${message.sender.id === ownerRoom.id ? 'messageOwner' : ''}`} key={index}>
                         <div className={`messageBlock ${message.sender.id === ownerRoom.id ? 'messageBlockOwner' : ''}`}>
-                            <span className="sendTime">{formatDate(message.createAt)}</span>
+                            <span className="sendTime">{message.createAt}</span>
                             <span className={`sendName ${message.sender.id === ownerRoom.id ? 'player-br-forth' : 'player-br-thr'}`}>
                                 {message.sender.username}
                             </span>

@@ -1,6 +1,7 @@
 package com.fit.monopolysbapi.monopolysocketapi.model;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
+import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import lombok.*;
 
@@ -21,10 +22,13 @@ public class Room {
     private Date createAt;
     private boolean isPlaying;
 
-
-    public boolean havePassword(){
-        if (password==null) return false;
+    public boolean havePassword() {
+        if (password == null) return false;
         return !password.isEmpty();
+    }
+
+    public RoomResponse getRoomResponse() {
+        return RoomResponse.builder().id(id).roomName(name).numUser(users.size()).havePass(havePassword()).isPlaying(isPlaying).build();
     }
 
     @Override

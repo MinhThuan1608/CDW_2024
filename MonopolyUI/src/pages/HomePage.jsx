@@ -6,10 +6,11 @@ import HomeBottom from '../components/homePackage/home-bottom';
 import { useState } from 'react';
 import { SocketContext } from '../App';
 import Swal from 'sweetalert2';
-import { JoinRoom } from '../api_caller/room';
+import { GetRoomMeIn, JoinRoom } from '../api_caller/room';
+import { GetMe } from '../api_caller/user';
 
 
-const HomePage = () => {
+const HomePage = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalCreateRoom, setShowModalCreateRoom] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
@@ -17,13 +18,11 @@ const HomePage = () => {
   const [showModalShop, setShowModalShop] = useState(false);
 
   const { socket } = useContext(SocketContext)
-  const me = JSON.parse(sessionStorage.getItem('user'))
 
   useEffect(() => {
-    if (socket) {
-      socket.subscribe(`/user/${me.id}/topic/room/invite`, (message) => {
+    if (socket && props.me.id) {
+      socket.subscribe(`/user/${props.me.id}/topic/room/invite`, (message) => {
         const inviteMessage = JSON.parse(message.body)
-        console.log("private invite")
         console.log(inviteMessage)
         switch (inviteMessage.inviteMessageType) {
           case "INVITE":
@@ -63,11 +62,12 @@ const HomePage = () => {
         }
       });
     }
-  }, [socket])
+  }, [socket, props.me])
 
   return (
     <div className='home-container'>
       <HomeTop
+        me={props.me}
         showModal={showModal}
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}

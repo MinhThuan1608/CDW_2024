@@ -12,6 +12,7 @@ import { reducer } from "./reducer/reducer";
 import { Client } from "@stomp/stompjs";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { GetMe } from './api_caller/user';
 // import SocketContext from "./components/socket-context";
 
 export const SocketContext = React.createContext();
@@ -28,8 +29,8 @@ function App() {
     dispatch
   }
 
-
   const [userOnline, setUserOnline] = useState([])
+  const [me, setMe] = useState({})
 
 
   useEffect(() => {
@@ -48,6 +49,7 @@ function App() {
         setSocket(client)
 
         client.subscribe('/topic/user/online', (message) => {
+          console.log(JSON.parse(message.body))
           setUserOnline(JSON.parse(message.body));
         });
 
@@ -69,12 +71,16 @@ function App() {
   //path authorize config
   useEffect(() => {
     const accessToken = sessionStorage.getItem('access_token');
-    const user = JSON.parse(sessionStorage.getItem('user'));
     if (!publicPages.find(page => window.location.pathname.startsWith(page))) {
       if (!accessToken) {
         window.location = '/login'
-      } else if (!user.username && !window.location.pathname.startsWith('/create-character') && !publicPages.find(page => window.location.pathname.startsWith(page))) {
-        window.location = '/create-character'
+      } else {
+        GetMe().then(user => {
+          if (user) setMe(user)
+          if (!user?.username && !window.location.pathname.startsWith('/create-character')) {
+            window.location = '/create-character'
+          }
+        })
       }
     }
   }, [])
@@ -86,15 +92,15 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/wait-room/:roomId" element={<WaitRoom userOnline={userOnline} />} />
+              <Route path="/" element={<HomePage me={me} />} />
+              <Route path="/wait-room/:roomId" element={<WaitRoom userOnline={userOnline} me={me} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game/:roomId" element={<GamePage/>} />
+              <Route path="/game/:roomId" element={<GamePage />} />
             </Routes>
           </BrowserRouter>
-          <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" stacked />
+          <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
         </div>
       </AppContext.Provider>
 
