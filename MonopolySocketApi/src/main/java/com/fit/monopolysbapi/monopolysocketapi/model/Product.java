@@ -15,7 +15,7 @@ public class Product {
     private String id;
     private String name;
     private String description;
+    private double price;
     private String urlImage;
-    private int quantity;
     private boolean isActive;
 }

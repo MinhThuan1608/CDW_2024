@@ -12,7 +12,7 @@ export async function GetProduct() {
     });
 
     const responseData = await response.json()
-    console.log(responseData)
+    
     if (response.ok) {
         return responseData.data; //return an array contains dafault avatars, avatar(id, data, createAt, isActive, isDefaultAvatar)
     }

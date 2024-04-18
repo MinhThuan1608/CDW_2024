@@ -102,7 +102,7 @@ export async function GetUserInRoom(roomId) {
     return false;
 }
 export async function GetTimmer(roomId) {
-    const urlString = `http://localhost:8001/room/game/${roomId}/time`;
+    const urlString = `http://localhost:8001/room/game/time/${roomId}`;
 
     const response = await fetch(urlString, {
         method: "GET",

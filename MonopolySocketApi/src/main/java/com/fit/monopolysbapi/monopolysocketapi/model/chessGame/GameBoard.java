@@ -17,9 +17,10 @@ public class GameBoard {
     public static final int COL = 8;
     public static final int ROW = 8;
     public static final int TILE_SIZE = 25;
+    public static final int RESET_TURN = 60;
     private int enPassantTile = -1;
     private String turn;
-    private boolean isWin;
+    private boolean isWin = false;
     private int timer;
     private Timer countdownTimer;
     private int countdownResetCounter;
@@ -38,7 +39,7 @@ public class GameBoard {
 
     public GameBoard() {
         this.turn = "w";
-        this.timer = 15;
+        this.timer = RESET_TURN;
         initGame();
         startTimer();
     }
@@ -56,14 +57,14 @@ public class GameBoard {
                     System.out.println("Timer: " + timer);
                 } else {
                     countdownResetCounter++;
-                    if (countdownResetCounter >= 3) {
+                    if (countdownResetCounter > 3) {
                         countdownTimer.cancel();
+                        isWin = true;
                         System.out.println("quá 3 lần reset");
-//                        isWin = false;
                     } else {
                         turn = turn.equals("w") ? "b" : "w";
-                        timer = 15;
-                        System.out.println("Timer reset to 60");
+                        timer = RESET_TURN;
+                        System.out.println("Timer reset");
                         System.out.println(turn);
                     }
 

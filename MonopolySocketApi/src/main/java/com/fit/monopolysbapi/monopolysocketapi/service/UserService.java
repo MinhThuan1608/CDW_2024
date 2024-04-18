@@ -1,18 +1,18 @@
 package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
-import com.fit.monopolysbapi.monopolysocketapi.model.Bag;
+import com.fit.monopolysbapi.monopolysocketapi.model.Item;
 import com.fit.monopolysbapi.monopolysocketapi.model.Role;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
+import com.fit.monopolysbapi.monopolysocketapi.repository.ProductRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +20,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
+    private final ProductRepository productRepository;
     private final Util util;
     private final PasswordEncoder passwordEncoder;
 
@@ -67,12 +69,21 @@ public class UserService {
         user.setAvatar(avatar);
         return userRepository.save(user);
     }
+    public User changeName(User user, String username) {
+        user.setUsername(username);
+        return userRepository.save(user);
+    }
     public User getOneUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
-    public Bag getBagByUserName(String username){
-        if(userRepository.existsByUsername(username))
-            return getOneUserByUsername(username).getBag();
-        return null;
+    public List<Item> getListItem(String id){
+        if(!userRepository.existsById(id)) return null;
+        return itemRepository.findAllByUserId(id);
     }
+    public boolean haveChangeNameCard(String id){
+        if(!userRepository.existsById(id)) return false;
+        System.out.println(itemRepository.findItemByProductId("3"));
+        return getListItem(id).contains(itemRepository.findItemByProductId("3"));
+    }
+
 }

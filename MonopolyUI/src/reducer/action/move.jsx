@@ -28,3 +28,9 @@ export const savePiece = ({rank, file, x, y}) => {
         payload: {rank, file, x, y},
     }
 }
+export const swapTurn = ({turn}) => {
+    return {
+        type: actionsTypes.SWAP_TURN,
+        payload: {turn},
+    }
+} 

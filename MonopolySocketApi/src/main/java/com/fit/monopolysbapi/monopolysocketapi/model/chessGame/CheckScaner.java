@@ -13,7 +13,6 @@ public class CheckScaner {
         Piece king = board.findKing(move.piece.isWhite);
         assert king != null;
 
-        System.out.println(king.row);
         int kingRow = king.row;
         int kingCol = king.col;
         return hitByRook(move.newRow, move.newCol, king, kingRow, kingCol, 0, 1) ||

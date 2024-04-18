@@ -3,5 +3,6 @@ const actionsTypes = {
     'CLEAR_CANDIDATE_MOVES' : 'CLEAR_CANDIDATE_MOVES',
     'NEW_MOVE'  : 'NEW_MOVE',
     'SAVE_PIECE_OLD_NEW' : 'SAVE_PIECE_OLD_NEW',
+    'SWAP_TURN':'SWAP_TURN',
 } 
 export default actionsTypes

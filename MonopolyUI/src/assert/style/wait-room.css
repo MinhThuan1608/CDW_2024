@@ -161,12 +161,16 @@
 .player-name {
     position: absolute;
     top: -8px;
-    left: 40px;
+    left: 30px;
     width: 79%;
     text-transform: uppercase;
     text-align: center;
-    padding: 12px 0;
+    padding: 12px 12px 12px 28px;
+    margin-left: 12px;
     color: #ffffff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .player-br-fst {

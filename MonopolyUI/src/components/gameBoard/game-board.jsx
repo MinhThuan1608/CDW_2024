@@ -6,7 +6,7 @@ import { useAppContext } from '../../contexts/Context';
 import { SocketContext } from '../../App';
 
 import { useParams } from 'react-router-dom';
-import {  makeNewMove } from '../../reducer/action/move';
+import {  makeNewMove, swapTurn } from '../../reducer/action/move';
 import Popup from './Popup/Popup';
 
 const GameBoard = (props) => {
@@ -36,13 +36,22 @@ const GameBoard = (props) => {
 
     useEffect(() => {
         if (socket) {
+
+            socket.subscribe('/topic/game/turn/' + roomId, (message) => {
+                const messResponse = JSON.parse(message.body);
+                let turn = messResponse.turn
+                // console.log(messResponse)
+                dispatch(swapTurn({turn}))
+
+            });
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse)
+                let turn = messResponse.turn
                 switch (messResponse.messageType) {
                     case 'MOVE':
                         let newPosition = messResponse.pieces
-                        let turn = messResponse.turn
+                        turn = messResponse.turn
                         dispatch(makeNewMove({newPosition, turn}))
                         // dispatch(clearCandidates())
                         break
@@ -50,6 +59,7 @@ const GameBoard = (props) => {
                         break
                 }
 
+                dispatch(swapTurn({turn}))
 
             });
         }

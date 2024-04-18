@@ -1,7 +1,8 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
-import com.fit.monopolysbapi.monopolysocketapi.model.Bag;
+import com.fit.monopolysbapi.monopolysocketapi.model.Item;
+import com.fit.monopolysbapi.monopolysocketapi.model.Product;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
@@ -23,19 +24,19 @@ public class UserController {
 
     private final UserService userService;
     private final AvatarService avatarService;
-    private final ProductService productService;
 
     @PatchMapping("/init")
     public ResponseEntity initUser(@RequestBody InitUserRequest request, Authentication authentication) {
+        String imageId = request.getDefaultAvatarId();
+        Avatar avatar = null;
         if (userService.isUsernameExist(request.getUsername()))
             return ResponseEntity.ok(new AbstractResponse(405, "This username have been used!!!", false));
-        String imageId = request.getDefaultAvatarId();
-        Avatar avatar;
+
         if (imageId != null && !imageId.isEmpty()) {
             if (!avatarService.isImageDefaultExist(imageId))
                 return ResponseEntity.ok(new AbstractResponse(405, "Avatar, that you provide, is not exists", false));
             avatar = avatarService.getAvatarById(imageId);
-        } else {
+        } else if(request.getAvatar() != null) {
             String base64Data = request.getAvatar();
             String[] parts = base64Data.split(",");
             String base64String = parts[1];
@@ -50,9 +51,11 @@ public class UserController {
         return ResponseEntity.ok().body(new AbstractResponse(200, "Username and avatar have been setted!", updatedUser.getUserResponse()));
     }
 
-    @PatchMapping("/editprofile")
-    public ResponseEntity editProfile(@RequestBody InitUserRequest request, Authentication authentication) {
-        System.out.println(request.getAvatar() + " =========================");
+    @PatchMapping("/edit/avatar")
+    public ResponseEntity editProfileAvatar(@RequestBody InitUserRequest request, Authentication authentication) {
+        if (request.getAvatar() == null)
+            return ResponseEntity.ok().body(new AbstractResponse(200, "Avatar not available!", false));
+
         Avatar avatar;
         String base64Data = request.getAvatar();
         String[] parts = base64Data.split(",");
@@ -64,6 +67,16 @@ public class UserController {
 
         User updatedUser = userService.changeAvatar((User) authentication.getPrincipal(), avatar);
         return ResponseEntity.ok().body(new AbstractResponse(200, "Avatar have been updated!", updatedUser.getUserResponse()));
+
+
+    }
+    @PatchMapping("/edit/name")
+    public ResponseEntity editProfileName(@RequestBody InitUserRequest request, Authentication authentication) {
+        if (userService.isUsernameExist(request.getUsername()))
+            return ResponseEntity.ok(new AbstractResponse(405, "This username have been used!!!", false));
+
+        User updatedUser = userService.changeName((User) authentication.getPrincipal(), request.getUsername());
+        return ResponseEntity.ok().body(new AbstractResponse(200, "Username have been updated!", updatedUser.getUserResponse()));
 
 
     }
@@ -82,12 +95,17 @@ public class UserController {
         return ResponseEntity.ok(new AbstractResponse(200, "Successfully!", avatars));
     }
 
-    @GetMapping("/bag/{username}")
-    public ResponseEntity getBag(@PathVariable String username) {
-        Bag bagResponse = userService.getBagByUserName(username);
-        if (bagResponse != null)
-            return ResponseEntity.ok(new AbstractResponse(200, "Bag is here", bagResponse));
-        return ResponseEntity.ok(new AbstractResponse(200, "User ID is not valid", null));
+    @GetMapping("/bag/{id}")
+    public ResponseEntity getBag(@PathVariable String id) {
+        List<Item> itemList = userService.getListItem(id);
+        return ResponseEntity.ok(new AbstractResponse(200, "Bag is here", itemList));
+    }
+
+    @GetMapping("/haveChangeNameCard/{id}")
+    public ResponseEntity haveChangeNameCard(@PathVariable String id) {
+        if (userService.haveChangeNameCard(id))
+            return ResponseEntity.ok(new AbstractResponse(200, "Have Change Name Card", true));
+        return ResponseEntity.ok(new AbstractResponse(200, "Have Not Change Name Card", false));
     }
 
 

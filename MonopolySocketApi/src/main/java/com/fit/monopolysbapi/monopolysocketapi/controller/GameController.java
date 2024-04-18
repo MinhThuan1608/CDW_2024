@@ -13,6 +13,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +37,7 @@ public class GameController {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();
         ChessMessage responseMessage = null;
+        ChessMessage responseMessageSwapTurn = null;
         Room room = roomService.getRoomById(roomId);
         GameBoard gameBoard = room.getGameBoard();
         switch (chessMessage.getMessageType()) {
@@ -58,7 +60,7 @@ public class GameController {
                                 .build();
 //                                .timer(60)
 //                        ====================
-                        gameBoard.setTimer(15);
+                        gameBoard.setTimer(GameBoard.RESET_TURN);
                         gameBoard.startTimer();
                     } else {
                         responseMessage = ChessMessage.builder()
@@ -113,10 +115,34 @@ public class GameController {
         room.setGameBoard(gameBoard);
         simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
     }
-    @GetMapping("/room/game/{roomId}/time")
+
+    @MessageMapping("/game/turn/{roomId}")
+    public void chessGameSwapTurn(@DestinationVariable String roomId) {
+        ChessMessage responseMessageSwapTurn = null;
+        Room room = roomService.getRoomById(roomId);
+        GameBoard gameBoard = room.getGameBoard();
+        System.out.println(gameBoard.getTurn() + "đổi turn ==================");
+        if (gameBoard.getTimer() == GameBoard.RESET_TURN)
+            responseMessageSwapTurn = ChessMessage.builder()
+                    .turn(gameBoard.getTurn())
+                    .build();
+        if (gameBoard.getCountdownResetCounter() == 3)
+            responseMessageSwapTurn = ChessMessage.builder()
+                    .isWin(gameBoard.isWin())
+                    .turn(gameBoard.getTurn()).build();
+
+        simpMessagingTemplate.convertAndSend("/topic/game/turn/" + roomId, responseMessageSwapTurn);
+    }
+
+//    @MessageMapping("/game/time/{roomId}")
+//    public void chessGetTimer(@DestinationVariable String roomId) {
+//        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null)
+//            simpMessagingTemplate.convertAndSend("/topic/game/time/" + roomId, roomService.getRoomById(roomId).getGameBoard().getTimer());
+//    }
+
+    @GetMapping("/room/game/time/{roomId}")
     public ResponseEntity getTimmer(@PathVariable String roomId, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null){
+        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null) {
             return ResponseEntity.ok(new AbstractResponse(200, "Get time ok", roomService.getRoomById(roomId).getGameBoard().getTimer()));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get time fail", false));

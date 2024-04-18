@@ -24,8 +24,6 @@ public class User implements UserDetails {
     private String password;
     @OneToOne
     private Avatar avatar;
-    @OneToOne
-    private Bag bag;
     private boolean isConfirmEmail;
     private boolean isNonLocked;
     @Enumerated(EnumType.STRING)

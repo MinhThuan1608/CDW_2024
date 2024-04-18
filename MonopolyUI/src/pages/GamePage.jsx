@@ -45,13 +45,14 @@ const GamePage = () => {
                         break
                 }
             });
+
         }
 
     }, [socket])
 
-
     useEffect(() => {
         if (socket) {
+          
             const fetchTimer = async () => {
                 await GetTimmer(roomId).then(result => {
                     setSeconds(result)
@@ -63,16 +64,28 @@ const GamePage = () => {
             return () => {
                 clearInterval(intervalId);
             };
+           
         }
 
-    }, [socket])
+    })
+
+    useEffect(() => {
+        if (socket) {
+            socket.publish({
+                destination: '/app/game/turn/' + roomId,
+                body: ''
+
+            });
+        }
+
+    }, [seconds === 60])
 
     // =================
 
     return (
 
         <div className="container-gameplay">
-           {isWin &&  <VictoryModal listUsers={listUsers} />}
+            {isWin && <VictoryModal listUsers={listUsers} />}
             <div className="game-board-main">
                 <GameBoard listUsers={listUsers} />
             </div>

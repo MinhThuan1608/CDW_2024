@@ -77,6 +77,7 @@ const Piceces = (props) => {
     }
 
     useEffect(() => {
+        
         if (appState.completePromotionChoose && socket) {
             console.log(movePromotion)
             socket.publish({
