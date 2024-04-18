@@ -23,31 +23,31 @@ public class GameService {
     private final UserRepository userRepository;
     private final Util util;
 
-    public void save(User winner, User closer, Date startAt, Date endAt, long totalTime) {
+    public void save(User winner, User loser, Date startAt, Date endAt, long totalTime) {
         String id = util.generateId();
         while (matchRepository.existsById(id)) id = util.generateId();
-        Match match = Match.builder().id(id).winner(winner).closer(closer).startAt(startAt).endAt(endAt).totalTime(totalTime).build();
+        Match match = Match.builder().id(id).winner(winner).loser(loser).startAt(startAt).endAt(endAt).totalTime(totalTime).build();
         matchRepository.save(match);
     }
 
-    public void matchEnd(Room room, User winner, User closer, boolean isWinMatch) {
+    public void matchEnd(Room room, User winner, User loser, boolean isWinMatch) {
         GameBoard gameBoard = room.getGameBoard();
         Date endAt = new Date(System.currentTimeMillis());
         Date startAt = gameBoard.getCreateAt();
         long totalTime = endAt.getTime() - startAt.getTime();
         if (isWinMatch && totalTime > 5 * 60 * 1000) {
             winner.setMoney(winner.getMoney() + 1000);
-            closer.setMoney(closer.getMoney() + 200);
+            loser.setMoney(loser.getMoney() + 200);
         } else if (isWinMatch) {
             winner.setMoney(winner.getMoney() + 10);
-            closer.setMoney(closer.getMoney() + 10);
+            loser.setMoney(loser.getMoney() + 10);
         } else {
             winner.setMoney(winner.getMoney() + 500);
-            closer.setMoney(closer.getMoney() + 500);
+            loser.setMoney(loser.getMoney() + 500);
         }
         userRepository.save(winner);
-        userRepository.save(closer);
-        save(winner, closer, startAt, endAt, totalTime);
+        userRepository.save(loser);
+        save(winner, loser, startAt, endAt, totalTime);
         room.setGameBoard(null);
         room.setPlaying(false);
         room.setCreateAt(new Date());

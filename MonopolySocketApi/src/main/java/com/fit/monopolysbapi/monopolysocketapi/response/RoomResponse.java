@@ -12,6 +12,7 @@ public class RoomResponse {
     private String roomName;
     private int numUser;
     private boolean havePass;
+    private boolean isPlaying;
 
     @Override
     public String toString() {

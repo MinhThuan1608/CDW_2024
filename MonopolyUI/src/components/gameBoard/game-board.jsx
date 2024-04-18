@@ -21,6 +21,7 @@ const GameBoard = () => {
     const [completePromotionChoose, setCompletePromotionChoose] = useState(false)
     const [isSelected, setIsSelected] = useState('')
     const [hints, setHints] = useState([])
+    const [justMoving, setJustMoving] = useState([])
     const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
@@ -71,8 +72,10 @@ const GameBoard = () => {
                     case 'MOVE':
                         newPosition = messResponse.pieces
                         turn = messResponse.turn
-                        if (newPosition)
+                        if (newPosition){
                             dispatch(makeNewMove({ newPosition, turn }))
+                            setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
+                        }
                         break
 
                     default:
@@ -100,7 +103,7 @@ const GameBoard = () => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose} hints={hints}/>
+            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose} hints={hints} justMoving={justMoving}/>
 
             {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} setCompletePromotionChoose={setCompletePromotionChoose}/>)}
             <Files files={files} />

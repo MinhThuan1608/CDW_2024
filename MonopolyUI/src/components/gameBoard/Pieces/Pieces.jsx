@@ -102,6 +102,7 @@ const Piceces = (props) => {
                         file={file}
                         piece={currentPosition[rank][file]}
                         hints={props.hints}
+                        justMoving={props.justMoving}
                     />
                     : null
             ))}

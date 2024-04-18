@@ -21,7 +21,7 @@ public class Match {
     @ManyToOne
     private User winner;
     @ManyToOne
-    private User closer;
+    private User loser;
     private Date startAt;
     private Date endAt;
     private long totalTime;

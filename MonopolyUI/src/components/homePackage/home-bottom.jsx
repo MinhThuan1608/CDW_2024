@@ -38,6 +38,10 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
         window.location = '/wait-room/' + roomMeIn.id
     }
 
+    const handleReturnGame = ()=>{
+        window.location = '/game/' + roomMeIn.id
+    }
+
     return (
         <div className="bottom-container">
             <div className="util-container">
@@ -53,9 +57,10 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 </div>
             </div>
             <div className="action-button-container">
-                {roomMeIn ? (<button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button>) :
-                    <><button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
-                        <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button></>}
+                {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :
+                    roomMeIn ? <button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button> :
+                        <><button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
+                            <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button></>}
             </div>
 
 

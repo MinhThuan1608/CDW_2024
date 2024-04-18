@@ -21,6 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final Environment env;
 
+
     public Optional<User> getUserByUsername(String username) {
         var userOptional = userRepository.findByUsername(username);
         return userOptional;

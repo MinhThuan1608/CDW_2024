@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import { GetRoomMeIn } from '../../api_caller/room';
 
 const WaitRoomBottom = (props) => {
+
+    const [roomMeIn, setRoomMeIn] = useState(null)
+
+    useEffect(() => {
+        GetRoomMeIn().then(res => {
+            if (res) setRoomMeIn(res)
+        })
+    }, [])
+
     const handleInitGame = () => {
         if (props.listUser.length == 2)
             props.socket.publish({
@@ -13,10 +23,17 @@ const WaitRoomBottom = (props) => {
             });
         else toast.warn('Cần có 2 người mới chơi được!');
     }
+
+    const handleReturnGame = ()=>{
+        window.location = '/game/' + roomMeIn.id
+    }
+
     return (
         props.me.id === props.listUser[0]?.id &&
         (<div className="bottom-part">
-            <button className="btn-play-game" onClick={handleInitGame}>play game now</button>
+            {roomMeIn?.playing ?
+                <button className="btn-play-game" onClick={handleReturnGame}>Trờ lại game</button> :
+                <button className="btn-play-game" onClick={handleInitGame}>Bắt đầu chơi</button>}
         </div>)
     );
 }

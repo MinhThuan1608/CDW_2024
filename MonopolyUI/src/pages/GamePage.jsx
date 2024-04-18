@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import '../assert/style/game-play.css';
 import GameBoard from '../components/gameBoard/game-board'
 import ChatSide from '../components/waitRoom/wait-room-chat-side';
@@ -26,11 +26,20 @@ const GamePage = () => {
         })
     }, []);
 
-    // =================
+    const sendVoice = (data) => {
+        socket.publish({
+            destination: '/app/game/chess/' + roomId,
+            body: JSON.stringify({
+                messageType: 'VOICE',
+
+            })
+        });
+    }
 
     return (
 
         <div className="container-gameplay">
+        
             <div className="game-board-main">
                 <GameBoard />
             </div>

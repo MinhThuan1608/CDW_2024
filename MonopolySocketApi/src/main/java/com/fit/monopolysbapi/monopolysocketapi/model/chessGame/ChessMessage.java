@@ -25,13 +25,15 @@ public class ChessMessage {
     private String winnerId;
     private List<Hint> hints;
 
+
     public enum ChessMessageType {
         CONNECT,
         MOVE,
         GIVE_UP,
         GET_USER_IN_ROOM,
         WIN,
-        DRAW
+        DRAW,
+        VOICE
 
     }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { useAppContext } from "../../../contexts/Context";
 import { generateCandidateMoves } from "../../../reducer/action/move";
 
-const Piece = ({ rank, file, piece, hints }) => {
+const Piece = ({ rank, file, piece, hints, justMoving }) => {
 
     const { appState, dispatch } = useAppContext()
     const { turn, position: currentPosition } = appState;
@@ -18,10 +18,10 @@ const Piece = ({ rank, file, piece, hints }) => {
                 .map(hint => [hint.newRow, hint.newCol])
             dispatch(generateCandidateMoves({ candidateMoves }))
         }
-    }
+    } 
     const onDragEnd = e => e.target.style.display = 'block'
     return (
-        <div className={`piece ${piece} p-${file}${rank}`}
+        <div className={`piece ${piece} p-${file}${rank} ${justMoving[0]===rank && justMoving[1]===file? 'justMoving':''}`}
             draggable={piece[0] === turn ? true : false}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}

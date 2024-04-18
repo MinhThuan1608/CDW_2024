@@ -49,10 +49,10 @@ public class WaitRoomController {
     }
 
     @GetMapping("/room/me")
-    public ResponseEntity getRoomMeIn(Authentication authentication){
+    public ResponseEntity getRoomMeIn(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Room room = roomService.getRoomUserIn(user.getId());
-        if (room==null)
+        if (room == null)
             return ResponseEntity.ok(new AbstractResponse(200, "You are not in any room!", null));
         return ResponseEntity.ok(new AbstractResponse(200, "You are in a room!", room.getRoomResponse()));
     }
@@ -83,10 +83,11 @@ public class WaitRoomController {
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get room's password fail", false));
     }
+
     @GetMapping("/room/{roomId}/user")
     public ResponseEntity getUserInRoom(@PathVariable String roomId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        if (roomService.getRoomById(roomId) != null && roomService.isUserInRoom(user.getId(), roomId)){
+        if (roomService.getRoomById(roomId) != null && roomService.isUserInRoom(user.getId(), roomId)) {
             return ResponseEntity.ok(new AbstractResponse(200, "Get user in room successfully", roomService.getUserInRoom(roomId)));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get user in room fail", false));
@@ -116,12 +117,12 @@ public class WaitRoomController {
                 break;
             case MESSAGE:
                 if (waitRoomMessage.getContent() != null && !waitRoomMessage.getContent().trim().isEmpty())
-                newMessage = WaitRoomMessage.builder()
-                        .users(room.getUsers())
-                        .messageType(WaitRoomMessage.RoomMessageType.MESSAGE)
-                        .content(waitRoomMessage.getContent().trim())
-                        .createAt(simpleDateFormat.format(new Date()))
-                        .sender(user).build();
+                    newMessage = WaitRoomMessage.builder()
+                            .users(room.getUsers())
+                            .messageType(WaitRoomMessage.RoomMessageType.MESSAGE)
+                            .content(waitRoomMessage.getContent().trim())
+                            .createAt(simpleDateFormat.format(new Date()))
+                            .sender(user).build();
                 break;
             case START_GAME:
                 if (room.getUsers().size() == 2 && room.getUsers().get(0).getId().equals(user.getId())) {
@@ -140,7 +141,7 @@ public class WaitRoomController {
     }
 
     @MessageMapping("/room/invite")
-    public void invite(@Payload InviteMessage inviteMessage, Message message){
+    public void invite(@Payload InviteMessage inviteMessage, Message message) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
         User user = (User) token.getPrincipal();

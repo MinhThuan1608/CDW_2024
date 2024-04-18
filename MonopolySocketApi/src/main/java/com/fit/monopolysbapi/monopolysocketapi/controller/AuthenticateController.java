@@ -1,6 +1,7 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.repository.MatchRepository;
 import com.fit.monopolysbapi.monopolysocketapi.request.LoginRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.RegisterRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
@@ -25,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 public class AuthenticateController {
 
     private final UserService userService;
+    private final MatchRepository matchRepository;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 

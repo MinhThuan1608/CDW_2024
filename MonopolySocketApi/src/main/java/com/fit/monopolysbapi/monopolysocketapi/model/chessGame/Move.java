@@ -27,6 +27,7 @@ public class Move {
     }
 
     public boolean same(Move oMove) {
+        var a =1;
         return this.oldRow == oMove.oldRow && this.oldCol == oMove.oldCol && this.newRow == oMove.newRow && this.newCol == oMove.newCol && this.piece.getName().equals(oMove.piece.getName());
     }
 

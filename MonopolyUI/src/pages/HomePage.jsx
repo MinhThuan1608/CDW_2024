@@ -18,7 +18,6 @@ const HomePage = (props) => {
 
   useEffect(() => {
     if (socket && props.me.id) {
-      console.log(`/user/${props.me.id}/topic/room/invite`)
       socket.subscribe(`/user/${props.me.id}/topic/room/invite`, (message) => {
         const inviteMessage = JSON.parse(message.body)
         console.log(inviteMessage)
