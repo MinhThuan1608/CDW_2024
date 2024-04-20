@@ -24,7 +24,9 @@ public class GameBoard {
     private int enPassantTile = -1;
     private int timer;
     private Timer countdownTimer;
-    private int countdownResetCounter;
+    private int countdownResetCounterWhite;
+    private int countdownResetCounterBlack;
+    private boolean justResetCounter = false;
     private char turn;
     private Date createAt;
     private List<Move> hints;
@@ -62,11 +64,19 @@ public class GameBoard {
                     timer--;
                     System.out.println("Timer: " + timer);
                 } else {
-                    countdownResetCounter++;
-                    if (countdownResetCounter > 3) {
+                    if(turn == 'w'){
+                        countdownResetCounterWhite++;
+                    }else{
+                        countdownResetCounterBlack++;
+                    }
+                    justResetCounter = true;
+                    if (countdownResetCounterWhite > 3) {
                         countdownTimer.cancel();
-                        System.out.println("quá 3 lần reset");
-                    } else {
+                        System.out.println("dden thang");
+                    } else  if (countdownResetCounterBlack > 3) {
+                        countdownTimer.cancel();
+                        System.out.println("trang thang");
+                    }else {
                         turn = turn == 'w' ? 'b' : 'w';
                         hints = getNextStepHints(turn);
                         timer = RESET_TURN;

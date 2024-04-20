@@ -4,7 +4,7 @@
     align-items: center;
     position: relative;
     justify-content: center;
-    margin: 48px;
+    /* margin: 48px; */
 }
 .chat-div{
     background-color: #ffffff;
@@ -133,7 +133,16 @@
     color: green;
     font-weight: bold;
 }
-.icon-chess-white{
+.icon-chess-white-win{
+    font-size: 80px;
+    filter: drop-shadow(0 0 4px #000);
+}
+.icon-chess-dark{
+    font-size: 80px;
+    filter: drop-shadow(0 0 4px #fff);
+    /* background-color: #fff; */
+}
+.white-color{
     color: #ffffff;
 }
 
@@ -180,7 +189,6 @@
 
 .tilte-win {
     margin-top: 24px;
-    color: azure;
     text-align: center;
     font-size: 24px;
 }

@@ -36,10 +36,10 @@ public class ChessMessage {
         MOVE,
         MESSAGE,
         GIVE_UP,
-        GET_USER_IN_ROOM,
+        EXIT,
         WIN,
         DRAW,
-        VOICE
+        TIME
 
     }
 }
