@@ -7,7 +7,8 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { GetRoomMeIn } from '../../api_caller/room';
 
 
-const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCreateRoom, showModalBag, setShowModalBag,showModalShop, setShowModalShop}) => {
+const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag
+    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
 
     useEffect(() => {
@@ -17,22 +18,22 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
     }, [])
     // Hàm xử lý khi ấn vào ô chọn phòng
     const handleOpenModal = () => {
-        if(!showModalCreateRoom && !showModalBag && !showModalShop){
+        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend) {
             setShowModal(true);
         }
     };
     const handleOpenModalCreateRoom = () => {
-        if(!showModal && !showModalBag && !showModalShop){
+        if (!showModal && !showModalBag && !showModalShop && !showModalFriend) {
             setShowModalCreateRoom(true);
         }
     };
     const handleOpenModalBag = () => {
-        if(!showModal && !showModalCreateRoom && !showModalShop){
+        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend) {
             setShowModalBag(true);
         }
     };
     const handleOpenModalShop = () => {
-        if(!showModal && !showModalCreateRoom && !showModalBag){
+        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend) {
             setShowModalShop(true);
         }
     };
@@ -42,7 +43,7 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
         window.location = '/wait-room/' + roomMeIn.id
     }
 
-    const handleReturnGame = ()=>{
+    const handleReturnGame = () => {
         window.location = '/game/' + roomMeIn.id
     }
 
@@ -51,17 +52,17 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
             <div className="util-container">
                 <div className="shop-container">
                     <img src={shopImg} alt="shop" className="util-icon" id="shop-image"
-                        title="Cửa hàng" onClick={handleOpenModalShop}/>
+                        title="Cửa hàng" onClick={handleOpenModalShop} />
                     <FontAwesomeIcon icon={faCircle} className="dot" id="shop-dot" />
                 </div>
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image" 
-                     onClick={handleOpenModalBag}/>
+                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
+                        onClick={handleOpenModalBag} />
                     <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
                 </div>
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image" 
-                     onClick={handleOpenModalBag}/>
+                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
+                        onClick={handleOpenModalBag} />
                     <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
                 </div>
             </div>

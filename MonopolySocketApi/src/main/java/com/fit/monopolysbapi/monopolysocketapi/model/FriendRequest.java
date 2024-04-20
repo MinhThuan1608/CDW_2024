@@ -24,6 +24,6 @@ public class FriendRequest {
     private Date createAt;
 
     public FriendRequestResponse toFriendRequestResponse(){
-        return FriendRequestResponse.builder().id(id).sender(sender.getUserResponse()).createAt(new SimpleDateFormat("HH:mm").format(new Date())).build();
+        return FriendRequestResponse.builder().id(id).sender(sender.getUserResponse()).createAt(new SimpleDateFormat("HH:mm").format(createAt)).build();
     }
 }

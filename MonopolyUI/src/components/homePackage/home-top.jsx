@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faCircle, faEnvelope, faBell, faCoins, faGem } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faCircle, faEnvelope, faBell, faCoins, faUserFriends, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const HomeTop = (props) => {
 
     const handleOpenModalProfile = () => {
-        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal) {
+        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal && !props.showModalFriend) {
             props.setShowModalProfile(true);
         }
     };
+
+    const handleOpenFriendModal = () => {
+        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal && !props.showModalProfile) {
+            props.setShowModalFriend(true);
+        }
+    }
 
     return (
         <div className="top-container">
@@ -26,10 +32,6 @@ const HomeTop = (props) => {
             <FontAwesomeIcon icon={faCoins} className="money-icon"/>
                 <p className="money coin">{props.me?.money}</p>
             </div>
-            {/* <div className="diamond-container">
-            <FontAwesomeIcon icon={faGem} className="gem-icon"/>
-                <p className="money gem">999,999</p>
-            </div> */}
         </div>
         <div className="setting-container">
             <div className="icon-container">
@@ -37,8 +39,8 @@ const HomeTop = (props) => {
             <FontAwesomeIcon icon={faCircle} className="dot" id="setting-dot"/>
             </div>
             <div className="icon-container">
-            <FontAwesomeIcon icon={faEnvelope} className="setting-icon" id="letter"/>
-            <FontAwesomeIcon icon={faCircle} className="dot show" id="letter-dot"/>
+            <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal}/>
+            <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length?"dot show":"dot"}  id="letter-dot"/>
             </div>
             <div className="icon-container">
             <FontAwesomeIcon icon={faBell} className="setting-icon" id="notification"/>

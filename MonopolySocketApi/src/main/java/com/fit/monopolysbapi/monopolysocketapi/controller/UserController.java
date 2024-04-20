@@ -12,12 +12,7 @@ import com.fit.monopolysbapi.monopolysocketapi.service.FriendService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -155,7 +150,7 @@ public class UserController {
             return ResponseEntity.status(405).body(new AbstractResponse(405, "Both users are friends!", false));
         Optional<FriendRequest> friendRequestOptional = friendService.getFriendRequest(user, oUser);
         if (friendRequestOptional.isPresent())
-            return ResponseEntity.status(405).body(new AbstractResponse(405, "You are requested!", false));
+            return ResponseEntity.ok(new AbstractResponse(405, "You are requested!", "RE_REQUEST"));
         friendRequestOptional = friendService.getFriendRequest(oUser, user);
         if (friendRequestOptional.isPresent()) {
             friendService.addFriend(oUser, user, friendRequestOptional.get());
@@ -180,7 +175,7 @@ public class UserController {
         return ResponseEntity.ok(new AbstractResponse(200, "Add friend successfully!", "ADDED"));
     }
 
-    @PostMapping("/friend/request/remove/{idRequest}")
+    @DeleteMapping("/friend/request/remove/{idRequest}")
     public ResponseEntity<?> removeRequestFriend(@PathVariable String idRequest, Authentication authentication){
         Optional<FriendRequest> friendRequestOptional = friendService.getFriendRequestById(idRequest);
         if (friendRequestOptional.isEmpty())
@@ -196,7 +191,31 @@ public class UserController {
     @GetMapping("/friend/request")
     public ResponseEntity<?> getFriendRequest(Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(new AbstractResponse(200, "Get friend request successfully!", friendService.getAllByReceiverId(user.getId())));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get friend request successfully!", friendService.getAllRequestByReceiverId(user.getId())));
+    }
+
+    @GetMapping("/friend")
+    public ResponseEntity<?> getFriends(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(new AbstractResponse(200, "Get friend request successfully!", friendService.getAllFriendByUserId(user.getId())));
+    }
+
+    @DeleteMapping ("/friend/remove/{friendId}")
+    public ResponseEntity<?> removeFriend(@PathVariable String friendId, Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+        boolean deleteResult = friendService.removeFriend(user.getId(), friendId);
+        if (!deleteResult)
+            return ResponseEntity.status(405).body(new AbstractResponse(405, "You not have that friend!", false));
+        return ResponseEntity.ok(new AbstractResponse(200, "Remove friend successfully!", true));
+
+    }
+
+    @GetMapping("/search/{username}")
+    public ResponseEntity<?> searchUser(@PathVariable String username){
+        Optional<User> userSearchOptional = userService.getUserByUsername(username);
+        if (userSearchOptional.isEmpty())
+            return ResponseEntity.status(405).body(new AbstractResponse(405, "Username is wrong!", null));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get info successfully!", userSearchOptional.get().getUserResponse()));
 
     }
 

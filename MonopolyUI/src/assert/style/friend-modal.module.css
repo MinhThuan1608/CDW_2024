@@ -1,0 +1,117 @@
+.modalHeader{
+    padding: 0;
+    border-bottom: none;
+}
+.tabsContainer{
+    display: flex;
+    width: 90%;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+
+.tabsButton{
+    width: 33%;
+    margin-bottom: 0;
+    cursor: pointer;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background-color: rgb(201, 201, 201);
+}
+
+.tabsButton.active{
+    border-radius: 0.5rem 0.5rem 0 0;
+    border: 2px solid black;
+    border-bottom: none;
+    background-color: white;
+}
+
+.btnClose{
+    margin-right: auto !important;
+}
+
+.modalBody{
+    border: 2px solid black;
+    border-radius: 0 0 0.5rem 0.5rem;
+    height: 60vh;
+    overflow: auto;
+    padding-top: 0;
+}
+
+.deleteBtn{
+    background-color: #f72323;
+    border-radius: 5px;
+    padding: 2px 4px;
+    font-size: 14px;
+    border-color: #f72323;
+    margin: 0 1rem;
+}
+.acceptBtn{
+    background-color: #00bb00;
+    border-radius: 5px;
+    padding: 2px 4px;
+    font-size: 14px;
+    border-color: #00bb00;
+    margin: 0 1rem;
+}
+.acceptBtn.disable{
+    background-color: #bfbfbf;
+    border-color: #bfbfbf;
+}
+.deleteBtn:hover{
+    box-shadow: 0 0 5px 5px #ff5757;
+}
+.acceptBtn:hover{
+    box-shadow: 0 0 5px 5px #00bb00;
+}
+.acceptBtn.disable:hover{
+    box-shadow: none;
+}
+
+.friendCard{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 0.5rem;
+    cursor: default;
+    border: 1px solid white;
+}
+
+.friendCard:hover{
+    border: 1px solid gray;
+}
+
+.userCard{
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.filterFriendContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    padding-top: 1rem;
+    z-index: 1;
+    background-color: white;
+}
+
+.listUser{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    height: -moz-fit-content;
+    height: fit-content;
+    overflow: auto;
+    width: 100%;
+}
+
+.noResultP{
+    text-align: center;
+    width: 100%;
+    margin-top: 1rem;
+}

@@ -5,8 +5,8 @@ import com.fit.monopolysbapi.monopolysocketapi.model.FriendRequest;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRequestRepository;
-import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
-import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
+import com.fit.monopolysbapi.monopolysocketapi.response.FriendRequestResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.FriendResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,19 @@ public class FriendService {
         friendRequestRepository.delete(friendRequest);
     }
 
-    public List<FriendRequest> getAllByReceiverId(String userId){
-        return friendRequestRepository.findAllByReceiverId(userId);
+    public List<FriendRequestResponse> getAllRequestByReceiverId(String userId){
+        return friendRequestRepository.findAllByReceiverId(userId).stream().map(FriendRequest::toFriendRequestResponse).toList();
+    }
+
+    public List<FriendResponse> getAllFriendByUserId(String userId){
+        return friendRepository.findAllByUser1IdOrUser2Id(userId, userId).stream().map(f -> f.toFriendResponse(userId)).toList();
+    }
+
+    public boolean removeFriend(String user1Id, String user2Id){
+        Optional<Friend> friend =  friendRepository.findByUser1IdAndUser2Id(user1Id, user2Id);
+        if (friend.isEmpty()) friend =  friendRepository.findByUser1IdAndUser2Id(user2Id, user1Id);
+        if (friend.isEmpty()) return false;
+        friendRepository.delete(friend.get());
+        return true;
     }
 }

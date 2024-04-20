@@ -202,7 +202,7 @@ export async function RemoveFriendRequest(requestID) {
     const urlString = "http://localhost:8001/user/friend/request/remove/"+requestID;
 
     const response = await fetch(urlString, {
-        method: "POST",
+        method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + accessToken,
@@ -212,6 +212,77 @@ export async function RemoveFriendRequest(requestID) {
     if (response.ok) {
         const responseData = await response.json()
         return responseData.data;
+    }
+    return false;
+}
+
+export async function GetFriendRequest() {
+    const urlString = "http://localhost:8001/user/friend/request";
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return [];
+}
+
+export async function GetFriends() {
+    const urlString = "http://localhost:8001/user/friend";
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return [];
+}
+
+export async function SearchUser(username) {
+    const urlString = "http://localhost:8001/user/search/"+username;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return null;
+}
+
+export async function RemoveFriend(userId) {
+    const urlString = "http://localhost:8001/user/friend/remove/"+userId;
+
+    const response = await fetch(urlString, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        return true;
     }
     return false;
 }

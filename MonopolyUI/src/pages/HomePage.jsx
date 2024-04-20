@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { SocketContext } from '../App';
 import Swal from 'sweetalert2';
 import { GetRoomMeIn, JoinRoom } from '../api_caller/room';
-import { GetMe } from '../api_caller/user';
+import { GetFriendRequest, GetMe } from '../api_caller/user';
 
 
 const HomePage = (props) => {
@@ -16,6 +16,8 @@ const HomePage = (props) => {
   const [showModalBag, setShowModalBag] = useState(false);
   const [showModalProfile, setShowModalProfile] = useState(false);
   const [showModalShop, setShowModalShop] = useState(false);
+  const [showModalFriend, setShowModalFriend] = useState(false);
+  const [friendRequests, setFriendRequests] = useState([])
 
   const { socket } = useContext(SocketContext)
 
@@ -64,6 +66,10 @@ const HomePage = (props) => {
     }
   }, [socket, props.me])
 
+  useEffect(() => {
+    GetFriendRequest().then(res => setFriendRequests(res))
+  }, [])
+
   return (
     <div className='home-container'>
       <HomeTop
@@ -71,18 +77,23 @@ const HomePage = (props) => {
         showModal={showModal}
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}
-        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />
+        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
+        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend} />
       <HomeMiddle
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
-        showModalShop={showModalShop} setShowModalShop={setShowModalShop} />
+        showModalShop={showModalShop} setShowModalShop={setShowModalShop}
+        showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
+        friendRequests={friendRequests} setFriendRequests={setFriendRequests} />
       <HomeBottom
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
+        friendRequests={friendRequests} setShowModalFriend={setShowModalFriend}
+        showModalFriend={showModalFriend}
       />
     </div>
   );
