@@ -80,7 +80,7 @@ const HomePage = (props) => {
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
         friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend} />
       <HomeMiddle
-        showModal={showModal} setShowModal={setShowModal}
+        showModal={showModal} setShowModal={setShowModal} me={props.me}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}

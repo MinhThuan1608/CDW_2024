@@ -146,6 +146,8 @@ public class UserController {
             return ResponseEntity.status(405).body(new AbstractResponse(405, "User id is wrong!", false));
         User user = (User) authentication.getPrincipal();
         User oUser = oUserOptional.get();
+        if (user.getId().equals(oUserId))
+            return ResponseEntity.status(405).body(new AbstractResponse(405, "You can not add friend with yourself!", false));
         if (friendService.isFriend(user, oUser))
             return ResponseEntity.status(405).body(new AbstractResponse(405, "Both users are friends!", false));
         Optional<FriendRequest> friendRequestOptional = friendService.getFriendRequest(user, oUser);

@@ -32,8 +32,10 @@ const FriendModal = (props) => {
     const searchUser = (e) => {
         clearTimeout(timeOutSearchId)
         timeOutSearchId = setTimeout(async () => {
-            const user = await SearchUser(e.target.value)
-            setUserSearched(user)
+            if (props.me.username !== e.target.value) {
+                const user = await SearchUser(e.target.value)
+                setUserSearched(user)
+            }
 
         }, 1000)
     }

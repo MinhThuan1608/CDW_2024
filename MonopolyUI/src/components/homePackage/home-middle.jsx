@@ -10,7 +10,7 @@ import FriendModal from './friend-model';
 
 const HomeMiddle = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom,
     showModalBag, setShowModalBag, showModalProfile, setShowModalProfile, showModalShop, setShowModalShop,
-    showModalFriend, setShowModalFriend, friendRequests, setFriendRequests }) => {
+    showModalFriend, setShowModalFriend, friendRequests, setFriendRequests, me }) => {
 
 
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
@@ -20,7 +20,7 @@ const HomeMiddle = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
             {showModal && (<SelectRoomModal showModal={showModal} setShowModal={setShowModal}
                 showJoinRoomModal={showJoinRoomModal} setShowJoinRoomModal={setShowJoinRoomModal} />)}
             {showModalFriend && (<FriendModal showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
-                friendRequests={friendRequests} setFriendRequests={setFriendRequests} />)}
+                friendRequests={friendRequests} setFriendRequests={setFriendRequests} me={me}/>)}
             {showModalCreateRoom && (<CreateRoomModal showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom} />)}
             {showModalBag && (<ModalBag showModalBag={showModalBag} setShowModalBag={setShowModalBag} />)}
             {showModalProfile && (<EditUserProfileModal showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />)}
