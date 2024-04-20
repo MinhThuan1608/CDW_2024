@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "item")
+@Table(name = "items")
 public class Item{
     @Id
     private String id;
@@ -19,6 +19,8 @@ public class Item{
     @ManyToOne
     private Product product;
     private int quantity;
+    private boolean saleAble;
+    private boolean useAble;
 
     @Override
     public String toString() {

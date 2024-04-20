@@ -19,8 +19,8 @@ const GamePage = () => {
     const [listMessageInGame, setListMessageInGame] = useState([]);
     const [listUsers, setlistUsers] = useState([]);
     const [isWin, setWin] = useState(false);
+    const [isUserWin, setIsUserWin] = useState('')
 
-    // set thời gian cho game
     const [seconds, setSeconds] = useState();
 
 
@@ -31,57 +31,16 @@ const GamePage = () => {
         })
 
     }, []);
-
     useEffect(() => {
-        if (socket) {
-            socket.subscribe('/topic/game/chess/chat/' + roomId, (message) => {
-                const messResponse = JSON.parse(message.body);
-                console.log(messResponse);
-                switch (messResponse.messageType) {
-                    case 'MESSAGE':
-                        setListMessageInGame(prevlistMessageInGame => [messResponse, ...prevlistMessageInGame])
-                        break
+        var intervalId = setInterval(() => {
+            if (seconds > 0)
+                setSeconds(seconds - 1)
+        }, 1000)
 
-                    default:
-                        break
-                }
-            });
+        return () => { clearInterval(intervalId) }
+    }, [seconds]);
 
-        }
 
-    }, [socket])
-
-    useEffect(() => {
-        if (socket) {
-          
-            const fetchTimer = async () => {
-                await GetTimmer(roomId).then(result => {
-                    setSeconds(result)
-                })
-            };
-
-            const intervalId = setInterval(fetchTimer, 1000);
-
-            return () => {
-                clearInterval(intervalId);
-            };
-           
-        }
-
-    })
-
-    useEffect(() => {
-        if (socket) {
-            socket.publish({
-                destination: '/app/game/turn/' + roomId,
-                body: ''
-
-            });
-        }
-
-    }, [seconds === 60])
-
-    // =================
     const sendVoice = (data) => {
         socket.publish({
             destination: '/app/game/chess/' + roomId,
@@ -92,12 +51,29 @@ const GamePage = () => {
         });
     }
 
+    const handleExitGame = () =>{
+        socket.publish({
+            destination: '/app/game/chess/' + roomId,
+            body: JSON.stringify({
+                messageType: 'EXIT',
+            })
+        });
+    }
+    const handleGiveUpGame = () =>{
+        socket.publish({
+            destination: '/app/game/chess/' + roomId,
+            body: JSON.stringify({
+                messageType: 'GIVE_UP',
+            })
+        });
+    }
+
     return (
 
         <div className="container-gameplay">
-            {isWin && <VictoryModal listUsers={listUsers} />}
+            {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} />}
             <div className="game-board-main">
-                <GameBoard listUsers={listUsers} />
+                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame}/>
             </div>
             <div className="chat-div">
                 <p className="turn-player" style={{ margin: `4px 0 0 0` }}>
@@ -120,10 +96,10 @@ const GamePage = () => {
                         </div>
                     ))}
                 </div>
-                <GameChat socket={socket} listMessageInGame={listMessageInGame} roomId={roomId} />
+                <GameChat listMessageInGame={listMessageInGame} roomId={roomId} />
                 <div className="control-btn">
-                    <button>Bỏ cuộc</button>
-                    <button>Thoát</button>
+                    <button onClick={handleGiveUpGame}>Bỏ cuộc</button>
+                    <button onClick={handleExitGame}>Thoát</button>
                 </div>
             </div>
         </div>
