@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { GetProduct } from '../../api_caller/shop';
+import { BuyItem, GetProduct } from '../../api_caller/shop';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { formatCurrency } from '../gameBoard/help';
+import { toast } from 'react-toastify';
 
 const ModalShop = ({ showModalShop, setShowModalShop }) => {
-    const user = JSON.parse(sessionStorage.getItem('user'))
     const [listProduct, setListProduct] = useState([]);
     const [productDetail, setProductDetail] = useState({});
 
@@ -16,13 +16,18 @@ const ModalShop = ({ showModalShop, setShowModalShop }) => {
     const showDetailItem = (id) => {
         setProductDetail(listProduct.find(item => item.id === id));
     };
-
+    const handleBuyItem = async () => {
+        const bought = await BuyItem(productDetail.id);
+        if(!bought) toast.error('Không mua được vật phẩm vì không đủ tiềnn!');
+        else toast.success('Mua thành công!');
+    }
     useEffect(() => {
         const getProductShop = async () => {
             const products = await GetProduct();
             setListProduct(products)
 
         }
+       
         if (listProduct.length === 0) getProductShop();
         return () => { }
     }, [])
@@ -67,7 +72,7 @@ const ModalShop = ({ showModalShop, setShowModalShop }) => {
                                             <p className="description">{productDetail.description}</p>
                                         </div>
                                         <div className="item-action-button-container">
-                                            <button className="item-action-button use-button">Mua</button>
+                                            <button className="item-action-button use-button" onClick={handleBuyItem}>Mua</button>
                                         </div>
                                     </>
                                 ) || (

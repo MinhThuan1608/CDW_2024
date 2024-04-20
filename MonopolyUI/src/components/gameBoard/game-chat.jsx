@@ -1,24 +1,26 @@
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { formatDate } from './help';
+import { SocketContext } from '../../App';
 
 const GameChat = (props) => {
+    const { socket, setSocket } = useContext(SocketContext);
     const [messageValue, setMessageValue] = useState('')
 
     const messRef = useRef()
     const ownerRoom = JSON.parse(sessionStorage.getItem('user'))
 
-    // console.log(props.listMessageInGame)
     const handleSendMessage = () => {
         console.log(messageValue)
-        props.socket.publish({
-            destination: '/app/game/chess/chat/' + props.roomId,
-            body: JSON.stringify({
-                messageType: 'MESSAGE',
-                content: messageValue
-            })
-        });
+        if (messageValue)
+            socket.publish({
+                destination: '/app/game/chess/' + props.roomId,
+                body: JSON.stringify({
+                    messageType: 'MESSAGE',
+                    content: messageValue
+                })
+            });
 
         setMessageValue('')
         messRef.current.focus()

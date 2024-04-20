@@ -16,10 +16,9 @@ public class ProductService {
     public List<Product> getAllProductIsActive() {
         return productRepository.findAllByActive(true);
     }
+    public Product getProductById(String id){
+        return productRepository.findProductById(id);
+    }
 
-
-    //    public List<Product> getAllProductIsActive(boolean isActive) {
-//        return productRepository.findAllByActive(isActive);
-//    }
 
 }

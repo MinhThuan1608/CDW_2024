@@ -5,6 +5,7 @@ import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
+import com.fit.monopolysbapi.monopolysocketapi.request.WaitRoomMessage;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
@@ -20,6 +21,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -46,12 +48,14 @@ public class GameController {
         Room room = roomService.getRoomById(roomId);
         GameBoard gameBoard = room.getGameBoard();
         ChessMessage responseMessage = null;
+        User winner = null;
         switch (chessMessage.getMessageType()) {
             case CONNECT:
                 if (gameBoard != null)
                     responseMessage = ChessMessage.builder()
                             .messageType(ChessMessage.ChessMessageType.MOVE)
                             .turn(gameBoard.getTurn())
+                            .timer(gameBoard.getTimer())
                             .hints(gameBoard.getHintsResponse())
                             .pieces(gameBoard.getPiecesResponse())
                             .build();
@@ -60,6 +64,7 @@ public class GameController {
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.MOVE)
                         .turn(gameBoard.getTurn())
+                        .timer(gameBoard.getTimer())
                         .hints(gameBoard.getHintsResponse())
                         .pieces(gameBoard.getPiecesResponse())
                         .build();
@@ -93,21 +98,20 @@ public class GameController {
                             gameService.matchEnd(room, user, otherUser, false);
                         } else {
                             gameBoard.setTurn(nextTurn);
+                            gameBoard.setTimer(GameBoard.RESET_TURN);
+                            gameBoard.startTimer();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.MOVE)
                                     .turn(nextTurn)
+                                    .timer(gameBoard.getTimer())
                                     .move(Move.builder().oldRow(move.getOldRow()).oldCol(move.getOldCol()).newRow(move.getNewRow()).newCol(move.getNewCol()).build())
                                     .pieces(gameBoard.getPiecesResponse())
                                     .hints(gameBoard.getHintsResponse())
                                     .build();
-                            gameBoard.setTimer(GameBoard.RESET_TURN);
-                            gameBoard.startTimer();
+
                         }
                     }
                 }
-                break;
-            case GIVE_UP:
-
                 break;
 
             case MESSAGE:
@@ -117,8 +121,25 @@ public class GameController {
                         .content(chessMessage.getContent())
                         .createAt(new Date())
                         .sender(user).build();
-            case GET_USER_IN_ROOM:
-
+                break;
+            case GIVE_UP:
+                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                gameService.matchEnd(room, winner, user, true);
+                responseMessage = ChessMessage.builder()
+                        .messageType(ChessMessage.ChessMessageType.GIVE_UP)
+                        .winnerId(winner.getId())
+                        .pieces(gameBoard.getPiecesResponse())
+                        .build();
+                break;
+            case EXIT:
+                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                gameService.matchEnd(room, winner, user, true);
+                responseMessage = ChessMessage.builder()
+                        .messageType(ChessMessage.ChessMessageType.EXIT)
+                        .winnerId(winner.getId())
+                        .pieces(gameBoard.getPiecesResponse())
+                        .build();
+                roomService.leaveRoom(user, roomId);
                 break;
             default:
                 break;
@@ -127,58 +148,40 @@ public class GameController {
         simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
     }
 
-    @MessageMapping("/game/turn/{roomId}")
-    public void chessGameSwapTurn(@DestinationVariable String roomId) {
-        ChessMessage responseMessageSwapTurn = null;
-        Room room = roomService.getRoomById(roomId);
-        GameBoard gameBoard = room.getGameBoard();
-        System.out.println(gameBoard.getTurn() + "đổi turn ==================");
-        if (gameBoard.getTimer() == GameBoard.RESET_TURN)
-            responseMessageSwapTurn = ChessMessage.builder()
-                    .turn(gameBoard.getTurn())
-                    .hints(gameBoard.getHintsResponse())
-                    .build();
-//        if (gameBoard.getCountdownResetCounter() == 3)
-//            responseMessageSwapTurn = ChessMessage.builder()
-//                    .turn(gameBoard.getTurn()).build();
 
-        simpMessagingTemplate.convertAndSend("/topic/game/turn/" + roomId, responseMessageSwapTurn);
-    }
+    @Scheduled(fixedRate = 1000)
+    public void autoReturnStateGameBoard() {
+        if (roomService.getRooms().size() > 0)
+            for (int i = 0; i < roomService.getRooms().size(); i++) {
+                if (roomService.getRooms().get(i).isPlaying() && roomService.getRooms().get(i).getGameBoard().isJustResetCounter()) {
+                    if (roomService.getRooms().get(i).getGameBoard().getCountdownResetCounterBlack() > 3) {
+                        simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomService.getRooms().get(i).getId(), ChessMessage.builder()
+                                .messageType(ChessMessage.ChessMessageType.WIN)
+                                .winnerId(roomService.getRooms().get(i).getUsers().get(0).getId())
+                                .pieces(roomService.getRooms().get(i).getGameBoard().getPiecesResponse())
+                                .build());
+                        gameService.matchEnd(roomService.getRooms().get(i), roomService.getRooms().get(i).getUsers().get(0), roomService.getRooms().get(i).getUsers().get(1), true);
+                    } else if (roomService.getRooms().get(i).getGameBoard().getCountdownResetCounterWhite() > 3) {
+                        simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomService.getRooms().get(i).getId(), ChessMessage.builder()
+                                .messageType(ChessMessage.ChessMessageType.WIN)
+                                .winnerId(roomService.getRooms().get(i).getUsers().get(1).getId())
+                                .pieces(roomService.getRooms().get(i).getGameBoard().getPiecesResponse())
+                                .build());
 
-//    @MessageMapping("/game/time/{roomId}")
-//    public void chessGetTimer(@DestinationVariable String roomId) {
-//        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null)
-//            simpMessagingTemplate.convertAndSend("/topic/game/time/" + roomId, roomService.getRoomById(roomId).getGameBoard().getTimer());
-//    }
+                        gameService.matchEnd(roomService.getRooms().get(i), roomService.getRooms().get(i).getUsers().get(1), roomService.getRooms().get(i).getUsers().get(0), true);
+                    }
+                    else {
+                        simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomService.getRooms().get(i).getId(), ChessMessage.builder()
+                                .messageType(ChessMessage.ChessMessageType.TIME)
+                                .turn(roomService.getRooms().get(i).getGameBoard().getTurn())
+                                .hints(roomService.getRooms().get(i).getGameBoard().getHintsResponse())
+                                .timer(roomService.getRooms().get(i).getGameBoard().getTimer())
+                                .build());
+                        roomService.getRooms().get(i).getGameBoard().setJustResetCounter(false);
+                    }
+                }
+            }
 
-    @GetMapping("/room/game/time/{roomId}")
-    public ResponseEntity getTimmer(@PathVariable String roomId, Authentication authentication) {
-        if (roomService.getRoomById(roomId) != null && roomService.getRoomById(roomId).getGameBoard() != null) {
-            return ResponseEntity.ok(new AbstractResponse(200, "Get time ok", roomService.getRoomById(roomId).getGameBoard().getTimer()));
-        }
-        return ResponseEntity.ok(new AbstractResponse(200, "Get time fail", false));
-    }
-
-    @MessageMapping("/game/chess/chat/{roomId}")
-    public void chessGameChat(@Payload ChessMessage chessMessage, @DestinationVariable String roomId, Message message) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
-        User user = (User) token.getPrincipal();
-        ChessMessage responseMessage = null;
-        Room room = roomService.getRoomById(roomId);
-        switch (chessMessage.getMessageType()) {
-            case MESSAGE:
-                responseMessage = ChessMessage.builder()
-                        .users(room.getUsers())
-                        .messageType(ChessMessage.ChessMessageType.MESSAGE)
-                        .content(chessMessage.getContent())
-                        .createAt(new Date())
-                        .sender(user).build();
-                break;
-            default:
-                break;
-        }
-        simpMessagingTemplate.convertAndSend("/topic/game/chess/chat/" + roomId, responseMessage);
     }
 
 
