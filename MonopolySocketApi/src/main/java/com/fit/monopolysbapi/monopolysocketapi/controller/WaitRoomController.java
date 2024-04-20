@@ -40,7 +40,7 @@ public class WaitRoomController {
     private final SimpleDateFormat simpleDateFormat;
 
     @PostMapping("/room/create")
-    public ResponseEntity createRoom(@RequestBody CreateRoomRequest request, Authentication authentication) {
+    public ResponseEntity<?> createRoom(@RequestBody CreateRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         RoomResponse newRoom = roomService.createRoom(request, user);
         System.out.println(newRoom);
@@ -49,7 +49,7 @@ public class WaitRoomController {
     }
 
     @GetMapping("/room/me")
-    public ResponseEntity getRoomMeIn(Authentication authentication) {
+    public ResponseEntity<?> getRoomMeIn(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Room room = roomService.getRoomUserIn(user.getId());
         if (room == null)
@@ -58,12 +58,12 @@ public class WaitRoomController {
     }
 
     @GetMapping("/room/all")
-    public ResponseEntity getRooms() {
+    public ResponseEntity<?> getRooms() {
         return ResponseEntity.ok(new AbstractResponse(200, "Get room successfully", roomService.getRoomsResponse()));
     }
 
     @PostMapping("/room/join")
-    public ResponseEntity joinRoom(@RequestBody JoinRoomRequest request, Authentication authentication) {
+    public ResponseEntity<?> joinRoom(@RequestBody JoinRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         if (roomService.checkJoinRoom(request)) {
             roomService.joinRoom(user, request.getRoomId());
@@ -74,7 +74,7 @@ public class WaitRoomController {
     }
 
     @GetMapping("/room/{roomId}/get/pass")
-    public ResponseEntity getRoomPass(@PathVariable String roomId, Authentication authentication) {
+    public ResponseEntity<?> getRoomPass(@PathVariable String roomId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         if (roomService.getRoomById(roomId) != null &&
                 (user.getId().equals(roomService.getRoomById(roomId).getUsers().get(0).getId()) ||
@@ -85,7 +85,7 @@ public class WaitRoomController {
     }
 
     @GetMapping("/room/{roomId}/user")
-    public ResponseEntity getUserInRoom(@PathVariable String roomId, Authentication authentication) {
+    public ResponseEntity<?> getUserInRoom(@PathVariable String roomId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         if (roomService.getRoomById(roomId) != null && roomService.isUserInRoom(user.getId(), roomId)) {
             return ResponseEntity.ok(new AbstractResponse(200, "Get user in room successfully", roomService.getUserInRoom(roomId)));

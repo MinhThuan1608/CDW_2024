@@ -1,7 +1,9 @@
 import React from 'react';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faPlus, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { RequestAddFriend } from '../../api_caller/user';
+import { toast } from 'react-toastify';
 
 
 const WaitRoomOnlineUser = (props) => {
@@ -18,6 +20,20 @@ const WaitRoomOnlineUser = (props) => {
         });
     }
 
+    const handleAddFriend = async (userId) => {
+        const res = await RequestAddFriend(userId)
+        if (res) {
+            switch (res) {
+                case 'REQUESTED':
+                    toast.success('Gửi lời mời thành công')
+                    break;
+                case 'ADDED':
+                    toast.success('Kết bạn thành công')
+                    break;
+            }
+        }
+    }
+
     return (
         <div className="online-part">
             <p className="title-chat">Online</p>
@@ -32,7 +48,11 @@ const WaitRoomOnlineUser = (props) => {
                                 <span className='user-card-status' style={{ color: user.status === 'ONLINE' ? 'green' : user.status === 'IN_ROOM' ? 'orange' : 'red' }}>
                                     {user.status === 'IN_ROOM' ? 'Trong phòng chờ' : user.status === 'IN_GAME' ? 'Đang thi đấu' : user.status}</span>
                             </div>
-                            <button className="join" onClick={() => handleInviteUser(user.id)}>Mời</button>
+                            <div className="join">
+                                <FontAwesomeIcon icon={faUserPlus} className="add-friend-button" onClick={() => handleAddFriend(user.id)} />
+                                <button className="join-button" onClick={() => handleInviteUser(user.id)}>Mời</button>
+                            </div>
+
                         </div> : <div key={index} style={{ display: 'none' }}></div>
 
 

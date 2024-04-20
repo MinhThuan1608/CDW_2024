@@ -334,13 +334,13 @@
     display: flex;
     flex-direction: column;
     margin: 4px 0;
-    align-items: flex-start; 
-   
+    align-items: flex-start;
+
 }
 
 .messageOwner {
     justify-content: flex-end;
-    align-items: flex-end; 
+    align-items: flex-end;
 }
 
 .messageBlock {
@@ -373,8 +373,9 @@
     align-items: center;
     padding: 0 4px;
     max-width: 200px;
-    word-wrap: break-word; /* Xuống dòng khi vượt quá chiều rộng */
-    word-break: break-word; 
+    word-wrap: break-word;
+    /* Xuống dòng khi vượt quá chiều rộng */
+    word-break: break-word;
 
 }
 
@@ -457,25 +458,40 @@
     left: 46px;
     top: 49px;
 }
-.user-card-name-container{
+
+.user-card-name-container {
     display: flex;
     flex-direction: column;
 }
-.user-card-status{
+
+.user-card-status {
     font-size: 0.6rem;
 }
-.join{   
+
+.join {
     position: absolute;
-    background-color: #8aa905;
-    border-radius: 5px;
     right: 12px;
     top: 26px;
+}
+
+.join-button {
+    background-color: #8aa905;
+    border-radius: 5px;
     padding: 2px 4px;
     font-size: 14px;
     border-color: #8aa905;
+    margin-left: 10px;
 }
 
-.join:hover {
+.add-friend-button{
+    cursor: pointer;
+}
+
+.add-friend-button:hover{
+    filter: drop-shadow(2px 2px 5px #fff);
+}
+
+.join-button:hover {
     filter: drop-shadow(0 0 4px #F3F8FF);
     cursor: pointer;
 }

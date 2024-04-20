@@ -28,6 +28,8 @@ public class User implements UserDetails {
     private long money = 0;
     private boolean isConfirmEmail;
     private boolean isNonLocked;
+    @Column(nullable = false, columnDefinition = "bigint default 1000")
+    private long exp;
     @Enumerated(EnumType.STRING)
     private Role role;
 

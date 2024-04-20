@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "item")
+@Table(name = "items")
 public class Item{
     @Id
     private String id;

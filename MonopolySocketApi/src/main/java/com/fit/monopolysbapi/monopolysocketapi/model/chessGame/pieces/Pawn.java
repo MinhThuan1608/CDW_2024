@@ -33,21 +33,21 @@ public class Pawn extends Piece {
             return true;
         }
 //        capture left
-        if (col == this.col - 1 && row == this.row + colorIndex && board.getPiece(row, col) != null) {
+        if (col == this.col - 1 && row == this.row + colorIndex && board.getPiece(row, col) != null && getColor() != board.getPiece(row, col).getColor()) {
             return true;
         }
 //        capture right
-        if (col == this.col + 1 && row == this.row + colorIndex && board.getPiece(row, col) != null) {
+        if (col == this.col + 1 && row == this.row + colorIndex && board.getPiece(row, col) != null && getColor() != board.getPiece(row, col).getColor()) {
             return true;
         }
 //        en Passant left
         if (board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col - 1 && row == this.row + colorIndex
-                && board.getPiece(row - colorIndex, col) != null) {
+                && board.getPiece(row - colorIndex, col) != null && getColor() != board.getPiece(row, col).getColor()) {
             return true;
         }
 //        en Passant right
         if (board.getTileNum(row, col) == board.getEnPassantTile() && col == this.col + 1 && row == this.row + colorIndex
-                && board.getPiece(row - colorIndex, col) != null) {
+                && board.getPiece(row - colorIndex, col) != null && getColor() != board.getPiece(row, col).getColor()) {
             return true;
         }
         return false;

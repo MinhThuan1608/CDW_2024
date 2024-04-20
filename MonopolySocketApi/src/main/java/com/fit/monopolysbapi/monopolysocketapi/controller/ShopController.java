@@ -18,7 +18,7 @@ public class ShopController {
     private final ProductService productService;
 
     @GetMapping("/shop")
-    public ResponseEntity getProduct() {
+    public ResponseEntity<?> getProduct() {
         List<Product> products = productService.getAllProductIsActive();
         return ResponseEntity.ok(new AbstractResponse(200, "Successfully!", products));
     }

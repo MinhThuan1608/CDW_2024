@@ -75,6 +75,7 @@ export async function InitUser(username, defaultAvatarId, avatar) {
     }
     return responseData.message;// init fail
 }
+
 export async function EditProfileAvatar(username, avatar) {
     const urlString = `http://localhost:8001/user/edit/avatar`;
 
@@ -99,6 +100,7 @@ export async function EditProfileAvatar(username, avatar) {
     }
     return responseData.message;// init fail
 }
+
 export async function ChangeUserName(username) {
     const urlString = `http://localhost:8001/user/edit/name`;
 
@@ -123,6 +125,7 @@ export async function ChangeUserName(username) {
     }
     return responseData.message;// init fail
 }
+
 export async function GetBag(id) {
     const urlString = `http://localhost:8001/user/bag/${id}`;
 
@@ -154,6 +157,60 @@ export async function HaveChangeNameCard(id) {
     const responseData = await response.json()
     console.log(responseData)
     if (response.ok) {
+        return responseData.data;
+    }
+    return false;
+}
+
+export async function RequestAddFriend(userID) {
+    const urlString = "http://localhost:8001/user/friend/request/"+userID;
+
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return false;
+}
+
+export async function AddFriend(requestID) {
+    const urlString = "http://localhost:8001/user/friend/add/"+requestID;
+
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return false;
+}
+
+export async function RemoveFriendRequest(requestID) {
+    const urlString = "http://localhost:8001/user/friend/request/remove/"+requestID;
+
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
         return responseData.data;
     }
     return false;
