@@ -199,7 +199,7 @@ public class UserController {
     @GetMapping("/friend")
     public ResponseEntity<?> getFriends(Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(new AbstractResponse(200, "Get friend request successfully!", friendService.getAllFriendByUserId(user.getId())));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get friends successfully!", friendService.getAllFriendByUserId(user.getId())));
     }
 
     @DeleteMapping ("/friend/remove/{friendId}")
