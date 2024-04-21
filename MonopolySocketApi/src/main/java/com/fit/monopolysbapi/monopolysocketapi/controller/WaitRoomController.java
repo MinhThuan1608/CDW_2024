@@ -130,7 +130,7 @@ public class WaitRoomController {
                             .users(room.getUsers())
                             .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
                             .build();
-                    roomService.startGame(room);
+                    roomService.startGame(room, waitRoomMessage.getTimeOfTurn());
                 }
                 break;
             default:

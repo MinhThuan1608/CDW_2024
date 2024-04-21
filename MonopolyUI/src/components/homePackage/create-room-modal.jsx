@@ -31,7 +31,8 @@ const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {
     return (
         <div
             className="modal show"
-            style={{ display: 'block', position: 'initial', height: 'auto' }}
+            style={{ display: 'block', position: 'initial', height: 'auto',  transition: 'top 0.5s ease',
+            animation: 'bounceIn 0.5s ease forwards' }}
         >
             {showModalCreateRoom && (
                 <Modal.Dialog>

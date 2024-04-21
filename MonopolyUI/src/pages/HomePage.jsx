@@ -68,11 +68,14 @@ const HomePage = (props) => {
     <div className='home-container'>
       <HomeTop
         me={props.me}
+        setMe={props.setMe}
         showModal={showModal}
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />
       <HomeMiddle
+        me={props.me}
+        setMe={props.setMe}
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}

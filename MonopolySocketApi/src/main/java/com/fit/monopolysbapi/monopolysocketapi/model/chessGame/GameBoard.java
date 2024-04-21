@@ -20,7 +20,7 @@ public class GameBoard {
     public static final int COL = 8;
     public static final int ROW = 8;
     public static final int TILE_SIZE = 25;
-    public static final int RESET_TURN = 60;
+    public int resetTime;
     private int enPassantTile = -1;
     private int timer;
     private Timer countdownTimer;
@@ -44,10 +44,11 @@ public class GameBoard {
                 '}';
     }
 
-    public GameBoard() {
+    public GameBoard(int resetTime) {
         this.createAt = new Date();
         this.turn = 'w';
-        this.timer = RESET_TURN;
+        this.resetTime = resetTime;
+        this.timer = resetTime;
         initGame();
         startTimer();
     }
@@ -79,7 +80,7 @@ public class GameBoard {
                     }else {
                         turn = turn == 'w' ? 'b' : 'w';
                         hints = getNextStepHints(turn);
-                        timer = RESET_TURN;
+                        timer = resetTime;
                         System.out.println("Timer reset");
                         System.out.println(turn);
                     }

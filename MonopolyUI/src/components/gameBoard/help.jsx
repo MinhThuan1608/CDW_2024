@@ -54,6 +54,33 @@ export const formatDate = (data) => {
     return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
 
 }
+export const formatDateAndTime = (data) => {
+
+    const dateObj = new Date(data);
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); 
+    const year = String(dateObj.getFullYear()); 
+
+    const formattedDateTime = `${hours}:${minutes} ${day}-${month}-${year}`;
+
+    return formattedDateTime;
+
+}
+export const formatSecondsToHHMMSS = (milliseconds) => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(seconds).padStart(2, '0');
+
+  const formattedTime = `${formattedMinutes}:${formattedSeconds}`;
+
+  return formattedTime;
+}
 export const formatCurrency = (amount) => {
     return amount.toLocaleString('en-EN');
 }

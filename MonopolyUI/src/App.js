@@ -13,7 +13,7 @@ import { Client } from "@stomp/stompjs";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { GetMe } from './api_caller/user';
-// import SocketContext from "./components/socket-context";
+import './assert/style/responsitive.css'
 
 export const SocketContext = React.createContext();
 
@@ -92,12 +92,12 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<HomePage me={me} />} />
+              <Route path="/" element={<HomePage me={me} setMe={setMe} />} />
               <Route path="/wait-room/:roomId" element={<WaitRoom userOnline={userOnline} me={me} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game/:roomId" element={<GamePage />} />
+              <Route path="/game/:roomId" element={<GamePage me={me} />} />
             </Routes>
           </BrowserRouter>
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />

@@ -34,8 +34,9 @@ const ModalShop = ({ showModalShop, setShowModalShop }) => {
 
     return (
         <div
-            className="modal show"
-            style={{ display: 'block', position: 'initial', height: 'auto' }}
+            className="modal"
+            style={{ display: 'block', position: 'initial', height: 'auto',transition: 'top 0.5s ease',
+            animation: 'bounceIn 0.5s ease forwards' }}
         >
             {showModalShop && (
                 <div className='modal-content'>

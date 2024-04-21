@@ -98,7 +98,7 @@ public class GameController {
                             gameService.matchEnd(room, user, otherUser, false);
                         } else {
                             gameBoard.setTurn(nextTurn);
-                            gameBoard.setTimer(GameBoard.RESET_TURN);
+                            gameBoard.setTimer(gameBoard.getResetTime());
                             gameBoard.startTimer();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.MOVE)
@@ -123,7 +123,7 @@ public class GameController {
                         .sender(user).build();
                 break;
             case GIVE_UP:
-                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                winner = user.getId().equals(room.getUsers().get(0).getId()) ? room.getUsers().get(1) : room.getUsers().get(0);
                 gameService.matchEnd(room, winner, user, true);
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.GIVE_UP)
@@ -132,7 +132,7 @@ public class GameController {
                         .build();
                 break;
             case EXIT:
-                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                winner = user.getId().equals(room.getUsers().get(0).getId()) ? room.getUsers().get(1) : room.getUsers().get(0);
                 gameService.matchEnd(room, winner, user, true);
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.EXIT)

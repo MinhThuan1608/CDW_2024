@@ -86,7 +86,7 @@ const GameBoard = (props) => {
                         }
                         break
                     case 'GIVE_UP':
-                        newPosition = messResponse.pieces
+                        console.log(messResponse)
                         if (me?.id === messResponse.winnerId) {
                             toast('Chúc mừng, bạn đã chiến thắng <3, vì người chơi còn lại đã bỏ cuộc');
                             props.setWin(true)
@@ -94,7 +94,6 @@ const GameBoard = (props) => {
                         }
                         else {
                             toast('Tiếc ghê, bạn bỏ cuộc nên thua mất rồi... hichic');
-
                         }
                         toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
                         setTimeout(() => {
@@ -102,7 +101,6 @@ const GameBoard = (props) => {
                         }, 10000)
                         break
                     case 'EXIT':
-                        newPosition = messResponse.pieces
                         if (me?.id === messResponse.winnerId) {
                             props.setWin(true)
                             props.setIsUserWin(messResponse.winnerId)

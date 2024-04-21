@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { GetRoomMeIn } from '../../api_caller/room';
 
@@ -13,18 +12,13 @@ const WaitRoomBottom = (props) => {
         })
     }, [])
 
-    const handleInitGame = () => {
+    const handleShowStartGameModal = () => {
         if (props.listUser.length == 2)
-            props.socket.publish({
-                destination: '/app/game/room/' + props.roomId,
-                body: JSON.stringify({
-                    messageType: 'START_GAME'
-                })
-            });
+            props.setIsShowStartGameModal(true)
         else toast.warn('Cần có 2 người mới chơi được!');
     }
 
-    const handleReturnGame = ()=>{
+    const handleReturnGame = () => {
         window.location = '/game/' + roomMeIn.id
     }
 
@@ -33,7 +27,7 @@ const WaitRoomBottom = (props) => {
         (<div className="bottom-part">
             {roomMeIn?.playing ?
                 <button className="btn-play-game" onClick={handleReturnGame}>Trờ lại game</button> :
-                <button className="btn-play-game" onClick={handleInitGame}>Bắt đầu chơi</button>}
+                <button className="btn-play-game" onClick={handleShowStartGameModal}>Bắt đầu chơi</button>}
         </div>)
     );
 }

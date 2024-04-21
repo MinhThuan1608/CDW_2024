@@ -51,7 +51,7 @@ const GamePage = () => {
         });
     }
 
-    const handleExitGame = () =>{
+    const handleExitGame = () => {
         socket.publish({
             destination: '/app/game/chess/' + roomId,
             body: JSON.stringify({
@@ -59,7 +59,7 @@ const GamePage = () => {
             })
         });
     }
-    const handleGiveUpGame = () =>{
+    const handleGiveUpGame = () => {
         socket.publish({
             destination: '/app/game/chess/' + roomId,
             body: JSON.stringify({
@@ -71,9 +71,14 @@ const GamePage = () => {
     return (
 
         <div className="container-gameplay">
+
             {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} />}
             <div className="game-board-main">
-                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame}/>
+                <div className="turn-player-mobile">
+                    <p className='turn'> Turn {appState.turn === 'b' ? 'Black' : 'White'}</p>
+                    <p id="timer">00:{seconds}</p>
+                </div>
+                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setIsUserWin={setIsUserWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame} />
             </div>
             <div className="chat-div">
                 <p className="turn-player" style={{ margin: `4px 0 0 0` }}>

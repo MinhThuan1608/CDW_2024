@@ -5,10 +5,8 @@ import WaitRoomCenter from '../components/waitRoom/wait-room-center';
 import WaitRoomBottom from '../components/waitRoom/wait-room-bottom';
 import { SocketContext } from '../App';
 import { useParams } from 'react-router-dom';
-import { switchCase } from '@babel/types';
 import Swal from 'sweetalert2';
 import { GetRoomPass } from '../api_caller/room';
-import { GetMe } from '../api_caller/user';
 import meme from '../assert/images/icon/meme-meo-khoc-2.png';
 
 
@@ -18,6 +16,8 @@ const WaitRoom = (props) => {
     const [listMessage, setListMessage] = useState([]);
     const [listUser, setListUser] = useState([]);
     const [roomPassword, setRoomPassword] = useState('');
+
+    const [isShowStartGameModal, setIsShowStartGameModal] = useState(false)
 
     useEffect(() => {
         GetRoomPass(roomId).then(res => {
@@ -114,10 +114,18 @@ const WaitRoom = (props) => {
     }, [socket, props.me])
 
     return (
-        <div className='container'>
-            <WaitRoomTop roomId={roomId} socket={socket} roomPassword={roomPassword} me={props.me} />
-            <WaitRoomCenter socket={socket} roomId={roomId} listMessage={listMessage} listUser={listUser} userOnline={props.userOnline} roomPassword={roomPassword} me={props.me} />
-            <WaitRoomBottom socket={socket} roomId={roomId} listUser={listUser} me={props.me} />
+        <div className='home-container'>
+            <WaitRoomTop roomId={roomId} roomPassword={roomPassword} me={props.me} />
+            <WaitRoomCenter roomId={roomId}
+                listMessage={listMessage} listUser={listUser}
+                userOnline={props.userOnline} roomPassword={roomPassword}
+                me={props.me}
+                isShowStartGameModal={isShowStartGameModal}
+                setIsShowStartGameModal={setIsShowStartGameModal} />
+            <WaitRoomBottom roomId={roomId}
+                listUser={listUser} me={props.me}
+                isShowStartGameModal={isShowStartGameModal}
+                setIsShowStartGameModal={setIsShowStartGameModal} />
         </div>
     );
 }

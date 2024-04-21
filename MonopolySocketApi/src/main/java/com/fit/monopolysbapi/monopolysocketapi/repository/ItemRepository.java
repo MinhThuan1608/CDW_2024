@@ -10,6 +10,7 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, String> {
     Item findItemById(String id);
     Item findItemByProductId(String id);
+    List<Item> findAllByProductIdAndUserId(String product_id, String user_id);
     List<Item> findAllByUserId(String user_id);
     Item findItemByUserIdAndProductId(String user_id, String product_id);
     boolean existsById(String id);

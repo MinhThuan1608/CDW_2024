@@ -51,7 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             User user = userService.getUserByUsernameOrEmail(username).orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
             if (user != null && jwtUtil.validateToken(jwtToken, user)) {
                 if (user.getUsername()==null) user.setUsername(user.getEmail());
-
+                System.out.println(user);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

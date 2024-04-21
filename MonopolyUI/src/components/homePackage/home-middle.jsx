@@ -7,7 +7,7 @@ import EditUserProfileModal from './user-edit-profile-modal';
 import ModalShop from './modal-shop';
 
 
-const HomeMiddle = ({showModal,setShowModal, showModalCreateRoom ,setShowModalCreateRoom, 
+const HomeMiddle = ({me, setMe,showModal,setShowModal, showModalCreateRoom ,setShowModalCreateRoom, 
     showModalBag, setShowModalBag, showModalProfile, setShowModalProfile, showModalShop, setShowModalShop}) => {
 
 
@@ -19,8 +19,8 @@ const HomeMiddle = ({showModal,setShowModal, showModalCreateRoom ,setShowModalCr
             showJoinRoomModal={showJoinRoomModal} setShowJoinRoomModal={setShowJoinRoomModal}/>)}
 
             {showModalCreateRoom && (<CreateRoomModal showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}/>)}
-            {showModalBag && (<ModalBag showModalBag={showModalBag} setShowModalBag={setShowModalBag}/>)}
-            {showModalProfile && (<EditUserProfileModal showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}/>)}
+            {showModalBag && (<ModalBag me={me} setMe={setMe} showModalBag={showModalBag} setShowModalBag={setShowModalBag}/>)}
+            {showModalProfile && (<EditUserProfileModal me={me} setMe={setMe} showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}/>)}
             {showModalShop && (<ModalShop showModalShop={showModalShop} setShowModalShop={setShowModalShop}/>)}
             
         </div>

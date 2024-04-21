@@ -1,13 +1,11 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
-import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
-import com.fit.monopolysbapi.monopolysocketapi.model.Item;
-import com.fit.monopolysbapi.monopolysocketapi.model.Product;
-import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import com.fit.monopolysbapi.monopolysocketapi.model.*;
 import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.AvatarService;
+import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.ProductService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +25,7 @@ public class UserController {
 
     private final UserService userService;
     private final AvatarService avatarService;
+    private final GameService gameService;
 
     @PatchMapping("/init")
     public ResponseEntity initUser(@RequestBody InitUserRequest request, Authentication authentication) {
@@ -74,15 +73,16 @@ public class UserController {
     }
     @PatchMapping("/edit/name")
     public ResponseEntity editProfileName(@RequestBody InitUserRequest request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        if(!userService.haveChangeNameCard(user.getId()))
+            return ResponseEntity.ok(new AbstractResponse(405, "User have not change name card!!!", false));
         if (userService.isUsernameExist(request.getUsername()))
             return ResponseEntity.ok(new AbstractResponse(405, "This username have been used!!!", false));
-
-        User updatedUser = userService.changeName((User) authentication.getPrincipal(), request.getUsername());
+        User updatedUser = userService.changeName(user, request.getUsername());
         return ResponseEntity.ok().body(new AbstractResponse(200, "Username have been updated!", updatedUser.getUserResponse()));
 
 
     }
-
 
     @GetMapping("/me")
     public ResponseEntity getUser(Authentication authentication){
@@ -111,12 +111,10 @@ public class UserController {
         List<Item> itemList = userService.getListItem(id);
         return ResponseEntity.ok(new AbstractResponse(200, "Bag is here", itemList));
     }
-
-    @GetMapping("/haveChangeNameCard/{id}")
-    public ResponseEntity haveChangeNameCard(@PathVariable String id) {
-        if (userService.haveChangeNameCard(id))
-            return ResponseEntity.ok(new AbstractResponse(200, "Have Change Name Card", true));
-        return ResponseEntity.ok(new AbstractResponse(200, "Have Not Change Name Card", false));
+    @GetMapping("/match/{id}")
+    public ResponseEntity getAllMatches(@PathVariable String id) {
+        List<Match> matches = gameService.getAllMatchByUserId(id);
+        return ResponseEntity.ok(new AbstractResponse(200, "Successfully", matches));
     }
 
 

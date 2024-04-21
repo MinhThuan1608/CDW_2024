@@ -79,10 +79,21 @@ public class UserService {
     }
     public User changeName(User user, String username) {
         user.setUsername(username);
+        updateChangeNameCard(user);
         return userRepository.save(user);
     }
-    public User getOneUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public void updateChangeNameCard(User user) {
+        for (Item item : getListItem(user.getId())) {
+            if (item.getProduct().getId().equals("2")) {
+                if (item.getQuantity() > 1) {
+                    item.setQuantity(item.getQuantity() - 1);
+                    itemRepository.save(item);
+                } else {
+                    itemRepository.delete(item);
+                }
+
+            }
+        }
     }
     public List<Item> getListItem(String id){
         if(!userRepository.existsById(id)) return null;
@@ -91,8 +102,9 @@ public class UserService {
 
     public boolean haveChangeNameCard(String id) {
         if (!userRepository.existsById(id)) return false;
-        System.out.println(itemRepository.findItemByProductId("3"));
-        return getListItem(id).contains(itemRepository.findItemByProductId("3"));
+        List<Item> itemList = itemRepository.findAllByProductIdAndUserId("2",id);
+        System.out.println(itemList);
+        return !itemList.isEmpty();
     }
     private String getVerifyEmailURL(User user) throws NoSuchAlgorithmException {
         return "http://localhost:8001/user/verify_email/"+user.getId()+"?token="+util.hash(user.getPassword());

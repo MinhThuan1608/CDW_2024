@@ -59,11 +59,7 @@ const HomeBottom = ({showModal, setShowModal,showModalCreateRoom, setShowModalCr
                      onClick={handleOpenModalBag}/>
                     <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
                 </div>
-                <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image" 
-                     onClick={handleOpenModalBag}/>
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
-                </div>
+                
             </div>
             <div className="action-button-container">
                 {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :

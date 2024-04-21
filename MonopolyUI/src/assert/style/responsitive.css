@@ -1,0 +1,105 @@
+/* iPad */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+    /* waitroom */
+    .online-part,
+    .chat-div {
+        display: none;
+    }
+
+    .img-frame {
+        top: -5px;
+        left: 4px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .password-div input {
+        width: 50px;
+    }
+
+    /* home */
+    .action-button {
+        padding: 12px 15px;
+    }
+
+    /* game-play */
+    .turn-player-mobile {
+        display: flex;
+    }
+}
+
+/* Điện thoại di động */
+@media only screen and (max-width: 767px) {
+
+    /* waitroom */
+    .online-part,
+    .chat-room-part,
+    .chat-div {
+        display: none;
+    }
+
+    .img-frame {
+        top: -5px;
+        left: 4px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .password-div input {
+        width: 50px;
+    }
+
+    .btn-play-game {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    /* home */
+    .setting-icon {
+        font-size: 18px;
+    }
+
+    .action-button {
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    #username-title,
+    .money {
+        font-size: 16px;
+    }
+
+    /* game-play */
+    .turn-player-mobile {
+        display: flex;
+    }
+
+    /* create-character && login && register */
+    .title {
+        font-size: 40px;
+    }
+
+    .title-container {
+        margin: 12px 0;
+    }
+
+    .form-container {
+        border: none;
+    }
+    .input-username-container{
+        min-width: 250px;
+    }
+    .choose-avatar-title{
+        font-size: 14px;
+    }
+    .choose-avatar-scroller{
+        max-height: 200px;
+    }
+    #upload-avatar-button, #confirm{
+        font-size: 14px;
+    }
+    #confirm{
+        padding: 8px;
+    }
+}

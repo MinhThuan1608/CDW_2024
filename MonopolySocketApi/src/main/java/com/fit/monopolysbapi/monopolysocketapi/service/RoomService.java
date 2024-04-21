@@ -119,8 +119,9 @@ public class RoomService {
         rooms.removeIf(room -> room.getId().equals(id));
     }
 
-    public void startGame(Room room){
-        GameBoard gameBoard = new GameBoard();
+    public void startGame(Room room, int timeOfTurn){
+        GameBoard gameBoard = new GameBoard(timeOfTurn);
+//        gameBoard.setResetTime();
         room.setGameBoard(gameBoard);
         room.setPlaying(true);
     }

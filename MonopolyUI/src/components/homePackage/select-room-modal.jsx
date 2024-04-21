@@ -90,7 +90,8 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     return (
         <div
             className="modal show"
-            style={{ display: 'block', position: 'initial', height: 'auto' }}
+            style={{ display: 'block', position: 'initial', height: 'auto',transition: 'top 0.5s ease',
+            animation: 'bounceIn 0.5s ease forwards' }}
         >
             {showModal && (
                 <Modal.Dialog className={showJoinRoomModal ? 'd-none' : ''}>

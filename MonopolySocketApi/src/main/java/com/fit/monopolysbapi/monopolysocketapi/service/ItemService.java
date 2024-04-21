@@ -21,6 +21,7 @@ public class ItemService {
         return itemRepository.findItemById(itemId);
     }
 
+
     public boolean buyItem(User user, Product product) {
         if (user.getMoney() >= product.getPrice()) {
             user.setMoney(user.getMoney() - product.getPrice());
@@ -32,8 +33,8 @@ public class ItemService {
                     itemId = util.generateId();
 
                 itemRepository.save(Item.builder().id(itemId).user(user).product(product).quantity(1).build());
-            }else {
-                item.setQuantity(item.getQuantity()+1);
+            } else {
+                item.setQuantity(item.getQuantity() + 1);
                 itemRepository.save(item);
             }
             return true;
