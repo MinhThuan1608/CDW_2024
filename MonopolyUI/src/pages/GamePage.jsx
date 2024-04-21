@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GameChat from '../components/gameBoard/game-chat';
 import VictoryModal from '../components/gameBoard/VictoryModal';
 
-const GamePage = () => {
+const GamePage = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const { appState, dispatch } = useAppContext();
     const { roomId } = useParams("roomId");
@@ -73,7 +73,7 @@ const GamePage = () => {
         <div className="container-gameplay">
             {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} />}
             <div className="game-board-main">
-                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame}/>
+                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame} me={props.me}/>
             </div>
             <div className="chat-div">
                 <p className="turn-player" style={{ margin: `4px 0 0 0` }}>

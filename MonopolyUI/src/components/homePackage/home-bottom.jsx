@@ -5,17 +5,50 @@ import schoolBag from '../../assert/images/icon/school-bag.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { GetRoomMeIn } from '../../api_caller/room';
+import { toast } from 'react-toastify';
 
 
 const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag
-    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend }) => {
+    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, me }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
 
     useEffect(() => {
         GetRoomMeIn().then(res => {
-            if (res) setRoomMeIn(res)
+            if (res) {
+                setRoomMeIn(res)
+                if (socket)
+                    var roomSubscribe = socket.subscribe('/topic/game/room/' + res.id, (message) => {
+                        const messResponse = JSON.parse(message.body);
+                        console.log(messResponse);
+                        switch (messResponse.messageType) {
+                            case 'JOIN':
+                                toast.warn("Có ai đó vừa vào phòng")
+                                break
+                            case 'LEAVE':
+                                toast.warn("Bạn cùng phòng của bạn không muốn chơi với bạn nữa :)))")
+                                break
+                            case 'KICK':
+                                toast.warn("Bạn đã bị đá ra khỏi phòng :))))")
+                                roomSubscribe.unsubscribe()
+                                setRoomMeIn(null)
+                                break
+                            case 'TIME_OUT':
+                                toast.warn("Phòng của bạn đã hết hạn")
+                                setRoomMeIn(null)
+                                break
+                            case 'MESSAGE':
+                                toast(`Bạn có tin nhắn mới từ ${messResponse.sender.username}: ${messResponse.content}`)
+                                break
+                            case 'START_GAME':
+                                window.location = '/game/' + res.id
+                                break
+                            default:
+                                break
+                        }
+                    });
+            }
         })
-    }, [])
+    }, [socket])
     // Hàm xử lý khi ấn vào ô chọn phòng
     const handleOpenModal = () => {
         if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend) {

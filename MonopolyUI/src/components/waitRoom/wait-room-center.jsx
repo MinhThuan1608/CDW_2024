@@ -6,7 +6,6 @@ import WaitRoomOnlineUser from './wait-room-online-list-user';
 
 
 const WaitRoomCenter = (props) => {
-    const me = JSON.parse(sessionStorage.getItem('user'))
 
     const handleKickUser = () => {
         props.socket.publish({
@@ -23,7 +22,8 @@ const WaitRoomCenter = (props) => {
                 messageType: 'LEAVE'
             })
         });
-        window.location = '/'
+        console.log('u click out room')
+        // window.location = '/'
     }
     return (
         <div className="center-part">

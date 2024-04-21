@@ -218,7 +218,6 @@ public class UserController {
         if (userSearchOptional.isEmpty())
             return ResponseEntity.status(405).body(new AbstractResponse(405, "Username is wrong!", null));
         return ResponseEntity.ok(new AbstractResponse(200, "Get info successfully!", userSearchOptional.get().getUserResponse()));
-
     }
 
 }

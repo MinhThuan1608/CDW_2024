@@ -32,8 +32,8 @@ public class AuthenticateController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final Util util;
     private final AuthenticationManager authenticationManager;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {

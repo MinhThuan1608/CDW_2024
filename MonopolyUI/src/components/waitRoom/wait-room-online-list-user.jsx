@@ -21,17 +21,17 @@ const WaitRoomOnlineUser = (props) => {
     }
 
     const handleAddFriend = async (userId) => {
-        const res = await RequestAddFriend(userId)
-        if (res) {
-            switch (res) {
-                case 'REQUESTED':
-                    toast.success('Gửi lời mời thành công')
-                    break;
-                case 'ADDED':
-                    toast.success('Kết bạn thành công')
-                    break;
-            }
-        }
+        // const res = await RequestAddFriend(userId)
+        // if (res) {
+        //     switch (res) {
+        //         case 'REQUESTED':
+        //             toast.success('Gửi lời mời thành công')
+        //             break;
+        //         case 'ADDED':
+        //             toast.success('Kết bạn thành công')
+        //             break;
+        //     }
+        // }
     }
 
     return (

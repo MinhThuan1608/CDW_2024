@@ -29,12 +29,12 @@ const WaitRoomBottom = (props) => {
     }
 
     return (
-        props.me.id === props.listUser[0]?.id &&
-        (<div className="bottom-part">
+        
+        <div className="bottom-part">
             {roomMeIn?.playing ?
                 <button className="btn-play-game" onClick={handleReturnGame}>Trờ lại game</button> :
-                <button className="btn-play-game" onClick={handleInitGame}>Bắt đầu chơi</button>}
-        </div>)
+                props.me.id === props.listUser[0]?.id && <button className="btn-play-game" onClick={handleInitGame}>Bắt đầu chơi</button>}
+        </div>
     );
 }
 export default WaitRoomBottom; 

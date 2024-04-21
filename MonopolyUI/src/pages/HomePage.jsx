@@ -93,7 +93,7 @@ const HomePage = (props) => {
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
         friendRequests={friendRequests} setShowModalFriend={setShowModalFriend}
-        showModalFriend={showModalFriend}
+        showModalFriend={showModalFriend} socket={socket} me={props.me}
       />
     </div>
   );

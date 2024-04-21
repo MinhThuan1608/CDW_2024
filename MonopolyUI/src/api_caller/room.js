@@ -130,8 +130,8 @@ export async function GetRoomMeIn() {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         return responseData.data;
     }
     return null;

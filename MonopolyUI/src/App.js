@@ -139,7 +139,7 @@ function App() {
               <Route path="/forget-password" element={<ForgetPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/create-character" element={<CreateCharacter />} />
-              <Route path="/game/:roomId" element={<GamePage />} />
+              <Route path="/game/:roomId" element={<GamePage me={me}/>} />
             </Routes>
           </BrowserRouter>
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />

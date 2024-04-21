@@ -28,7 +28,7 @@ const WaitRoom = (props) => {
     }, [])
 
     useEffect(() => {
-        if (socket) {
+        if (socket && props.me.id) {
             socket.subscribe('/topic/game/room/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse);
@@ -40,8 +40,7 @@ const WaitRoom = (props) => {
                         setListUser(messResponse.users)
                         break
                     case 'KICK':
-                        var me = JSON.parse(sessionStorage.getItem('user'))
-                        if (messResponse.users.find(u => u.username === me.username))
+                        if (messResponse.users.find(u => u.username === props.me?.username))
                             setListUser(messResponse.users)
                         else window.location = '/'
                         break
@@ -85,7 +84,7 @@ const WaitRoom = (props) => {
                 })
             });
         }
-    }, [socket])
+    }, [socket, props.me])
 
     useEffect(() => {
         if (socket && props.me.id)
