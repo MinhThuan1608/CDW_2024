@@ -41,4 +41,16 @@ public class ItemService {
         }
         return false;
     }
+
+    public void saleItem(User user, Item item, int amount) {
+        int remainNumber = item.getQuantity() - amount;
+        if (remainNumber > 0) {
+            item.setQuantity(remainNumber);
+            itemRepository.save(item);
+        } else {
+            itemRepository.delete(item);
+        }
+        user.setMoney((long) (user.getMoney() + (item.getProduct().getPrice() * 0.05 * amount)));
+        userRepository.save(user);
+    }
 }

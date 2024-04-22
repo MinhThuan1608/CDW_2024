@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../assert/style/wait-room.css';
 import WaitRoomTop from '../components/waitRoom/wait-room-top';
 import WaitRoomCenter from '../components/waitRoom/wait-room-center';
@@ -11,7 +11,7 @@ import meme from '../assert/images/icon/meme-meo-khoc-2.png';
 
 
 const WaitRoom = (props) => {
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const { roomId } = useParams("roomId");
     const [listMessage, setListMessage] = useState([]);
     const [listUser, setListUser] = useState([]);
@@ -21,7 +21,7 @@ const WaitRoom = (props) => {
 
     useEffect(() => {
         GetRoomPass(roomId).then(res => {
-            if (res != false)
+            if (res !== false)
                 setRoomPassword(res)
             else window.location = '/'
         })
