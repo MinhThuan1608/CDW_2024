@@ -76,10 +76,11 @@ public class WaitRoomController {
     @GetMapping("/room/{roomId}/get/pass")
     public ResponseEntity<?> getRoomPass(@PathVariable String roomId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
+        Room room = roomService.getRoomById(roomId);
+        System.out.println(room.getUsers().size());
         if (roomService.getRoomById(roomId) != null &&
-                (user.getId().equals(roomService.getRoomById(roomId).getUsers().get(0).getId()) ||
-                        user.getId().equals(roomService.getRoomById(roomId).getUsers().get(1).getId()))) {
-            return ResponseEntity.ok(new AbstractResponse(200, "Get room's password successfully", roomService.getRoomById(roomId).getPassword()));
+                room.getUsers().stream().anyMatch(u -> u.getId().equals(user.getId()))) {
+            return ResponseEntity.ok(new AbstractResponse(200, "Get room's password successfully", room.getPassword()));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get room's password fail", false));
     }

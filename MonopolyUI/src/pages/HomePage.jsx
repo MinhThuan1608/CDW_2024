@@ -17,6 +17,7 @@ const HomePage = (props) => {
   const [showModalProfile, setShowModalProfile] = useState(false);
   const [showModalShop, setShowModalShop] = useState(false);
   const [showModalFriend, setShowModalFriend] = useState(false);
+  const [showModalSetting, setShowModalSetting] = useState(false);
   const [friendRequests, setFriendRequests] = useState([])
 
   const { socket } = useContext(SocketContext)
@@ -78,7 +79,8 @@ const HomePage = (props) => {
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
-        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend} />
+        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting} />
       <HomeMiddle
         showModal={showModal} setShowModal={setShowModal} me={props.me}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
@@ -86,6 +88,7 @@ const HomePage = (props) => {
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
         showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting}
         friendRequests={friendRequests} setFriendRequests={setFriendRequests} />
       <HomeBottom
         showModal={showModal} setShowModal={setShowModal}
@@ -94,7 +97,7 @@ const HomePage = (props) => {
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
         friendRequests={friendRequests} setShowModalFriend={setShowModalFriend}
         showModalFriend={showModalFriend} socket={socket} me={props.me}
-      />
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting} />
     </div>
   );
 }

@@ -72,13 +72,6 @@ public class GameController {
                         (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn() == 'b')) {
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
-                    for (Piece[] piece : gameBoard.getPieces()) {
-                        for (Piece piece1 : piece) {
-                            System.out.print(piece1+", ");
-                        }
-                        System.out.println();
-                    }
-                    System.out.println(move.getPiece());
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
                     System.out.println("move: " + move);
                     if (gameBoard.isValidMove(move)) {

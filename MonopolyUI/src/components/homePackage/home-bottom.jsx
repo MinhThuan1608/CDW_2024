@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 
 const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag
-    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, me }) => {
+    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend, showModalSetting, socket, me }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
 
     useEffect(() => {
@@ -51,22 +51,22 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     }, [socket])
     // Hàm xử lý khi ấn vào ô chọn phòng
     const handleOpenModal = () => {
-        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModal(true);
         }
     };
     const handleOpenModalCreateRoom = () => {
-        if (!showModal && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalCreateRoom(true);
         }
     };
     const handleOpenModalBag = () => {
-        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalBag(true);
         }
     };
     const handleOpenModalShop = () => {
-        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend && !showModalSetting) {
             setShowModalShop(true);
         }
     };
@@ -93,11 +93,7 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                         onClick={handleOpenModalBag} />
                     <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
                 </div>
-                <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
-                        onClick={handleOpenModalBag} />
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
-                </div>
+            
             </div>
             <div className="action-button-container">
                 {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :

@@ -95,7 +95,7 @@ public class UserController {
         User user = userService.getUserById(userAuth.getId()).get();
         UserResponse userResponse = user.getUserResponse();
         userResponse.setMoney(user.getMoney());
-        return ResponseEntity.ok(new AbstractResponse(200, "Get infomation successfully!", userResponse));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get information successfully!", userResponse));
     }
 
     @GetMapping("/exists/{username}")

@@ -71,7 +71,7 @@ const GamePage = (props) => {
     return (
 
         <div className="container-gameplay">
-            {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} />}
+            {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} roomId={roomId}/>}
             <div className="game-board-main">
                 <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame} me={props.me}/>
             </div>

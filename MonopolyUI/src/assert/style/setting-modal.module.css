@@ -1,0 +1,74 @@
+.modalHeader {
+    padding: 0;
+    border-bottom: none;
+}
+
+.tabsContainer {
+    display: flex;
+    width: 90%;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(201, 201, 201);
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.tabsButton {
+    width: 50%;
+    margin-bottom: 0;
+    cursor: pointer;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background-color: rgb(201, 201, 201);
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: rgb(82, 82, 82);
+}
+
+.tabsButton.active {
+    border-bottom: none;
+    background-color: white;
+    color: black;
+}
+
+.btnClose {
+    margin-right: auto !important;
+}
+
+.btnClose:hover {
+    background-color: red;
+}
+
+.modalBody {
+    border-radius: 0 0 0.5rem 0.5rem;
+    overflow: auto;
+    padding-top: 0;
+    
+}
+
+.soundSettingContainer{
+    display: flex;
+}
+
+.container {
+    display: flex;
+}
+
+.column {
+    flex: 1;
+}
+
+.columnLeft {
+    flex: 0 0 fit-content;
+}
+
+.columnRight {
+    flex: 1;
+}
+
+.row {
+    padding: 1rem;
+}
+
+.rangeInput{
+    width: 100%;
+    cursor: pointer;
+}

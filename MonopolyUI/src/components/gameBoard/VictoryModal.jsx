@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const VictoryModal = (props) => {
     const handleBtnExit = () => {
-        window.location = '/'
+        window.location = '/wait-room/'+props.roomId
     }
 
     return <div className="victory-modal">
