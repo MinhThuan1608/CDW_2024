@@ -374,8 +374,14 @@
     background-color: #F3F8FF;
 }
 
-.use-button {
+.use-button, .sell-button, .donate-button {
     background-color: #b484f4;
+}
+.exit-button{
+    background-color: #F3F8FF;
+}
+.exit-button:hover{
+    background-color: #ccc;
 }
 
 /* modal chọn phòng */

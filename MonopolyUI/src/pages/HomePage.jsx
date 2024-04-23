@@ -82,17 +82,11 @@ const HomePage = (props) => {
 
 
   useEffect(() => {
+    if (props.me.id) {
     GetFriendRequest().then(res => setFriendRequests(res))
-
-    const getBag = async () => {
-      const bag = await GetBag(props.me.id);
-      if (bag) {
-        setListItem(bag)
-      }
+    GetBag(props.me?.id).then(res => setListItem(res))
     }
-    getBag();
-
-  }, [])
+  }, [props.me.id, props.me.money, props.me.username])
 
   return (
     <div className='home-container'>

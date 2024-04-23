@@ -51,7 +51,7 @@ public class ItemService {
             } else {
                 itemRepository.delete(item);
             }
-            user.setMoney((long) (user.getMoney() + (item.getProduct().getPrice() * 0.5 * amount)));
+            user.setMoney((long) (user.getMoney() + (item.getProduct().getPrice() * 0.05 * amount)));
             userRepository.save(user);
         }
         return user.getMoney();

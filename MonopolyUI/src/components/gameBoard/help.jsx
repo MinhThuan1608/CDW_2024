@@ -84,3 +84,17 @@ export const formatSecondsToHHMMSS = (milliseconds) => {
 export const formatCurrency = (amount) => {
     return amount.toLocaleString('en-EN');
 }
+export const convertSecondsToMinutesAndSeconds = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+const adjectives = ['Red', 'Brave', 'Wise', 'Mighty', 'Swift', 'Gentle', 'Fierce'];
+const nouns = ['Dragon', 'Knight', 'Wizard', 'Sorcerer', 'Warrior', 'Archer', 'Thief'];
+export const generateRandomUsername = () => {
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+    const random = Math.floor(Math.random() * 100000);
+    var randomName = randomAdjective + randomNoun + random;
+    return randomName
+}

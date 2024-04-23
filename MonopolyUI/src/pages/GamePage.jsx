@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GameChat from '../components/gameBoard/game-chat';
 import VictoryModal from '../components/gameBoard/VictoryModal';
 import { initGameBoard } from '../reducer/action/move';
-import { createPositionBlack, createPositionWhite } from '../components/gameBoard/help';
+import { convertSecondsToMinutesAndSeconds, createPositionBlack, createPositionWhite, formatSecondsToHHMMSS } from '../components/gameBoard/help';
 
 const GamePage = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -92,7 +92,7 @@ const GamePage = (props) => {
                     <p></p>
                     <p></p>
                     <p className='turn'> Turn {appState.turn === 'b' ? 'Black' : 'White'}</p>
-                    <p id="timer">00:{seconds}</p>
+                    <p id="timer">{convertSecondsToMinutesAndSeconds(seconds)}</p>
                     <p></p>
                     <p></p>
                 </p>

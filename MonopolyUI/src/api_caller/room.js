@@ -61,20 +61,7 @@ export async function JoinRoom(roomId, password) {
     }
     return false;
 }
-export async function QuickJoinRoom() {
-    const urlString = `http://localhost:8001/room/quickJoin`;
 
-    const response = await fetch(urlString, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + accessToken,
-        }
-    });
-
-    const responseData = await response.json()
-    return responseData.data; // room id or false
-}
 export async function GetRoomPass(roomId) {
     const urlString = `http://localhost:8001/room/${roomId}/get/pass`;
 

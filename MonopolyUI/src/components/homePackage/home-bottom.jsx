@@ -9,9 +9,11 @@ import { toast } from 'react-toastify';
 
 
 const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag,
-    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket,showModalSetting, me, listItem, setListItem }) => {
+    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, showModalSetting, me, listItem, setListItem }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
-   
+    const [searchRoomText, setSearchRoomText] = useState('TÌM PHÒNG NHANH')
+    const [quickJoin, setQuickJoin] = useState(false)
+
 
     useEffect(() => {
         GetRoomMeIn().then(res => {
@@ -49,7 +51,7 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                     });
             }
         })
-    }, [socket])
+    }, [socket, quickJoin])
 
     const handleOpenModal = () => {
         if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
@@ -71,16 +73,6 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
             setShowModalShop(true);
         }
     };
-
-    const handleQuickJoinRoom = async () => {
-        const quickRoomid = await QuickJoinRoom();
-        if(quickRoomid === null){
-        toast.warn("Chưa xác thực mail kìa!!!")
-        }else{
-            window.location = '/wait-room/' + quickRoomid
-        }    
-
-    }
     const handleReturnRoom = () => {
         window.location = '/wait-room/' + roomMeIn.id
     }
@@ -88,6 +80,26 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     const handleReturnGame = () => {
         window.location = '/game/' + roomMeIn.id
     }
+    const handleQuickJoinRoom = () => {
+        setSearchRoomText('ĐANG TÌM...')
+        if (me.confirmEmail && socket) {
+            socket.publish({
+                destination: '/app/room/quick-join',
+                body: ""
+            });
+            socket.subscribe('/topic/room/quick-join', (message) => {
+                const messResponse = message.body;
+                console.log(messResponse);
+                setQuickJoin(true)
+                window.location = '/wait-room/' + messResponse
+
+            });
+        }else{
+            toast.warn('Chưa xác thực mail kìa má!')
+
+        } 
+    }
+
 
     return (
         <div className="bottom-container">
@@ -100,7 +112,7 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
                     <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
                         onClick={handleOpenModalBag} />
-                   {listItem.length > 0 &&  <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />}
+                    {listItem?.length > 0 && <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />}
                 </div>
 
             </div>
@@ -108,9 +120,9 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :
                     roomMeIn ? <button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button> :
                         <>
-                            <button className="action-button" onClick={handleQuickJoinRoom}>VÀO NHANH</button>
-                            <button className="action-button"  onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
-                            <button className="action-button"  onClick={handleOpenModal}>CHỌN PHÒNG</button>
+                            <button className="action-button" onClick={searchRoomText === 'ĐANG TÌM...' ? null : handleQuickJoinRoom}>{searchRoomText}</button>
+                            <button className="action-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
+                            <button className="action-button" onClick={handleOpenModal}>CHỌN PHÒNG</button>
                         </>}
             </div>
 

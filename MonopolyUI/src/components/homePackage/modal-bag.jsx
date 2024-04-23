@@ -5,7 +5,7 @@ import { ChangeUserName, GetBag, GetFriends, IsUsernameValid } from '../../api_c
 import { toast } from 'react-toastify';
 import Loader from '../loader/loader';
 import { SaleItem } from '../../api_caller/shop';
-import { formatCurrency } from '../gameBoard/help';
+import { formatCurrency, generateRandomUsername } from '../gameBoard/help';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
@@ -13,11 +13,10 @@ import { SocketContext } from '../../App';
 
 
 const ModalBag = (props) => {
-    const user = JSON.parse(sessionStorage.getItem('user'))
     const { socket } = useContext(SocketContext);
     const [listFriend, setListFriend] = useState([]);
 
-   
+
     const [itemDetail, setItemDetail] = useState(null);
     const [isChangeNameCard, setIsChangeNameCard] = useState(false);
     const [saleProduct, setSaleProduct] = useState(false);
@@ -49,44 +48,17 @@ const ModalBag = (props) => {
 
     };
     // 
-   
-
-    const handleShowChangeNameDiv = () => {
-        if (!isChangeNameCard && !saleProduct && !donateProduct)
-            setIsChangeNameCard(true)
-        else setIsChangeNameCard(false)
-        setErrorMessage('')
-    }
-    const handleShowSaleProductDiv = () => {
-        if (!saleProduct && !isChangeNameCard && !donateProduct) {
-            setSaleProduct(true)
-        }
-        else setSaleProduct(false)
-    }
-    const handleShowDonateProductDiv = () => {
-        if (!saleProduct && !isChangeNameCard && !donateProduct) {
-            setDonateProduct(true)
-        }
-        else {
-            setDonateProduct(false)
-            setSelectedFriend(null);
-        }
-    }
     const handleChangeUsername = async (event) => {
         var newUsername = event.target.value;
         setUsername(newUsername);
         validateUsername(newUsername);
     }
-    const adjectives = ['Red', 'Brave', 'Wise', 'Mighty', 'Swift', 'Gentle', 'Fierce'];
-    const nouns = ['Dragon', 'Knight', 'Wizard', 'Sorcerer', 'Warrior', 'Archer', 'Thief'];
-    const generateRandomName = () => {
-        const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-        const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-        const random = Math.floor(Math.random() * 100000);
-        var randomName = randomAdjective + randomNoun + random;
+    const generateRandomName = () =>{
+        const randomName = generateRandomUsername();
         setUsername(randomName)
         validateUsername(randomName)
     }
+   
 
     const validateUsername = async (uname) => {
         console.log(uname)
@@ -119,7 +91,6 @@ const ModalBag = (props) => {
             } else {
                 setErrorMessage(response.message)
             }
-
         }
         setLoading(false)
 
@@ -133,8 +104,35 @@ const ModalBag = (props) => {
         else {
             toast.success('Bán thành công! Tiền đã vào ví hihi');
             props.me.money = moneyAfterSale
+            let remain = itemDetail.quantity - saleNumber
+            if (remain > 0){
+                itemDetail.quantity = remain
+                setItemDetail({...itemDetail, quantity: remain})
+            }
+            else {
+                const updatedList = props.listItem.filter(item => item.id !== itemDetail.id);
+                props.setListItem(updatedList);
+            }
         }
 
+    }
+    const handleShowChangeNameDiv = () => {
+        setIsChangeNameCard(true)
+        setErrorMessage('')
+    }
+    const handleShowSaleProductDiv = () => {
+        setSaleProduct(true)
+    }
+    const handleShowDonateProductDiv = () => {
+        setDonateProduct(true)
+    }
+    const handleShowExitDiv = () => {
+        if (donateProduct) {
+            setDonateProduct(false)
+            setSelectedFriend(null)
+        }
+        if (saleProduct) setSaleProduct(false)
+        if (isChangeNameCard) setIsChangeNameCard(false)
     }
 
     useEffect(() => {
@@ -147,8 +145,7 @@ const ModalBag = (props) => {
     const handleFriendClick = (friend) => {
         setSelectedFriend(friend);
     };
-    const donateItem = async () => {
-        setLoading(true)
+    const donateItem = () => {
         if (selectedFriend !== null) {
             socket.publish({
                 destination: '/app/donate',
@@ -159,8 +156,16 @@ const ModalBag = (props) => {
                 })
             });
             toast.success('Tặng thành công!');
+            let remain = itemDetail.quantity - donateNumber
+            if (remain > 0) {
+                itemDetail.quantity = remain
+                setItemDetail({...itemDetail, quantity: remain})
+            } else {
+                const updatedList = props.listItem.filter(item => item.id !== itemDetail.id);
+                props.setListItem(updatedList);
+            }
         } else toast.error('Chưa chọn người nhận kìa má!');
-        setLoading(false)
+     
     }
 
     return (
@@ -212,7 +217,6 @@ const ModalBag = (props) => {
                                                                     <input type="text" value={username ? username : props.me.username} name="username" maxLength={20} placeholder={props.me.username} onChange={handleChangeUsername} />
                                                                     <img src={dice} title="Tạo ngẫu nhiên" alt="random" className="dice" onClick={generateRandomName} />
                                                                 </div>
-                                                                <button className='profile-btn' onClick={changeName}>Đổi tên</button>
                                                             </div>
                                                             <p style={{ color: 'red', fontStyle: 'italic' }}>{errorMessage}</p>
                                                         </>
@@ -234,11 +238,10 @@ const ModalBag = (props) => {
                                                                         {itemDetail.product.name}
                                                                     </p>
                                                                     <p>Số tiền nhận được:
-                                                                        <span style={{ color: '#41B06E', fontSize: '18px' }}> {formatCurrency(itemDetail.product.price * 0.5 * saleNumber)} </span>
+                                                                        <span style={{ color: '#41B06E', fontSize: '18px' }}> {formatCurrency(itemDetail.product.price * 0.05 * saleNumber)} </span>
                                                                         <span> <FontAwesomeIcon icon={faCoins} className="money-icon" /></span>
                                                                     </p>
                                                                 </div>
-                                                                <button className='profile-btn' onClick={saleItem}>Bán</button>
                                                             </div>
                                                             <p style={{ color: 'red', fontStyle: 'italic' }}>{errorMessage}</p>
                                                         </>
@@ -270,7 +273,6 @@ const ModalBag = (props) => {
 
                                                                     </div>
                                                                 </div>
-                                                                <button className='profile-btn' onClick={donateItem}>Tặng</button>
                                                             </div>
                                                             <p style={{ color: 'red', fontStyle: 'italic' }}>{errorMessage}</p>
                                                         </>
@@ -278,9 +280,10 @@ const ModalBag = (props) => {
                                                 </div>
 
                                                 <div className="item-action-button-container">
-                                                    {itemDetail.product.saleAble && <button className="item-action-button sell-button" onClick={handleShowSaleProductDiv}>Bán</button>}
-                                                    {itemDetail.product.useAble && <button className="item-action-button use-button" onClick={handleShowChangeNameDiv}>Sử dụng</button>}
-                                                    {itemDetail.product.donateAble && <button className="item-action-button sell-button" onClick={handleShowDonateProductDiv}>Tặng</button>}
+                                                    {(donateProduct || saleProduct || isChangeNameCard) && <button className="item-action-button exit-button" onClick={handleShowExitDiv}>Thoát</button>}
+                                                    {itemDetail.product.saleAble && !donateProduct && !isChangeNameCard && <button className="item-action-button sell-button" onClick={saleProduct ? saleItem : handleShowSaleProductDiv}>Bán</button>}
+                                                    {itemDetail.product.useAble && !saleProduct && !donateProduct && <button className="item-action-button use-button" onClick={isChangeNameCard ? changeName : handleShowChangeNameDiv}>{isChangeNameCard ? 'Đổi tên':'Sử dụng'}</button>}
+                                                    {itemDetail.product.donateAble && !saleProduct && !isChangeNameCard && <button className="item-action-button donate-button" onClick={donateProduct ? donateItem : handleShowDonateProductDiv}>Tặng</button>}
                                                 </div>
                                             </>
                                         ) || (

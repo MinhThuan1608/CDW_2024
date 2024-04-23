@@ -64,7 +64,7 @@ const StartGameModal = (props) => {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button className='profile-btn' onClick={handleOKButtonClick}>
+                            <button className='profile-btn' style={{padding: '4px 8px'}} onClick={handleOKButtonClick}>
                                 OK
                             </button>
                         </Modal.Footer>

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faSkullCrossbones, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { ChangeUserName, EditProfileAvatar, GetMatches, IsUsernameValid } from '../../api_caller/user';
 import { toast } from 'react-toastify';
-import { formatDateAndTime, formatSecondsToHHMMSS } from '../gameBoard/help';
+import { formatDateAndTime, formatSecondsToHHMMSS, generateRandomUsername } from '../gameBoard/help';
 import Loader from '../loader/loader';
 
 
@@ -53,19 +53,33 @@ const EditUserProfileModal = (props) => {
             reader.readAsDataURL(image);
         }
     };
+    const changeAvt = async () => {
+        setLoading(true)
+        if (avatar.data !== '') {
+            const response = await EditProfileAvatar(props.me.username, avatar.data);
+            if (response.data.id) {
+                props.setMe(response.data)
+                toast.success('Đổi avatar thành công!')
+                window.location.reload()
+            } else {
+                setErrorMessage(response.message)
+                errorMessageText.style.display = 'block';
+            }
 
+        } else {
+            setErrorMessage("Chưa tải ảnh lên!")
+            errorMessageText.style.display = 'block';
+        }
+        setLoading(false)
+
+    }
     const handleChangeUsername = async (event) => {
         var newUsername = event.target.value;
         setUsername(newUsername);
         validateUsername(newUsername);
     }
-    const adjectives = ['Red', 'Brave', 'Wise', 'Mighty', 'Swift', 'Gentle', 'Fierce'];
-    const nouns = ['Dragon', 'Knight', 'Wizard', 'Sorcerer', 'Warrior', 'Archer', 'Thief'];
     const generateRandomName = () => {
-        const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-        const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-        const random = Math.floor(Math.random() * 100000);
-        var randomName = randomAdjective + randomNoun + random;
+        const randomName = generateRandomUsername();
         setUsername(randomName)
         validateUsername(randomName)
     }
@@ -89,27 +103,6 @@ const EditUserProfileModal = (props) => {
             setValid(false)
         }
     }
-    const changeAvt = async () => {
-        setLoading(true)
-        if (avatar.data !== '') {
-            const response = await EditProfileAvatar(props.me.username, avatar.data);
-            if (response.data.id) {
-                props.setMe(response.data)
-                toast.success('Đổi avatar thành công!')
-                window.location.reload()
-            } else {
-                setErrorMessage(response.message)
-                errorMessageText.style.display = 'block';
-            }
-
-        } else {
-            setErrorMessage("Chưa tải ảnh lên!")
-            errorMessageText.style.display = 'block';
-        }
-        setLoading(false)
-
-    }
-
 
     const changeName = async () => {
         setLoading(true)
@@ -120,8 +113,7 @@ const EditUserProfileModal = (props) => {
             if (response.data.id) {
                 props.setMe(response.data)
                 toast.success('Đổi tên thành công!')
-
-                // window.location.reload();
+                window.location.reload();
             } else {
                 setErrorMessage(response.message)
                 errorMessageText.style.display = 'block';
@@ -151,10 +143,13 @@ const EditUserProfileModal = (props) => {
         setErrorMessage('')
     }
     const handleChangeName = () => {
-        if (!isChangeAvt && !isChangeName)
-            setIsChangeName(true)
-        else setIsChangeName(false)
-        setErrorMessage('')
+        if (props.listItem.find(item => item.product.id === '2')) {
+            if (!isChangeAvt && !isChangeName)
+                setIsChangeName(true)
+            else setIsChangeName(false)
+            setErrorMessage('')
+        } else toast.warn('Chưa có thẻ đổi tên má oii, mua ở shop đi đã :v')
+
     }
 
     return (
