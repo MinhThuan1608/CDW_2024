@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { GetRoomPass } from '../api_caller/room';
 import meme from '../assert/images/icon/meme-meo-khoc-2.png';
 import meoLoad from '../assert/images/icon/meo-load.jpg';
+import { useAppContext } from '../contexts/Context';
 
 
 
@@ -73,6 +74,7 @@ const WaitRoom = (props) => {
                         break
                     case 'START_GAME':
                         window.location = '/game/' + roomId
+                      
                         break
                     default:
                         break

@@ -11,6 +11,8 @@ import { faChess, faCrow, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GameChat from '../components/gameBoard/game-chat';
 import VictoryModal from '../components/gameBoard/VictoryModal';
+import { initGameBoard } from '../reducer/action/move';
+import { createPositionBlack, createPositionWhite } from '../components/gameBoard/help';
 
 const GamePage = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
@@ -23,6 +25,7 @@ const GamePage = (props) => {
 
     const [seconds, setSeconds] = useState();
 
+ 
 
     useEffect(() => {
         GetUserInRoom(roomId).then(result => {
@@ -31,6 +34,9 @@ const GamePage = (props) => {
         })
 
     }, []);
+
+
+
     useEffect(() => {
         var intervalId = setInterval(() => {
             if (seconds > 0)
@@ -78,7 +84,9 @@ const GamePage = (props) => {
                     <p className='turn'> Turn {appState.turn === 'b' ? 'Black' : 'White'}</p>
                     <p id="timer">00:{seconds}</p>
                 </div>
-                <GameBoard listUsers={listUsers} isWin={isWin} setWin={setWin} setIsUserWin={setIsUserWin} setSeconds={setSeconds} setListMessageInGame={setListMessageInGame} />
+                <GameBoard me={props.me} listUsers={listUsers} isWin={isWin} setWin={setWin}
+                    setIsUserWin={setIsUserWin} setSeconds={setSeconds}
+                    setListMessageInGame={setListMessageInGame} />
             </div>
             <div className="chat-div">
                 <p className="turn-player" style={{ margin: `4px 0 0 0` }}>

@@ -10,7 +10,7 @@ import Popup from './Popup/Popup';
 import { toast } from 'react-toastify';
 
 const GameBoard = (props) => {
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const { appState, dispatch } = useAppContext()
     const { roomId } = useParams("roomId");
 
@@ -23,7 +23,6 @@ const GameBoard = (props) => {
     const [hints, setHints] = useState([])
     const [justMoving, setJustMoving] = useState([])
 
-    const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -51,7 +50,7 @@ const GameBoard = (props) => {
                         turn = messResponse.turn
                         if (newPosition)
                             dispatch(makeNewMove({ newPosition, turn }))
-                        if (me?.id === messResponse.winnerId) {
+                        if (props.me?.id === messResponse.winnerId) {
                             toast('Chúc mừng, bạn đã chiến thắng <3');
                             props.setWin(true)
                             props.setIsUserWin(messResponse.winnerId)
@@ -95,7 +94,7 @@ const GameBoard = (props) => {
                         break
                     case 'GIVE_UP':
                         console.log(messResponse)
-                        if (me?.id === messResponse.winnerId) {
+                        if (props.me?.id === messResponse.winnerId) {
                             toast('Chúc mừng, bạn đã chiến thắng <3, vì người chơi còn lại đã bỏ cuộc');
                             props.setWin(true)
                             props.setIsUserWin(messResponse.winnerId)
@@ -109,7 +108,7 @@ const GameBoard = (props) => {
                         }, 10000)
                         break
                     case 'EXIT':
-                        if (me?.id === messResponse.winnerId) {
+                        if (props.me?.id === messResponse.winnerId) {
                             props.setWin(true)
                             props.setIsUserWin(messResponse.winnerId)
                             toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');

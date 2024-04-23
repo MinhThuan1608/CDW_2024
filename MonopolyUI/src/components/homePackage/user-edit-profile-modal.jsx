@@ -94,9 +94,7 @@ const EditUserProfileModal = (props) => {
         if (avatar.data !== '') {
             const response = await EditProfileAvatar(props.me.username, avatar.data);
             if (response.data.id) {
-                sessionStorage.setItem('user', JSON.stringify(response.data))
                 props.setMe(response.data)
-                // props.me.avatar.data = avatar.data
                 toast.success('Đổi avatar thành công!')
                 window.location.reload()
             } else {
@@ -120,7 +118,6 @@ const EditUserProfileModal = (props) => {
             const response = await ChangeUserName(username);
             console.log(response)
             if (response.data.id) {
-                sessionStorage.setItem('user', JSON.stringify(response.data))
                 props.setMe(response.data)
                 toast.success('Đổi tên thành công!')
 

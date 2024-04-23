@@ -21,9 +21,15 @@ import Swal from 'sweetalert2';
 export const SocketContext = React.createContext();
 
 function App() {
+
   // socket context
   const [socket, setSocket] = useState(null);
   const publicPages = ['/login', '/register', '/forget-password', '/reset-password']
+
+
+
+  const [userOnline, setUserOnline] = useState([])
+  const [me, setMe] = useState({})
 
   // app state context
   const [appState, dispatch] = useReducer(reducer, initGameState)
@@ -31,9 +37,6 @@ function App() {
     appState,
     dispatch
   }
-
-  const [userOnline, setUserOnline] = useState([])
-  const [me, setMe] = useState({})
 
 
   useEffect(() => {
@@ -110,7 +113,6 @@ function App() {
       // donate
       socket.subscribe(`/user/${me.id}/topic/donate`, (message) => {
         const donateMessage = JSON.parse(message.body)
-        console.log(donateMessage)
         Swal.fire({
           title: "Êi cho này nè!!!",
           html: "Bạn nhận được " + donateMessage.sendProduct?.name + " từ <b>" + donateMessage.sender?.username + "</b>",
@@ -132,6 +134,7 @@ function App() {
         window.location = '/login'
       } else {
         GetMe().then(user => {
+          console.log(user)
           if (user) setMe(user)
           if (!user?.username && !window.location.pathname.startsWith('/create-character')) {
             window.location = '/create-character'
@@ -140,6 +143,7 @@ function App() {
       }
     }
   }, [])
+
 
 
 

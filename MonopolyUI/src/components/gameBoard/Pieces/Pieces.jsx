@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import './Pieces.css';
 import Piece from "./Piece";
-import { copyPosition, createPosition } from "../help";
+import { copyPosition, createPosition, createPositionBlack, createPositionWhite } from "../help";
 import { useAppContext } from "../../../contexts/Context";
 import { SocketContext } from "../../../App";
-import { clearCandidates, makeNewMove } from "../../../reducer/action/move";
+import { clearCandidates, initGameBoard, makeNewMove } from "../../../reducer/action/move";
 
 let movePromotion = {}
 const Piceces = (props) => {
@@ -12,7 +12,10 @@ const Piceces = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const ref = useRef()
     const { appState, dispatch } = useAppContext()
+   
     const currentPosition = appState.position[appState.position.length - 1]
+    // let currentPosition = [];
+
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
@@ -93,6 +96,15 @@ const Piceces = (props) => {
             props.setCompletePromotionChoose(false)
         }
     }, [props.completePromotionChoose])
+    // useEffect(() => {
+    //     // console.log(props.me)
+    //     // console.log(props.listUsers)
+    //     const position = props.me?.id === props.listUsers[0]?.id ? [createPositionWhite()] : [createPositionBlack()]
+    //     // console.log(position)
+    //     dispatch(initGameBoard({ position }))
+    //     currentPosition = appState.position[appState.position.length - 1]
+    //     console.log(appState.position)
+    // }, [])
 
     return <div
         className="pieces"

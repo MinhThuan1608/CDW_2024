@@ -13,7 +13,7 @@ public class CheckScanner {
 
     public boolean isKingChecked(Move move) {
         Piece king = board.findKing(move.piece.isWhite);
-        assert king != null;
+        if(king == null) return false;
         int kingRow = king.row;
         int kingCol = king.col;
         if (move.piece.name != null && move.piece.name.substring(1).equals("k")) {
