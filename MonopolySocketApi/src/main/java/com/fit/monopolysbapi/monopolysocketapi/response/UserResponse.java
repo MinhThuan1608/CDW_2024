@@ -20,6 +20,7 @@ public class UserResponse {
     private Role role;
     private String token;
     private Status status;
+    private long exp;
 
     public enum Status{
         ONLINE, IN_ROOM, IN_GAME

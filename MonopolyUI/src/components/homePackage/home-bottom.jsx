@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 
 const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag,
-    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, me, listItem, setListItem }) => {
+    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket,showModalSetting, me, listItem, setListItem }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
    
 
@@ -52,22 +52,22 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     }, [socket])
 
     const handleOpenModal = () => {
-        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModal(true);
         }
     };
     const handleOpenModalCreateRoom = () => {
-        if (!showModal && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalCreateRoom(true);
         }
     };
     const handleOpenModalBag = () => {
-        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalBag(true);
         }
     };
     const handleOpenModalShop = () => {
-        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend && !showModalSetting) {
             setShowModalShop(true);
         }
     };

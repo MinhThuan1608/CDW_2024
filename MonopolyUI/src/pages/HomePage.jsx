@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { SocketContext } from '../App';
 import Swal from 'sweetalert2';
 import { GetRoomMeIn, JoinRoom } from '../api_caller/room';
-import { GetFriendRequest, GetMe } from '../api_caller/user';
+import { GetBag, GetFriendRequest, GetMe } from '../api_caller/user';
 import { toast } from 'react-toastify';
 
 
@@ -18,6 +18,7 @@ const HomePage = (props) => {
   const [showModalProfile, setShowModalProfile] = useState(false);
   const [showModalShop, setShowModalShop] = useState(false);
   const [showModalFriend, setShowModalFriend] = useState(false);
+  const [showModalSetting, setShowModalSetting] = useState(false);
   const [friendRequests, setFriendRequests] = useState([])
   const [listItem, setListItem] = useState([]);
 
@@ -82,6 +83,15 @@ const HomePage = (props) => {
 
   useEffect(() => {
     GetFriendRequest().then(res => setFriendRequests(res))
+
+    const getBag = async () => {
+      const bag = await GetBag(props.me.id);
+      if (bag) {
+        setListItem(bag)
+      }
+    }
+    getBag();
+
   }, [])
 
   return (
@@ -93,7 +103,8 @@ const HomePage = (props) => {
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
-        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend} />
+        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting} />
       <HomeMiddle
         me={props.me}
         setMe={props.setMe}
@@ -104,6 +115,7 @@ const HomePage = (props) => {
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
         showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
         friendRequests={friendRequests} setFriendRequests={setFriendRequests}
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting}
         listItem={listItem} setListItem={setListItem} />
       <HomeBottom
         showModal={showModal} setShowModal={setShowModal}
@@ -113,7 +125,7 @@ const HomePage = (props) => {
         friendRequests={friendRequests} setShowModalFriend={setShowModalFriend}
         showModalFriend={showModalFriend} socket={socket} me={props.me}
         listItem={listItem} setListItem={setListItem}
-      />
+        showModalSetting={showModalSetting} setShowModalSetting={setShowModalSetting} />
     </div>
   );
 }

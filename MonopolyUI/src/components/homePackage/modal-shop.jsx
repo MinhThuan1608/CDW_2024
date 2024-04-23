@@ -121,8 +121,8 @@ const ModalShop = ({ me, showModalShop, setShowModalShop }) => {
                                                 )}
                                             </div>
                                             <div className="item-action-button-container">
+                                                {buyProduct && <button style={{background: '#ccc'}} className="item-action-button use-button" onClick={handleCloseBuyItemDiv}>Thoát</button>}
                                                 <button className="item-action-button use-button" onClick={buyProduct ? handleBuyItem : handleOpenBuyItemDiv}>Mua</button>
-                                                {buyProduct && <button className="item-action-button use-button" onClick={handleCloseBuyItemDiv}>Thoát</button>}
                                             </div>
                                         </>
                                     ) || (

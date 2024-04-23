@@ -49,18 +49,7 @@ const ModalBag = (props) => {
 
     };
     // 
-    useEffect(() => {
-        const getBag = async () => {
-            const bag = await GetBag(user.id);
-            if (bag) {
-                props.setListItem(bag)
-            }
-        }
-        setLoading(true)
-        getBag();
-        setLoading(false)
-
-    }, [])
+   
 
     const handleShowChangeNameDiv = () => {
         if (!isChangeNameCard && !saleProduct && !donateProduct)

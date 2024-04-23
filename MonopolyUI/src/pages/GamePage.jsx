@@ -77,8 +77,7 @@ const GamePage = (props) => {
     return (
 
         <div className="container-gameplay">
-
-            {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} />}
+            {isWin && <VictoryModal listUsers={listUsers} isUserWin={isUserWin} roomId={roomId}/>}
             <div className="game-board-main">
                 <div className="turn-player-mobile">
                     <p className='turn'> Turn {appState.turn === 'b' ? 'Black' : 'White'}</p>

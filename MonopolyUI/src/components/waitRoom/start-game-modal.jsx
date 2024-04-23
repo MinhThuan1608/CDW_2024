@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 const StartGameModal = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
-    const [time, setTime] = useState(10);
+    const [time, setTime] = useState(30);
 
 
     const handleCloseModal = () => {

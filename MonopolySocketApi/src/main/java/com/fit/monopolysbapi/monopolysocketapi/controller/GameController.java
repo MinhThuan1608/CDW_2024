@@ -72,17 +72,21 @@ public class GameController {
                         (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn() == 'b')) {
                     Move move = chessMessage.getMove();
                     move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
-                    for (Piece[] piece : gameBoard.getPieces()) {
-                        for (Piece piece1 : piece) {
-                            System.out.print(piece1+", ");
-                        }
-                        System.out.println();
-                    }
-                    System.out.println(move.getPiece());
                     move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
                     System.out.println("move: " + move);
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
+                        if(move.getCapture() != null && move.getCapture().getName().substring(1).equals("k")) {
+                            User loser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
+                            responseMessage = ChessMessage.builder()
+                                    .messageType(ChessMessage.ChessMessageType.WIN)
+                                    .winnerId(user.getId())
+                                    .pieces(gameBoard.getPiecesResponse())
+                                    .build();
+                            simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
+                            gameService.matchEnd(room, user, loser, true);
+                            return;
+                        }
                         char nextTurn = gameBoard.getNextTurn();
                         boolean isEnemyChecked = gameBoard.isChecked(nextTurn);
                         boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(nextTurn);

@@ -3,26 +3,27 @@ import Ranks from './bits/Ranks';
 import Files from './bits/Files';
 import Piceces from './Pieces/Pieces';
 import { useAppContext } from '../../contexts/Context';
-import { SocketContext } from '../../App';
+import { PlaySound, SettingContext, SocketContext } from '../../App';
 import { useParams } from 'react-router-dom';
 import { makeNewMove, swapTurn } from '../../reducer/action/move';
 import Popup from './Popup/Popup';
 import { toast } from 'react-toastify';
+import chessMoveSound from '../../assert/sounds/chess_move.mp3'
 
 const GameBoard = (props) => {
     const { socket } = useContext(SocketContext);
     const { appState, dispatch } = useAppContext()
     const { roomId } = useParams("roomId");
-
-    const ranks = Array(8).fill().map((x, i) => 8 - i)
-    const files = Array(8).fill().map((x, i) => i + 1)
-    const position = appState.position[appState.position.length - 1]
-
     const [completePromotionChoose, setCompletePromotionChoose] = useState(false)
     const [isSelected, setIsSelected] = useState('')
     const [hints, setHints] = useState([])
     const [justMoving, setJustMoving] = useState([])
 
+    const ranks = Array(8).fill().map((x, i) => 8 - i)
+    const files = Array(8).fill().map((x, i) => i + 1)
+    const position = appState.position[appState.position.length - 1]
+
+    // const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -38,7 +39,7 @@ const GameBoard = (props) => {
     }
 
     useEffect(() => {
-        if (socket) {
+        if (socket && props.me?.id && props.listUsers.length !== 0) {
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse)
@@ -46,7 +47,8 @@ const GameBoard = (props) => {
                 setHints(messResponse.hints)
                 switch (messResponse.messageType) {
                     case 'WIN':
-                        newPosition = messResponse.pieces
+                        // newPosition = messResponse.pieces
+                        newPosition = props.listUsers[0]?.id === props.me?.id ? messResponse.pieces : messResponse.pieces.reverse()
                         turn = messResponse.turn
                         if (newPosition)
                             dispatch(makeNewMove({ newPosition, turn }))
@@ -80,20 +82,20 @@ const GameBoard = (props) => {
                         turn = messResponse.turn
                         if (newPosition) {
                             dispatch(makeNewMove({ newPosition, turn }))
-                            if (props.listUsers[0]?.id === props.me?.id) {
-                                setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
-                                console.log([messResponse.move?.newRow, messResponse.move?.newCol])
-                            }
-                            else {
-                                setJustMoving([7 - messResponse.move?.newRow, messResponse.move?.newCol])
-                                console.log([7 - messResponse.move?.newRow, messResponse.move?.newCol])
+                            if (messResponse.move) {
+                                if (props.listUsers[0]?.id === props.me?.id)
+                                    setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
+                                else
+                                    setJustMoving([7 - messResponse.move?.newRow, messResponse.move?.newCol])
+                                // PlaySound(chessMoveSound, true)
 
                             }
+
                             props.setSeconds(messResponse.timer)
                         }
+                        // PlaySound(chessMoveSound)
                         break
                     case 'GIVE_UP':
-                        console.log(messResponse)
                         if (props.me?.id === messResponse.winnerId) {
                             toast('Chúc mừng, bạn đã chiến thắng <3, vì người chơi còn lại đã bỏ cuộc');
                             props.setWin(true)
@@ -113,7 +115,7 @@ const GameBoard = (props) => {
                             props.setIsUserWin(messResponse.winnerId)
                             toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
                             setTimeout(() => {
-                                window.location = '/';
+                                window.location = '/wait-room/'+roomId;
                             }, 10000)
                         }
                         else {
@@ -143,12 +145,11 @@ const GameBoard = (props) => {
                 })
             })
         }
-    }, [socket]);
+    }, [socket, props.me]);
 
     return (
 
         <div className="board">
-
             <Ranks ranks={ranks} />
             <div className='tiles'>
                 {ranks.map((rank, i) =>

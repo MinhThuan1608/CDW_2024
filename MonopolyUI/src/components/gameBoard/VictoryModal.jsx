@@ -21,6 +21,9 @@ const VictoryModal = (props) => {
             firework.remove();
         }, 3000);
     }
+    const handleBtnExit = () => {
+        window.location = '/wait-room/'+props.roomId
+    }
     
     const startFireworks = () => {
         // Tạo 20 pháo hoa giấy

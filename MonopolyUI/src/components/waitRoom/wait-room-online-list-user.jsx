@@ -16,27 +16,29 @@ const WaitRoomOnlineUser = (props) => {
         if (tabSelected === 1)
             GetFriends().then(res => {
                 var listUserConverted = res.map((friend => friend.user))
-                listUserConverted.forEach(user => {
-                    var userOnl = props.userOnline.find(uo => uo.id === user.id)
-                    if (userOnl) user.status = userOnl.status
-                    else user.status = "OFFLINE"
-                })
-                listUserConverted.sort((u1, u2) => {
-                    if (u1.status !== 'OFFLINE' && u2.status === 'OFFLINE') return -1
-                    if (u1.status === 'OFFLINE' && u2.status !== 'OFFLINE') return 1
-                    return 0
-                })
-                setUsers(listUserConverted)
+                if (props.userOnline.length !== 0) {
+                    listUserConverted.forEach(user => {
+                        var userOnl = props.userOnline.find(uo => uo.id === user.id)
+                        if (userOnl) user.status = userOnl.status
+                        else user.status = "OFFLINE"
+                    })
+                    listUserConverted.sort((u1, u2) => {
+                        if (u1.status !== 'OFFLINE' && u2.status === 'OFFLINE') return -1
+                        if (u1.status === 'OFFLINE' && u2.status !== 'OFFLINE') return 1
+                        return 0
+                    })
+                    setUsers(listUserConverted)
+                }
             })
-        else if (tabSelected === 2 && props.userOnline.length > 0){
+        else if (tabSelected === 2 && props.userOnline.length > 0) {
             var userOnl = [...props.userOnline]
             userOnl.forEach(uo => {
-                if (users.find(user => user.id===uo.id)) uo.isFriend = true
+                if (users.find(user => user.id === uo.id)) uo.isFriend = true
                 else uo.isFriend = false
             })
             setUsers(userOnl)
         }
-            
+
     }, [tabSelected, props.userOnline])
 
     const handleInviteUser = (id) => {
@@ -77,7 +79,7 @@ const WaitRoomOnlineUser = (props) => {
                         <div className={`user-card ${Styles.userCard}`} key={index}>
                             <div className={Styles.userCardLeft}>
                                 <img src={user.avatar ? user.avatar.data : userAvt} alt='user-avt' className="img-frame-player-onl" />
-                                {props.userOnline.find(uo => uo.id === user.id) ? <div className='online-status'></div> : <></>}
+                                {user.status !== 'OFFLINE' ? <div className='online-status'></div> : <></>}
                                 <div className='user-card-name-container'>
                                     <span className='user-card-name'>{user.username}</span>
                                     {props.userOnline.find(uo => uo.id === user.id) ?
@@ -98,7 +100,7 @@ const WaitRoomOnlineUser = (props) => {
 
                             </div>
 
-                        </div> : <div key={index} style={{ display: 'none' }}></div>
+                        </div> : <></>
 
 
                 )}

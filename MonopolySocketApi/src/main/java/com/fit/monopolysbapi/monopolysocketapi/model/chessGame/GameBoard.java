@@ -207,9 +207,9 @@ public class GameBoard {
 
     private void promotionPawn(Move move, String name) {
         switch (name) {
-            case "q":
-                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
-                break;
+//            case "q":
+//                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
+//                break;
             case "n":
                 move.piece = new Knight(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
@@ -220,6 +220,7 @@ public class GameBoard {
                 move.piece = new Bishop(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
             default:
+                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
 
         }

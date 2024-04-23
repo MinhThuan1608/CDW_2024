@@ -214,13 +214,14 @@ const EditUserProfileModal = (props) => {
                                     {listMatch.map((match, index) => (
                                         <div className={`match ${props.me.id == match.winner.id ? `win` : `lose`}`} key={index}>
                                             <div className='match-top'>
+                                                <p className={props.me.id == match.winner.id ? 'icon-win' : 'icon-lose'}>
+                                                    {props.me.id == match.winner.id ? 'VICTORY' : 'DEFEAT'}
+                                                </p>
                                                 <p>
                                                     Ngày chơi: {formatDateAndTime(match.startAt)}
                                                     {/* đến {formatDateAndTime(match.endAt)} */}
                                                 </p>
-                                                <p className={props.me.id == match.winner.id ? 'icon-win' : 'icon-lose'}>
-                                                    {props.me.id == match.winner.id ? 'VICTORY' : 'DEFEAT'}
-                                                </p>
+
                                             </div>
                                             <div className='match-bottom'>
                                                 {props.me.id == match.winner.id ? (

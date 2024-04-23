@@ -86,8 +86,8 @@ export async function GetRoomPass(roomId) {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         if (responseData.data != null || responseData.data != "")
             return responseData.data; //true if you can join this room and else
         return false;

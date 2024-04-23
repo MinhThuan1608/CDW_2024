@@ -1,8 +1,8 @@
-import { createPosition } from "./help";
+import {  createPosition } from "./help";
 
 
 export const initGameState = {
-    position: [],
+    position: [createPosition()],
     turn: 'w',
     candidateMoves: [],
     piece: '',

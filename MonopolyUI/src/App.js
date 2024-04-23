@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useState, useEffect } from 'react';
+import React, { createContext, useReducer, useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import WaitRoom from "./pages/WaitRoom";
 import HomePage from "./pages/HomePage";
@@ -19,6 +19,16 @@ import ResetPassword from './pages/ResetPassword';
 import Swal from 'sweetalert2';
 
 export const SocketContext = React.createContext();
+export const SettingContext = React.createContext();
+
+export const PlaySound = (soundURL) => {
+
+  const generalVolume = Number(localStorage.getItem('generalVolume')) ?? 80
+  var sound = new Audio(soundURL)
+  sound.volume = generalVolume/ 100
+  sound.play()
+
+}
 
 function App() {
 
@@ -142,6 +152,7 @@ function App() {
         })
       }
     }
+    sessionStorage.setItem('isClicked', false)
   }, [])
 
 
@@ -149,7 +160,6 @@ function App() {
 
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
-
       <AppContext.Provider value={providerState}>
         <div>
           <BrowserRouter>
@@ -167,7 +177,6 @@ function App() {
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
         </div>
       </AppContext.Provider>
-
     </SocketContext.Provider>
 
   );
