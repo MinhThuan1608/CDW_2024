@@ -36,10 +36,6 @@ const WaitRoom = (props) => {
                     <span>{props.me.money}</span>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
                 </p>
-                <p className="coins" style={{opacity: 0}}>
-                    <span></span>
-                    <FontAwesomeIcon icon={faCoins} className="money-icon" />
-                </p>
 
             </div>
             <div className="lable-room">

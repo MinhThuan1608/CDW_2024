@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { GetRoomPass } from '../api_caller/room';
 import meme from '../assert/images/icon/meme-meo-khoc-2.png';
+import meoLoad from '../assert/images/icon/meo-load.jpg';
+
 
 
 const WaitRoom = (props) => {
@@ -28,7 +30,7 @@ const WaitRoom = (props) => {
     }, [])
 
     useEffect(() => {
-        if (socket) {
+        if (socket && props.me.id) {
             socket.subscribe('/topic/game/room/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse);
@@ -40,8 +42,7 @@ const WaitRoom = (props) => {
                         setListUser(messResponse.users)
                         break
                     case 'KICK':
-                        var me = JSON.parse(sessionStorage.getItem('user'))
-                        if (messResponse.users.find(u => u.username === me.username))
+                        if (messResponse.users.find(u => u.username === props.me?.username))
                             setListUser(messResponse.users)
                         else window.location = '/'
                         break
@@ -85,7 +86,7 @@ const WaitRoom = (props) => {
                 })
             });
         }
-    }, [socket])
+    }, [socket, props.me])
 
     useEffect(() => {
         if (socket && props.me.id)
@@ -107,11 +108,23 @@ const WaitRoom = (props) => {
                             imageAlt: "meme"
                         });
                         break
+                    case "NOT_CONFIRM_MAIL":
+                        Swal.fire({
+                            text: "Người bạn mời chưa xác thực mail nên không thể tham gia :(",
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
+                            imageUrl: meoLoad,
+                            imageWidth: 200,
+                            imageHeight: 200,
+                        });
+                        break
                     default:
                         break
                 }
             });
     }, [socket, props.me])
+    
 
     return (
         <div className='home-container'>

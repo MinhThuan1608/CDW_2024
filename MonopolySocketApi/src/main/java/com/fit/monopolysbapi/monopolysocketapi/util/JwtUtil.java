@@ -21,8 +21,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; //1 day
+    public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
+    public static final long JWT_EMAIl_TOKEN_VALIDITY = 3 * 60 * 1000;
     private final Environment env;
+
+    public enum TokenType {
+        AUTHENTICATE, EMAIL
+    }
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(Base64.getEncoder().encode(env.getProperty("jwt.key").getBytes()));
@@ -43,18 +48,21 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, TokenType tokenType) {
         User user = (User) userDetails;
         Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder().setClaims(claims).setSubject(user.getUsername() != null ? user.getUsername() : user.getEmail()).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+        claims.put("type", tokenType);
+        return Jwts.builder().setClaims(claims).setSubject(user.getUsername() != null ? user.getUsername() : user.getEmail())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()
+                        + (tokenType.equals(TokenType.AUTHENTICATE) ? JWT_TOKEN_VALIDITY : JWT_EMAIl_TOKEN_VALIDITY)))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         User user = (User) userDetails;
         final String username = getUsernameFromToken(token);
-        return ((username.equals(user.getUsername()) || username.equals(user.getEmail()) )&& !isTokenExpired(token));
+        return ((username.equals(user.getUsername()) || username.equals(user.getEmail())) && !isTokenExpired(token));
     }
 
     private Claims getAllClaimsFromToken(String token) {

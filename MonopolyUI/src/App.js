@@ -10,17 +10,20 @@ import AppContext from "./contexts/Context";
 import { initGameState } from "./components/gameBoard/constants";
 import { reducer } from "./reducer/reducer";
 import { Client } from "@stomp/stompjs";
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { GetMe } from './api_caller/user';
 import './assert/style/responsitive.css'
+import { AddFriend, GetMe, RemoveFriendRequest } from './api_caller/user';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
+import Swal from 'sweetalert2';
 
 export const SocketContext = React.createContext();
 
 function App() {
   // socket context
   const [socket, setSocket] = useState(null);
-  const publicPages = ['/login', '/register']
+  const publicPages = ['/login', '/register', '/forget-password', '/reset-password']
 
   // app state context
   const [appState, dispatch] = useReducer(reducer, initGameState)
@@ -65,8 +68,61 @@ function App() {
       client.activate();
 
     }
-
   }, [])
+
+  useEffect(() => {
+    if (!publicPages.find(page => window.location.pathname.startsWith(page)) && socket && me) {
+      socket.subscribe(`/user/${me.id}/topic/friend/request`, (message) => {
+        const requestFriendMessage = JSON.parse(message.body)
+        Swal.fire({
+          title: "Lời mời kết bạn",
+          html: "Bạn nhận được lời mời kết bạn từ <b>" + requestFriendMessage.sender?.username + "</b>",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Chấp nhận',
+          denyButtonText: 'Từ chối',
+          cancelButtonText: 'Trở lại',
+          reverseButtons: true,
+          imageUrl: requestFriendMessage.sender?.avatar?.data,
+          imageWidth: 200,
+          imageHeight: 200,
+          imageAlt: "Avatar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            AddFriend(requestFriendMessage.id).then(res => {
+              if (res) {
+                toast.success('Kết bạn thành công')
+              }
+            })
+          } else if (result.isDenied) {
+            RemoveFriendRequest(requestFriendMessage.id).then(res => {
+              if (res) toast.success('Từ chối thành công! Đối phương không biết bạn đã từ chối họ!')
+            })
+          }
+        });
+      });
+// 
+      socket.subscribe(`/user/${me.id}/topic/friend/add`, (message) => {
+        console.log(message.body)
+        toast(`Người chơi ${message.body} đã đồng ý kết bạn!`)
+      });
+
+      // donate
+      socket.subscribe(`/user/${me.id}/topic/donate`, (message) => {
+        const donateMessage = JSON.parse(message.body)
+        console.log(donateMessage)
+        Swal.fire({
+          title: "Êi cho này nè!!!",
+          html: "Bạn nhận được " + donateMessage.sendProduct?.name + " từ <b>" + donateMessage.sender?.username + "</b>",
+          confirmButtonText: "OK",
+          // imageUrl: donateMessage.sender?.avatar?.data,
+          imageUrl: donateMessage.sendProduct?.urlImage,
+          imageWidth: 200,
+          imageHeight: 200,
+        })
+      })
+    }
+  }, [socket, me])
 
   //path authorize config
   useEffect(() => {
@@ -85,6 +141,8 @@ function App() {
     }
   }, [])
 
+
+
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
 
@@ -96,6 +154,8 @@ function App() {
               <Route path="/wait-room/:roomId" element={<WaitRoom userOnline={userOnline} me={me} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forget-password" element={<ForgetPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/create-character" element={<CreateCharacter />} />
               <Route path="/game/:roomId" element={<GamePage me={me} />} />
             </Routes>

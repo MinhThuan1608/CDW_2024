@@ -57,11 +57,24 @@ export async function JoinRoom(roomId, password) {
 
     const responseData = await response.json()
     if (response.ok) {
-        return responseData.data; //true if you can join this room and else
+        return responseData.code; //true if you can join this room and else
     }
     return false;
 }
+export async function QuickJoinRoom() {
+    const urlString = `http://localhost:8001/room/quickJoin`;
 
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        }
+    });
+
+    const responseData = await response.json()
+    return responseData.data; // room id or false
+}
 export async function GetRoomPass(roomId) {
     const urlString = `http://localhost:8001/room/${roomId}/get/pass`;
 
@@ -130,8 +143,8 @@ export async function GetRoomMeIn() {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         return responseData.data;
     }
     return null;

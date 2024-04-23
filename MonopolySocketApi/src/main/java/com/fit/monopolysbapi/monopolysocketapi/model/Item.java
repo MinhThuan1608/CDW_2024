@@ -20,7 +20,6 @@ public class Item{
     private Product product;
     private int quantity;
 
-
     @Override
     public String toString() {
         return "Item{" +

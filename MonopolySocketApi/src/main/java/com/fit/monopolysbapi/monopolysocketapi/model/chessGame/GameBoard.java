@@ -3,6 +3,8 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Arrays;
 import java.util.Timer;
@@ -31,7 +33,6 @@ public class GameBoard {
     private Date createAt;
     private List<Move> hints;
     private CheckScanner checkScanner = new CheckScanner(this);
-
     private CheckScaner checkScaner = new CheckScaner(this);
 
     @Override
@@ -63,7 +64,7 @@ public class GameBoard {
             public void run() {
                 if (timer > 0) {
                     timer--;
-                    System.out.println("Timer: " + timer);
+//                    System.out.println("Timer: " + timer);
                 } else {
                     if(turn == 'w'){
                         countdownResetCounterWhite++;

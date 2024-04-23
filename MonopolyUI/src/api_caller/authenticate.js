@@ -44,3 +44,42 @@ export async function RegisterAPI(email, password, confirmPassword) {
     }
     return responseData.message;
 }
+
+export async function SendForgetPassword(email) {
+    const urlString = "http://localhost:8001/authenticate/forget-pass?email=" + email;
+
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return false;
+}
+
+export async function SendResetPassword(password, confirmPassword, token) {
+    const urlString = "http://localhost:8001/authenticate/user/reset-pass";
+
+    const response = await fetch(urlString, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token,
+        },
+        body: JSON.stringify({
+            password: password,
+            confirmPassword: confirmPassword
+        }),
+    });
+
+    if (response.ok) {
+        const responseData = await response.json()
+        return responseData.data;
+    }
+    return false;
+}

@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faCircle, faEnvelope, faBell, faCoins, faGem, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faCircle, faBell, faCoins, faUserFriends, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { formatCurrency } from '../gameBoard/help';
 
 const HomeTop = (props) => {
 
     const handleOpenModalProfile = () => {
-        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal) {
+        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal && !props.showModalFriend) {
             props.setShowModalProfile(true);
         }
     };
@@ -14,6 +15,12 @@ const HomeTop = (props) => {
         sessionStorage.clear()
         window.location = '/login'
     };
+
+    const handleOpenFriendModal = () => {
+        if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal && !props.showModalProfile) {
+            props.setShowModalFriend(true);
+        }
+    }
 
     return (
         <div className="top-container">
@@ -24,30 +31,25 @@ const HomeTop = (props) => {
                     <p id="username-title">{props.me?.username}</p>
                 </div>
             </div>
+
             <div className="money-container">
                 <div className="coin-container">
-                    <i className="fa-solid fa-coins "></i>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
-                    <p className="money coin">{props.me?.money}</p>
+                    <p className="money coin">{props.me?.money ? formatCurrency(props.me?.money) : props.me?.money}</p>
                 </div>
-                {/* <div className="diamond-container">
-            <FontAwesomeIcon icon={faGem} className="gem-icon"/>
-                <p className="money gem">999,999</p>
-            </div> */}
             </div>
             <div className="setting-container">
                 <div className="icon-container">
-                    <FontAwesomeIcon icon={faSignOut} className="setting-icon" id="letter" onClick={handleLogOut}/>
+                    <FontAwesomeIcon icon={faSignOut} className="setting-icon" id="letter" onClick={handleLogOut} />
                 </div>
                 <div className="icon-container">
-                    <FontAwesomeIcon icon={faGear} className="setting-icon" id="setting" />
-                    <FontAwesomeIcon icon={faCircle} className="dot " id="setting-dot" />
+                    <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal} />
+                    <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length ? "dot show" : "dot"} id="letter-dot" />
                 </div>
                 <div className="icon-container">
                     <FontAwesomeIcon icon={faBell} className="setting-icon" id="notification" />
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="notification-dot" />
+                    <FontAwesomeIcon icon={faCircle} className="dot" id="notification-dot" />
                 </div>
-
             </div>
         </div>
     );

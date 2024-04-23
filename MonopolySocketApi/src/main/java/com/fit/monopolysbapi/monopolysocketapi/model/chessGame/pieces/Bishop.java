@@ -26,7 +26,6 @@ public class Bishop extends Piece {
     }
 
     public boolean moveCollidesWithPiece(int row, int col) {
-        //        up left
         if (this.col > col && this.row < row) {
             for (int i = 1; i < Math.abs(this.col - col); i++) {
                 if (board.getPiece((this.row + i), (this.col - i)) != null) {
@@ -34,7 +33,6 @@ public class Bishop extends Piece {
                 }
             }
         }
-//        up right
         if (this.col < col && this.row < row) {
             for (int i = 1; i < Math.abs(this.col - col); i++) {
                 if (board.getPiece((this.row + i), (this.col + i)) != null) {
@@ -42,7 +40,6 @@ public class Bishop extends Piece {
                 }
             }
         }
-        //       down left
         if (this.col > col && this.row > row) {
             for (int i = 1; i < Math.abs(this.col - col); i++) {
                 if (board.getPiece((this.row - i), (this.col - i)) != null) {
@@ -50,7 +47,6 @@ public class Bishop extends Piece {
                 }
             }
         }
-//       down right
         if (this.col < col && this.row > row) {
             for (int i = 1; i < Math.abs(this.col - col); i++) {
                 if (board.getPiece((this.row - i), (this.col + i)) != null) {
@@ -79,6 +75,7 @@ public class Bishop extends Piece {
                 move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();
                 if (!board.getCheckScanner().isKingChecked(move))
                     hints.add(move);
+                if (piece != null && piece.getColor() != this.getColor()) break;
             }
         }
         return hints;

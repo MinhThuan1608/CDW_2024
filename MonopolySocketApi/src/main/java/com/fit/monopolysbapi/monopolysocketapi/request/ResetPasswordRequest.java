@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BuyItemRequest {
-    private String productId;
-    private int amount;
+public class ResetPasswordRequest {
+    private String password;
+    private String confirmPassword;
 }

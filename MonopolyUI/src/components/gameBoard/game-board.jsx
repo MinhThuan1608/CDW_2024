@@ -22,7 +22,7 @@ const GameBoard = (props) => {
     const [isSelected, setIsSelected] = useState('')
     const [hints, setHints] = useState([])
     const [justMoving, setJustMoving] = useState([])
-    
+
     const me = JSON.parse(sessionStorage.getItem('user'))
 
     const getClassName = (i, j) => {
@@ -77,11 +77,19 @@ const GameBoard = (props) => {
                         }, 10000)
                         break
                     case 'MOVE':
-                        newPosition = messResponse.pieces
+                        newPosition = props.listUsers[0]?.id === props.me?.id ? messResponse.pieces : messResponse.pieces.reverse()
                         turn = messResponse.turn
                         if (newPosition) {
                             dispatch(makeNewMove({ newPosition, turn }))
-                            setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
+                            if (props.listUsers[0]?.id === props.me?.id) {
+                                setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
+                                console.log([messResponse.move?.newRow, messResponse.move?.newCol])
+                            }
+                            else {
+                                setJustMoving([7 - messResponse.move?.newRow, messResponse.move?.newCol])
+                                console.log([7 - messResponse.move?.newRow, messResponse.move?.newCol])
+
+                            }
                             props.setSeconds(messResponse.timer)
                         }
                         break
@@ -112,7 +120,7 @@ const GameBoard = (props) => {
                         else {
                             window.location = '/';
                         }
-                      
+
                         break
                     case 'MESSAGE':
                         props.setListMessageInGame(prevlistMessageInGame => [messResponse, ...prevlistMessageInGame])
@@ -150,7 +158,8 @@ const GameBoard = (props) => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose} hints={hints} justMoving={justMoving} listUsers={props.listUsers} />
+            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose}
+                hints={hints} justMoving={justMoving} listUsers={props.listUsers} me={props.me} />
 
             {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} setCompletePromotionChoose={setCompletePromotionChoose} />)}
             <Files files={files} />

@@ -26,6 +26,7 @@ const WaitRoomCenter = (props) => {
                 messageType: 'LEAVE'
             })
         });
+        console.log('u click out room')
         window.location = '/'
     }
     return (

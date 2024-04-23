@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GameChat from '../components/gameBoard/game-chat';
 import VictoryModal from '../components/gameBoard/VictoryModal';
 
-const GamePage = () => {
+const GamePage = (props) => {
     const { socket, setSocket } = useContext(SocketContext);
     const { appState, dispatch } = useAppContext();
     const { roomId } = useParams("roomId");

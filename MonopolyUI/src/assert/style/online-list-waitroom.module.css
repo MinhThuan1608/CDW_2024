@@ -1,0 +1,41 @@
+.tabsContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow: hidden;
+    background-color: #7a756f;
+    border-radius: 15px 15px 0 0;
+}
+
+.tab{
+    background-color: #7a756f;
+    width: 50%;
+    padding-bottom: 5px;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+}
+
+.tab.active{
+    background-color: #eadacb;
+}
+
+.tab:hover{
+    text-shadow: 0 0 5px white;
+}
+
+.userCardLeft{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.inviteContainer{
+    position: unset;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.userCard{
+    justify-content: space-between;
+}

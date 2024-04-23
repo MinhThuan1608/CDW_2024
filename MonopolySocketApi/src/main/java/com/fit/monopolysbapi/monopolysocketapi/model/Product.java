@@ -20,6 +20,7 @@ public class Product {
     private boolean isActive;
     private boolean saleAble;
     private boolean useAble;
+    private boolean donateAble;
 
     @Override
     public String toString() {

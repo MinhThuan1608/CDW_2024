@@ -7,7 +7,8 @@ import { useState } from 'react';
 import { SocketContext } from '../App';
 import Swal from 'sweetalert2';
 import { GetRoomMeIn, JoinRoom } from '../api_caller/room';
-import { GetMe } from '../api_caller/user';
+import { GetFriendRequest, GetMe } from '../api_caller/user';
+import { toast } from 'react-toastify';
 
 
 const HomePage = (props) => {
@@ -16,6 +17,9 @@ const HomePage = (props) => {
   const [showModalBag, setShowModalBag] = useState(false);
   const [showModalProfile, setShowModalProfile] = useState(false);
   const [showModalShop, setShowModalShop] = useState(false);
+  const [showModalFriend, setShowModalFriend] = useState(false);
+  const [friendRequests, setFriendRequests] = useState([])
+  const [listItem, setListItem] = useState([]);
 
   const { socket } = useContext(SocketContext)
 
@@ -42,9 +46,20 @@ const HomePage = (props) => {
             }).then((result) => {
               if (result.isConfirmed) {
                 JoinRoom(inviteMessage.roomId, inviteMessage.roomPass).then(result => {
-                  if (result) {
+                  if (result === 200) {
                     window.location = `/wait-room/${inviteMessage.roomId}`
-                  } else Swal.fire("Có lỗi xảy ra!", "Thông cảm xíu nhaaa", "error");
+                  } else if (result === 405) {
+                    toast.warn('Bạn chưa xác thực mail nên không thể tham gia!')
+                    socket.publish({
+                      destination: '/app/room/invite',
+                      body: JSON.stringify({
+                        receiverId: inviteMessage.sender.id,
+                        inviteMessageType: "NOT_CONFIRM_MAIL",
+                      })
+                    });
+                  } else {
+                    toast.error('Có lỗi xảy ra, thông cảm xíu nhaa!')
+                  }
                 })
               } else if (result.isDenied) {
                 socket.publish({
@@ -64,6 +79,11 @@ const HomePage = (props) => {
     }
   }, [socket, props.me])
 
+
+  useEffect(() => {
+    GetFriendRequest().then(res => setFriendRequests(res))
+  }, [])
+
   return (
     <div className='home-container'>
       <HomeTop
@@ -72,7 +92,8 @@ const HomePage = (props) => {
         showModal={showModal}
         showModalCreateRoom={showModalCreateRoom}
         showModalBag={showModalBag}
-        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />
+        showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
+        friendRequests={friendRequests} showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend} />
       <HomeMiddle
         me={props.me}
         setMe={props.setMe}
@@ -80,12 +101,18 @@ const HomePage = (props) => {
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile}
-        showModalShop={showModalShop} setShowModalShop={setShowModalShop} />
+        showModalShop={showModalShop} setShowModalShop={setShowModalShop}
+        showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
+        friendRequests={friendRequests} setFriendRequests={setFriendRequests}
+        listItem={listItem} setListItem={setListItem} />
       <HomeBottom
         showModal={showModal} setShowModal={setShowModal}
         showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom}
         showModalBag={showModalBag} setShowModalBag={setShowModalBag}
         showModalShop={showModalShop} setShowModalShop={setShowModalShop}
+        friendRequests={friendRequests} setShowModalFriend={setShowModalFriend}
+        showModalFriend={showModalFriend} socket={socket} me={props.me}
+        listItem={listItem} setListItem={setListItem}
       />
     </div>
   );

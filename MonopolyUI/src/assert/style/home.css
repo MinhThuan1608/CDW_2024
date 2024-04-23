@@ -13,12 +13,11 @@
     justify-content: space-between;
     background-color: rgba(73, 16, 139, 0.3);
     border-radius: 10vh;
-
+    overflow: hidden;
 }
 
 .info-container {
     display: flex;
-    justify-content: space-around;
     align-items: center;
 }
 
@@ -46,18 +45,16 @@
 #username-title {
     color: #F3F8FF;
     font-size: 20px;
-    margin: 0 8px;
+    margin: 0 12px;
 }
 
 .money-container {
     display: flex;
     align-items: center;
-    background-color: #b484f4;
-    padding: 0 20px;
-    border-radius: 10px;
-    width: 20%;
-    min-width: max-content;
     justify-content: center;
+    background-color: #b484f4;
+    /* padding: 0 20px; */
+    border-radius: 10px;
 }
 
 .money-container>div {
@@ -89,7 +86,6 @@
 .setting-container {
     display: flex;
     flex-direction: row-reverse;
-    height: 100%;
     justify-content: space-between;
     align-items: center;
 }
@@ -118,7 +114,7 @@
 
 .setting-icon {
     color: #F3F8FF;
-    margin: auto 10px;
+    margin: auto;
     cursor: pointer;
     font-size: 28px;
 }
@@ -190,9 +186,6 @@
 
 }
 
-#create-room-button {
-    background-color: #7E30E1;
-}
 
 #return-room-button {
     background-color: #5f30e1;
@@ -511,6 +504,7 @@
     border-left: 2px solid;
     margin-left: 12px;
     width: 70%;
+   
 }
 .history-match::-webkit-scrollbar {
     width: 8px;
@@ -530,6 +524,7 @@
     margin-left: 12px;
     height: 300px;
     overflow: auto;
+    position: relative;
 }
 
 .editAvt {
@@ -630,7 +625,7 @@
 /* history match */
 .match {
     background-color: #444444;
-   color: #F3F8FF;
+    color: #F3F8FF;
     border-radius: 5px;
     padding: 4px;
     margin: 8px;
@@ -670,3 +665,46 @@ margin: 0;
 .icon-lose {
     color: #B22222;
 }
+
+
+/* donate div */
+.gift-list-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+ 
+  }
+  
+  .donate-number {
+    color: #41b06e;
+    font-size: 18px;
+  }
+  
+  .friend-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .friend-list li {
+    cursor: pointer;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .friend-list li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .friend-list li.selected {
+    background-color: #41b06e;
+    color: white;
+  }
+  
+  .selected-friend-info {
+    margin-top: 10px;
+  }
+  

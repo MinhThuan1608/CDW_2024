@@ -12,7 +12,6 @@ import Loader from '../loader/loader';
 
 
 const EditUserProfileModal = (props) => {
-    // const user = JSON.parse(sessionStorage.getItem('user'))
     const errorMessageText = document.querySelector('.error-message')
 
     const [listMatch, setListMatch] = useState([]);
@@ -91,6 +90,7 @@ const EditUserProfileModal = (props) => {
         }
     }
     const changeAvt = async () => {
+        setLoading(true)
         if (avatar.data !== '') {
             const response = await EditProfileAvatar(props.me.username, avatar.data);
             if (response.data.id) {
@@ -108,6 +108,7 @@ const EditUserProfileModal = (props) => {
             setErrorMessage("Chưa tải ảnh lên!")
             errorMessageText.style.display = 'block';
         }
+        setLoading(false)
 
     }
 
@@ -134,6 +135,7 @@ const EditUserProfileModal = (props) => {
 
     }
     useEffect(() => {
+        setLoading(true)
         const getMatches = async () => {
             const matches = await GetMatches(props.me.id);
             if (matches) {
@@ -141,6 +143,7 @@ const EditUserProfileModal = (props) => {
             }
         }
         getMatches();
+        setLoading(false)
 
     }, [])
 
@@ -161,8 +164,10 @@ const EditUserProfileModal = (props) => {
         <>
             <div
                 className="modal"
-                style={{ display: 'block', position: 'initial', height: 'auto',transition: 'top 0.5s ease',
-                animation: 'bounceIn 0.5s ease forwards' }}
+                style={{
+                    display: 'block', position: 'initial', height: 'auto', transition: 'top 0.5s ease',
+                    animation: 'bounceIn 0.5s ease forwards'
+                }}
             >
                 {props.showModalProfile && (
                     <Modal.Dialog className='modal-profile'>
@@ -207,7 +212,7 @@ const EditUserProfileModal = (props) => {
                                 </div>
                             </div>
                             <div className="profile-right-contain">
-                                <p className='title-history-match'> Lịch sử trận đấu </p>
+                                <p className='title-history-match'> Lịch sử trận đấu - {listMatch.length} trận </p>
                                 <div className="history-match">
                                     {listMatch.map((match, index) => (
                                         <div className={`match ${props.me.id == match.winner.id ? `win` : `lose`}`} key={index}>
@@ -248,22 +253,16 @@ const EditUserProfileModal = (props) => {
                                                 <p>{formatSecondsToHHMMSS(match.totalTime)}</p>
                                             </div>
                                         </div>
+
                                     ))}
 
                                 </div>
-
-                                {/* <div className="upload-container-profile">
-                                <button className='upload-avatar-button' onClick={handleUploadClick}>+ Tải ảnh lên</button>
-                                <input type="file" name="avatarFile" accept="image/*" hidden id="input-avatar-file" onChange={handleImgUploaded} />
-                            </div> */}
-
-                                {/* <Button className='createBtn' onClick={changeAvt}>Xác nhận</Button> */}
                             </div>
                         </Modal.Body>
                     </Modal.Dialog>
                 )}
             </div>
-            <Loader isLoading={isLoading} />
+            {isLoading && <Loader isLoading={isLoading} />}
         </>
     );
 }

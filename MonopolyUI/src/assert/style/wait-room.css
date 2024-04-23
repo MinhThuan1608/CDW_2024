@@ -21,21 +21,24 @@
 }
 
 .top-name-user {
-    text-transform: uppercase;
     background-color: #8aa905;
-    color: #ffffff;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    padding: 8px ;
+    text-transform: uppercase;
     text-align: right;
-    margin-bottom: 0;
-    height: fit-content;
+    padding: 12px 12px 12px 85px;
+    color: #ffffff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
+    margin-left: 61px;
 }
 
 .img-frame {
     position: absolute;
-    top: -5px;
-    left: 18px;
+    top: -8px;
+    left: -2px;
     border: #ffffff 3px solid;
     width: 100px;
     height: 100px;
@@ -337,13 +340,13 @@
     display: flex;
     flex-direction: column;
     margin: 4px 0;
-    align-items: flex-start; 
-   
+    align-items: flex-start;
+
 }
 
 .messageOwner {
     justify-content: flex-end;
-    align-items: flex-end; 
+    align-items: flex-end;
 }
 
 .messageBlock {
@@ -376,8 +379,9 @@
     align-items: center;
     padding: 0 4px;
     max-width: 200px;
-    word-wrap: break-word; /* Xuống dòng khi vượt quá chiều rộng */
-    word-break: break-word; 
+    word-wrap: break-word;
+    /* Xuống dòng khi vượt quá chiều rộng */
+    word-break: break-word;
 
 }
 
@@ -460,25 +464,40 @@
     left: 46px;
     top: 49px;
 }
-.user-card-name-container{
+
+.user-card-name-container {
     display: flex;
     flex-direction: column;
 }
-.user-card-status{
+
+.user-card-status {
     font-size: 0.6rem;
 }
-.join{   
+
+.join {
     position: absolute;
-    background-color: #8aa905;
-    border-radius: 5px;
     right: 12px;
     top: 26px;
+}
+
+.join-button {
+    background-color: #8aa905;
+    border-radius: 5px;
     padding: 2px 4px;
     font-size: 14px;
     border-color: #8aa905;
+    margin-left: 10px;
 }
 
-.join:hover {
+.add-friend-button{
+    cursor: pointer;
+}
+
+.add-friend-button:hover{
+    filter: drop-shadow(2px 2px 5px #fff);
+}
+
+.join-button:hover {
     filter: drop-shadow(0 0 4px #F3F8FF);
     cursor: pointer;
 }
@@ -496,7 +515,7 @@
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
 }
-.set-time-progress-bar input[type="range"] {
+input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
     height: 10px;
@@ -508,7 +527,7 @@
     transition: opacity .2s;
   }
   
-  .set-time-progress-bar input[type="range"]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;

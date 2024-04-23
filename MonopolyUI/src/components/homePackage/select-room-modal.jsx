@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faUser, faUserAlt, faUserClock, faUsersLine } from '@fortawesome/free-solid-svg-icons';
 import { GetAllRoom, JoinRoom } from '../../api_caller/room';
 import { SocketContext } from '../../App';
+import { toast } from 'react-toastify';
 
 const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJoinRoomModal }) => {
     const [filteredRooms, setFilteredRooms] = useState([]); // State để lưu danh sách phòng sau khi lọc
@@ -48,7 +49,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     // hàm xử lý tham gia phòng k có pass
     const handleJoinRoom = async (room) => {
         if (room.numUser > 1) {
-            alert('Phòng full ời má!')
+            toast.warn('Phòng full ời má!')
             return;
         }
         if (room.havePass) {
@@ -57,11 +58,10 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
             return;
         }
         const res = await JoinRoom(room.id, "");
-        if (res) {
-            
+        if (res === 200) {
             window.location = `/wait-room/${room.id}`
-        } else {
-            alert('Error')
+        } else if (res === 405){
+            toast.warn('Chưa xác thực mail kìa!!!')
         }
     }
     // hàm xử lý tham gia phòng có pass
@@ -73,7 +73,9 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
             return;
         }
         const res = await JoinRoom(roomChosen.id, password);
-        if (res) {
+        if(res === 405) {
+            toast.warn("Chưa xác thực mail kìa!!!")
+        }else if (res === 200) {
             window.location = `/wait-room/${roomChosen.id}`
         } else {
             errorMessage.innerHTML = "Sai mật khẩu";
