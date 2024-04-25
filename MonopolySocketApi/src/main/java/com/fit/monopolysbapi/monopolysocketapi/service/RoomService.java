@@ -8,6 +8,7 @@ import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.RoomResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomService {
     private final Util util;
+    @Getter
     private List<Room> rooms = new ArrayList<>();
     private Queue<User> userQueue = new LinkedList<>();
 
@@ -37,12 +39,7 @@ public class RoomService {
 
     public Room getRoomById(String id) {
         Optional<Room> oRoom = rooms.stream().filter(r -> r.getId().equals(id)).findFirst();
-        if (oRoom.isEmpty()) return null;
-        return oRoom.get();
-    }
-
-    public List<Room> getRooms() {
-        return rooms;
+        return oRoom.orElse(null);
     }
 
     public boolean isRoomExistsByName(String name) {
@@ -67,8 +64,7 @@ public class RoomService {
 
     public Room getRoomUserIn(String userId) {
         Optional<Room> roomOptional = rooms.stream().filter(r -> r.getUsers().stream().anyMatch(u -> u.getId().equals(userId))).findFirst();
-        if (roomOptional.isPresent()) return roomOptional.get();
-        return null;
+        return roomOptional.orElse(null);
     }
 
     public void joinRoom(User user, String id) {

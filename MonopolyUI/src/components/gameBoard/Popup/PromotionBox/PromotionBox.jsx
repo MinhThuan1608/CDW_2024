@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useAppContext } from '../../../../contexts/Context'
 import './PromotionBox.css'
 

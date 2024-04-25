@@ -6,11 +6,13 @@
     .chat-div {
         display: none;
     }
+
     .top-name-user {
-        padding-left:25px;
+        padding-left: 25px;
         width: 74%;
         margin-left: 61px;
     }
+
     .img-frame {
         top: -5px;
         left: 4px;
@@ -29,7 +31,7 @@
 
     /* game-play */
     .turn-player-mobile {
-        display: flex;
+        display: block;
     }
 }
 
@@ -42,12 +44,14 @@
     .chat-div {
         display: none;
     }
+
     .top-name-user {
         padding-left: 65px;
         padding-right: 4px;
         width: 100%;
         margin-left: 0;
     }
+
     .img-frame {
         top: -5px;
         left: 4px;
@@ -62,6 +66,10 @@
     .btn-play-game {
         padding: 8px 12px;
         font-size: 14px;
+    }
+    .icon-mobile-online,
+    .icon-mobile-chat {
+        display: block;
     }
 
     /* home */
@@ -78,13 +86,14 @@
     .money {
         font-size: 16px;
     }
-    #username-title{
+
+    #username-title {
         display: none;
     }
-   
+
     /* game-play */
     .turn-player-mobile {
-        display: flex;
+        display: block;
     }
 
     /* create-character && login && register */
@@ -99,25 +108,28 @@
     .form-container {
         border: none;
     }
-    .input-username-container{
+
+    .input-username-container {
         min-width: 250px;
     }
-    .choose-avatar-title{
+
+    .choose-avatar-title {
         font-size: 14px;
     }
-    .choose-avatar-scroller{
+
+    .choose-avatar-scroller {
         max-height: 200px;
     }
-    #upload-avatar-button, #confirm{
+
+    #upload-avatar-button,
+    #confirm {
         font-size: 14px;
     }
-    #confirm{
+
+    #confirm {
         padding: 8px;
     }
 }
+
 /* Laptop */
-@media only screen and (min-width: 1025px) {
- 
-
-
-}
+@media only screen and (min-width: 1025px) {}

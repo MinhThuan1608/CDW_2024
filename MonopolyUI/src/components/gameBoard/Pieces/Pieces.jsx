@@ -9,12 +9,11 @@ import { clearCandidates, initGameBoard, makeNewMove } from "../../../reducer/ac
 let movePromotion = {}
 const Piceces = (props) => {
 
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const ref = useRef()
     const { appState, dispatch } = useAppContext()
-   
+
     const currentPosition = appState.position[appState.position.length - 1]
-    // let currentPosition = [];
 
 
     const calculateCoords = e => {
@@ -37,12 +36,18 @@ const Piceces = (props) => {
 
             if ((p === 'wp' || p === 'bp') && x === 7) {
                 appState.isPromotion = true;
-                movePromotion = {
-                    oldRow: Number(rank),
-                    oldCol: Number(file),
-                    newRow: x,
-                    newCol: y
-                }
+                movePromotion = props.listUsers[0]?.id === props.me?.id ?
+                    {
+                        oldRow: Number(rank),
+                        oldCol: Number(file),
+                        newRow: x,
+                        newCol: y
+                    } : {
+                        oldRow: 7 - Number(rank),
+                        oldCol: Number(file),
+                        newRow: 7 - x,
+                        newCol: y
+                    }
                 console.log(movePromotion)
             } else {
                 newPosition[Number(rank)][Number(file)] = ''
@@ -94,17 +99,10 @@ const Piceces = (props) => {
                 })
             });
             props.setCompletePromotionChoose(false)
+            props.setIsSelected('')
         }
     }, [props.completePromotionChoose])
-    // useEffect(() => {
-    //     // console.log(props.me)
-    //     // console.log(props.listUsers)
-    //     const position = props.me?.id === props.listUsers[0]?.id ? [createPositionWhite()] : [createPositionBlack()]
-    //     // console.log(position)
-    //     dispatch(initGameBoard({ position }))
-    //     currentPosition = appState.position[appState.position.length - 1]
-    //     console.log(appState.position)
-    // }, [])
+
 
     return <div
         className="pieces"

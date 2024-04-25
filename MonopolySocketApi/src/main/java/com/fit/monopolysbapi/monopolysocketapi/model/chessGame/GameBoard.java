@@ -33,7 +33,7 @@ public class GameBoard {
     private Date createAt;
     private List<Move> hints;
     private CheckScanner checkScanner = new CheckScanner(this);
-    private CheckScaner checkScaner = new CheckScaner(this);
+//    private CheckScaner checkScaner = new CheckScaner(this);
 
     @Override
     public String toString() {
@@ -41,7 +41,7 @@ public class GameBoard {
                 "pieces=" + Arrays.toString(pieces) +
                 ", enPassantTile=" + enPassantTile +
                 ", turn='" + turn + '\'' +
-                ", checkScaner=" + checkScaner +
+                ", checkScaner=" + checkScanner +
                 '}';
     }
 
@@ -64,7 +64,7 @@ public class GameBoard {
             public void run() {
                 if (timer > 0) {
                     timer--;
-//                    System.out.println("Timer: " + timer);
+                    System.out.println("Timer: " + timer);
                 } else {
                     if(turn == 'w'){
                         countdownResetCounterWhite++;
@@ -147,7 +147,9 @@ public class GameBoard {
         }
         return null;
     }
-
+    public boolean onlyKing() {
+        return this.getPieces().length == 2 && findKing(true) != null && findKing(false) != null;
+    }
     public void makeMove(Move move, String namePromotion) {
         if (move.piece.getName().substring(1).equals("p")) {
             movePawn(move, namePromotion);
@@ -250,6 +252,7 @@ public class GameBoard {
         return this.hints.isEmpty();
     }
 
+
     public List<Move> getNextStepHints(char nextStepColor) {
         List<Move> res = new ArrayList<>();
         for (Piece[] row : pieces) {
@@ -258,6 +261,7 @@ public class GameBoard {
                     List<Move> hints = piece.getMoveHint();
                     res.addAll(hints);
                 }
+
             }
         }
         return res;

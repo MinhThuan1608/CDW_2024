@@ -99,7 +99,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
                 <Modal.Dialog className={showJoinRoomModal ? 'd-none' : ''}>
                     <Modal.Header>
                         <Modal.Title>Chọn Phòng</Modal.Title>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={handleCloseModal}></button>
+                        <button type="button" className="btn-close" onClick={handleCloseModal}></button>
                     </Modal.Header>
 
                     <Modal.Body>

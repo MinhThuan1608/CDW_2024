@@ -5,7 +5,7 @@ import { formatDate } from './help';
 import { SocketContext } from '../../App';
 
 const GameChat = (props) => {
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const [messageValue, setMessageValue] = useState('')
 
     const messRef = useRef()

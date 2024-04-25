@@ -41,12 +41,12 @@ const ModalShop = ({ me, showModalShop, setShowModalShop }) => {
         setBuyProduct(false)
     }
     useEffect(() => {
-        setLoading(true)
         const getProductShop = async () => {
             const products = await GetProduct();
             setListProduct(products)
-
+            
         }
+        setLoading(true)
         getProductShop();
         setLoading(false)
 

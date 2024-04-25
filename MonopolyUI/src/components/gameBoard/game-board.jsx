@@ -23,7 +23,7 @@ const GameBoard = (props) => {
     const files = Array(8).fill().map((x, i) => i + 1)
     const position = appState.position[appState.position.length - 1]
 
-    // const me = JSON.parse(sessionStorage.getItem('user'))
+
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -115,7 +115,7 @@ const GameBoard = (props) => {
                             props.setIsUserWin(messResponse.winnerId)
                             toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
                             setTimeout(() => {
-                                window.location = '/wait-room/'+roomId;
+                                window.location = '/wait-room/' + roomId;
                             }, 10000)
                         }
                         else {
@@ -147,6 +147,8 @@ const GameBoard = (props) => {
         }
     }, [socket, props.me]);
 
+
+
     return (
 
         <div className="board">
@@ -158,10 +160,11 @@ const GameBoard = (props) => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose}
+            <Piceces roomId={roomId} isSelected={isSelected} setIsSelected={setIsSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose}
                 hints={hints} justMoving={justMoving} listUsers={props.listUsers} me={props.me} />
 
-            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} setCompletePromotionChoose={setCompletePromotionChoose} />)}
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}
+                setCompletePromotionChoose={setCompletePromotionChoose} seconds={props.seconds} />)}
             <Files files={files} />
 
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import ChatSide from './wait-room-chat-side';
-import { faChess, faCrown, faPlus, faSignOut, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChair, faChess, faClose, faComments, faCrown, faPeopleGroup, faPlus, faSignOut, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import WaitRoomOnlineUser from './wait-room-online-list-user';
 import StartGameModal from './start-game-modal';
@@ -8,8 +8,9 @@ import { SocketContext } from '../../App';
 
 
 const WaitRoomCenter = (props) => {
-    const me = JSON.parse(sessionStorage.getItem('user'))
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
+    const [showChatDiv, setShowChatDiv] = useState(false);
+    const [showOnlDiv, setShowOnlDiv] = useState(false);
 
     const handleKickUser = () => {
         socket.publish({
@@ -33,6 +34,13 @@ const WaitRoomCenter = (props) => {
         <>
             <div className="center-part">
                 <WaitRoomOnlineUser userOnline={props.userOnline} socket={socket} roomId={props.roomId} roomPassword={props.roomPassword} me={props.me} />
+                {!showOnlDiv && <FontAwesomeIcon title='Ai đang online?' icon={faPeopleGroup} className='icon-mobile-online' onClick={() => setShowOnlDiv(true)} />}
+                {showOnlDiv && <div className='sidebar'>
+                    <FontAwesomeIcon icon={faClose} className='sidebar-icon btn-close' onClick={() => setShowOnlDiv(false)} />
+                    <WaitRoomOnlineUser className='online-div-mobile' userOnline={props.userOnline} socket={socket} roomId={props.roomId}
+                        roomPassword={props.roomPassword} me={props.me} />
+                </div>}
+
                 <div className="center-part-left">
 
                     {/* người chơi 1 */}
@@ -64,7 +72,13 @@ const WaitRoomCenter = (props) => {
 
                 </div>
                 <ChatSide socket={socket} roomId={props.roomId} listMessage={props.listMessage} />
-                {props.isShowStartGameModal && <StartGameModal isShowStartGameModal={props.isShowStartGameModal} setIsShowStartGameModal={props.setIsShowStartGameModal} roomId={props.roomId}/>}
+
+                {!showChatDiv && <FontAwesomeIcon title='Chat với nhau!' icon={faComments} className='icon-mobile-chat' onClick={() => setShowChatDiv(true)} />}
+                {showChatDiv && <div className='sidebar'>
+                    <FontAwesomeIcon icon={faClose} className='sidebar-icon btn-close' onClick={() => setShowChatDiv(false)} />
+                    <ChatSide className='chat-div-mobile' socket={socket} roomId={props.roomId} listMessage={props.listMessage} />
+                </div>}
+                {props.isShowStartGameModal && <StartGameModal isShowStartGameModal={props.isShowStartGameModal} setIsShowStartGameModal={props.setIsShowStartGameModal} roomId={props.roomId} />}
             </div>
         </>
     );

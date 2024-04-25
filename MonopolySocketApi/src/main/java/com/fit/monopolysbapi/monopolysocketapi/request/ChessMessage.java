@@ -20,6 +20,7 @@ public class ChessMessage {
     private Move move;
     private String[][] pieces;
     private boolean isWin;
+    private boolean promotionTime;
     private String namePromotion;
     private User sender;
     private String content;

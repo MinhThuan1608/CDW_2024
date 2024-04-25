@@ -81,8 +81,8 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
         window.location = '/game/' + roomMeIn.id
     }
     const handleQuickJoinRoom = () => {
-        setSearchRoomText('ĐANG TÌM...')
         if (me.confirmEmail && socket) {
+            setSearchRoomText('ĐANG TÌM...')
             socket.publish({
                 destination: '/app/room/quick-join',
                 body: ""
@@ -94,10 +94,11 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 window.location = '/wait-room/' + messResponse
 
             });
+            
         }else{
             toast.warn('Chưa xác thực mail kìa má!')
-
         } 
+        setQuickJoin(false)
     }
 
 

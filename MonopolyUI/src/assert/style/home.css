@@ -247,7 +247,7 @@
 .item-container {
     /* width: calc(24% - 2px); */
     height: auto;
-    border: 1px solid #2d2d2d;
+    border: 1px solid #8a43e7;
     cursor: pointer;
     position: relative;
     margin: 4px;
@@ -714,3 +714,10 @@ margin: 0;
     margin-top: 10px;
   }
   
+
+  /* hover close modal btn */
+.btn-close:hover {
+    /* background-color: red; */
+    background-color: #7E30E1;
+    
+}
