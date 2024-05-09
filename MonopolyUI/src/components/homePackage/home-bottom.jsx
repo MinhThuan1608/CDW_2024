@@ -4,41 +4,75 @@ import shopImg from '../../assert/images/icon/shops.png';
 import schoolBag from '../../assert/images/icon/school-bag.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import { GetRoomMeIn } from '../../api_caller/room';
+import { GetRoomMeIn, QuickJoinRoom } from '../../api_caller/room';
+import { toast } from 'react-toastify';
 
 
-const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag
-    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend }) => {
+const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag,
+    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, showModalSetting, me, listItem, setListItem }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
+    const [searchRoomText, setSearchRoomText] = useState('TÌM PHÒNG NHANH')
+    const [quickJoin, setQuickJoin] = useState(false)
+
 
     useEffect(() => {
         GetRoomMeIn().then(res => {
-            if (res) setRoomMeIn(res)
+            if (res) {
+                setRoomMeIn(res)
+                if (socket)
+                    var roomSubscribe = socket.subscribe('/topic/game/room/' + res.id, (message) => {
+                        const messResponse = JSON.parse(message.body);
+                        console.log(messResponse);
+                        switch (messResponse.messageType) {
+                            case 'JOIN':
+                                toast.warn("Có ai đó vừa vào phòng")
+                                break
+                            case 'LEAVE':
+                                toast.warn("Bạn cùng phòng của bạn không muốn chơi với bạn nữa :)))")
+                                break
+                            case 'KICK':
+                                toast.warn("Bạn đã bị đá ra khỏi phòng :))))")
+                                roomSubscribe.unsubscribe()
+                                setRoomMeIn(null)
+                                break
+                            case 'TIME_OUT':
+                                toast.warn("Phòng của bạn đã hết hạn")
+                                setRoomMeIn(null)
+                                break
+                            case 'MESSAGE':
+                                toast(`Bạn có tin nhắn mới từ ${messResponse.sender.username}: ${messResponse.content}`)
+                                break
+                            case 'START_GAME':
+                                window.location = '/game/' + res.id
+                                break
+                            default:
+                                break
+                        }
+                    });
+            }
         })
-    }, [])
-    // Hàm xử lý khi ấn vào ô chọn phòng
+    }, [socket, quickJoin])
+
     const handleOpenModal = () => {
-        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModal(true);
         }
     };
     const handleOpenModalCreateRoom = () => {
-        if (!showModal && !showModalBag && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalCreateRoom(true);
         }
     };
     const handleOpenModalBag = () => {
-        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModalBag(true);
         }
     };
     const handleOpenModalShop = () => {
-        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend) {
+        if (!showModal && !showModalCreateRoom && !showModalBag && !showModalFriend && !showModalSetting) {
             setShowModalShop(true);
         }
     };
-
-
     const handleReturnRoom = () => {
         window.location = '/wait-room/' + roomMeIn.id
     }
@@ -46,6 +80,27 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     const handleReturnGame = () => {
         window.location = '/game/' + roomMeIn.id
     }
+    const handleQuickJoinRoom = () => {
+        if (me.confirmEmail && socket) {
+            setSearchRoomText('ĐANG TÌM...')
+            socket.publish({
+                destination: '/app/room/quick-join',
+                body: ""
+            });
+            socket.subscribe('/topic/room/quick-join', (message) => {
+                const messResponse = message.body;
+                console.log(messResponse);
+                setQuickJoin(true)
+                window.location = '/wait-room/' + messResponse
+
+            });
+            
+        }else{
+            toast.warn('Chưa xác thực mail kìa má!')
+        } 
+        setQuickJoin(false)
+    }
+
 
     return (
         <div className="bottom-container">
@@ -58,19 +113,18 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
                     <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
                         onClick={handleOpenModalBag} />
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
+                    {listItem?.length > 0 && <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />}
                 </div>
-                <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
-                    <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
-                        onClick={handleOpenModalBag} />
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
-                </div>
+
             </div>
             <div className="action-button-container">
                 {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :
                     roomMeIn ? <button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button> :
-                        <><button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
-                            <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button></>}
+                        <>
+                            <button className="action-button" onClick={searchRoomText === 'ĐANG TÌM...' ? null : handleQuickJoinRoom}>{searchRoomText}</button>
+                            <button className="action-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
+                            <button className="action-button" onClick={handleOpenModal}>CHỌN PHÒNG</button>
+                        </>}
             </div>
 
 

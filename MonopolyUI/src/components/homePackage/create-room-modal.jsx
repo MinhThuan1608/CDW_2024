@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 import { CreateRoom } from '../../api_caller/room';
 import { SocketContext } from '../../App';
+import { toast } from 'react-toastify';
 
 
 const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {
@@ -25,13 +26,14 @@ const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {
         const room = await CreateRoom(roomName, password);
         if (room){
             window.location = `/wait-room/${room.id}`
-        } else alert('Error')
+        } else toast.warn('Chưa xác thực mail kìa!!!')
     }
 
     return (
         <div
             className="modal show"
-            style={{ display: 'block', position: 'initial', height: 'auto' }}
+            style={{ display: 'block', position: 'initial', height: 'auto',  transition: 'top 0.5s ease',
+            animation: 'bounceIn 0.5s ease forwards' }}
         >
             {showModalCreateRoom && (
                 <Modal.Dialog>

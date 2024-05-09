@@ -4,5 +4,6 @@ const actionsTypes = {
     'NEW_MOVE'  : 'NEW_MOVE',
     'SAVE_PIECE_OLD_NEW' : 'SAVE_PIECE_OLD_NEW',
     'SWAP_TURN':'SWAP_TURN',
+    "INIT_GAME":"INIT_GAME",
 } 
 export default actionsTypes

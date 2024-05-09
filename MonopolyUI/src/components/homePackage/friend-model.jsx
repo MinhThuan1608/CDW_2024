@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import { Modal, Form, FloatingLabel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Styles from '../../assert/style/friend-modal.module.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock, faUser, faUserAlt, faUserClock, faUsersLine } from '@fortawesome/free-solid-svg-icons';
-import { GetAllRoom, JoinRoom } from '../../api_caller/room';
-import { SocketContext } from '../../App';
-import { AddFriend, GetFriendRequest, GetFriends, RemoveFriend, RemoveFriendRequest, RequestAddFriend, SearchUser } from '../../api_caller/user';
+import { AddFriend, GetFriends, RemoveFriend, RemoveFriendRequest, RequestAddFriend, SearchUser } from '../../api_caller/user';
 import userAvt from '../../assert/images/avatar/meo.jpg';
-import { tab } from '@testing-library/user-event/dist/tab';
 import { toast } from 'react-toastify';
 
 

@@ -65,8 +65,10 @@ public class User implements UserDetails {
                 .email(getEmail())
                 .username(getUsername())
                 .avatar(getAvatar())
+                .money(getMoney())
                 .isNonLocked(isNonLocked())
                 .isConfirmEmail(isConfirmEmail())
+                .exp(getExp())
                 .build();
     }
 

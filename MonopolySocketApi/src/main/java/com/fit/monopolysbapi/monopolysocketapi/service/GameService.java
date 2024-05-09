@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +53,12 @@ public class GameService {
         userRepository.save(winner);
         userRepository.save(loser);
         save(winner, loser, startAt, endAt, totalTime);
+        room.getGameBoard().getCountdownTimer().cancel();
         room.setGameBoard(null);
         room.setPlaying(false);
         room.setCreateAt(new Date());
+    }
+    public List<Match> getAllMatchByUserId(String userId){
+        return matchRepository.findAllByWinnerIdOrLoserId(userId, userId);
     }
 }

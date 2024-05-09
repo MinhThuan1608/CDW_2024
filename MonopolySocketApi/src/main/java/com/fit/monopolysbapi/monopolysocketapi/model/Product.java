@@ -18,4 +18,15 @@ public class Product {
     private long price;
     private String urlImage;
     private boolean isActive;
+    private boolean saleAble;
+    private boolean useAble;
+    private boolean donateAble;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

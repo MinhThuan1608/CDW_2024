@@ -57,7 +57,7 @@ export async function JoinRoom(roomId, password) {
 
     const responseData = await response.json()
     if (response.ok) {
-        return responseData.data; //true if you can join this room and else
+        return responseData.code; //true if you can join this room and else
     }
     return false;
 }
@@ -73,8 +73,8 @@ export async function GetRoomPass(roomId) {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         if (responseData.data != null || responseData.data != "")
             return responseData.data; //true if you can join this room and else
         return false;
@@ -130,8 +130,8 @@ export async function GetRoomMeIn() {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         return responseData.data;
     }
     return null;

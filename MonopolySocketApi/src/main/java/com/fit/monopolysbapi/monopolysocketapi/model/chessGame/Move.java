@@ -43,7 +43,7 @@ public class Move {
                 ", oldCol=" + oldCol +
                 ", newRow=" + newRow +
                 ", newCol=" + newCol +
-                ", piece=" + piece.getName() +
+                ", piece=" + piece.getName()+
                 '}';
     }
 }

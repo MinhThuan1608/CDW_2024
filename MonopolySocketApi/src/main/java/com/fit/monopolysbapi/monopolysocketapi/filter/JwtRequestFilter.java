@@ -41,17 +41,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (requestToken==null && secWebsocketProtocol!=null){
             requestToken = request.getParameter("Authorization");
         }
-        String username = null;
+        String id = null;
         String jwtToken = null;
         if (requestToken != null && requestToken.startsWith("Bearer ")) {
             jwtToken = requestToken.substring(7);
-            username = jwtUtil.getUsernameFromToken(jwtToken);
+            id = jwtUtil.getIdFromToken(jwtToken);
         } else logger.warn("JWT does not begin with Bearer");
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userService.getUserByUsernameOrEmail(username).orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
+        if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            User user = userService.getUserById(id).orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
             if (user != null && jwtUtil.validateToken(jwtToken, user)) {
                 if (user.getUsername()==null) user.setUsername(user.getEmail());
-
+                System.out.println(user);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

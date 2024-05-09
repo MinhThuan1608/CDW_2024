@@ -1,10 +1,12 @@
-import { React, useEffect, useState } from 'react';
+import { React, useContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { faXmark, faGear, faCoins, faEyeSlash, faEye, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { SocketContext } from '../../App';
 
 
 const WaitRoom = (props) => {
+    const { socket, setSocket } = useContext(SocketContext);
     const [showPassword, setShowPassword] = useState(false);
     
 
@@ -16,7 +18,7 @@ const WaitRoom = (props) => {
     };
 
     const handleOutRoom = () => {
-        props.socket.publish({
+        socket.publish({
             destination: '/app/game/room/' + props.roomId,
             body: JSON.stringify({
                 messageType: 'LEAVE'
@@ -32,10 +34,6 @@ const WaitRoom = (props) => {
                 </div>
                 <p className="coins">
                     <span>{props.me.money}</span>
-                    <FontAwesomeIcon icon={faCoins} className="money-icon" />
-                </p>
-                <p className="coins" style={{opacity: 0}}>
-                    <span></span>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
                 </p>
 

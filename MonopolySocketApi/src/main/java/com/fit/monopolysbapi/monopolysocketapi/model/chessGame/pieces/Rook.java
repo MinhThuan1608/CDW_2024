@@ -77,6 +77,7 @@ public class Rook extends Piece {
                 move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();
                 if (!board.getCheckScanner().isKingChecked(move))
                     hints.add(move);
+                if (piece != null && piece.getColor() != this.getColor()) break;
             }
         }
         return hints;

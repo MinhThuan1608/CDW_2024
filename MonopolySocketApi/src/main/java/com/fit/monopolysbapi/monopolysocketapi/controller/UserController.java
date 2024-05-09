@@ -1,5 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.*;
 import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
 import com.fit.monopolysbapi.monopolysocketapi.model.FriendRequest;
 import com.fit.monopolysbapi.monopolysocketapi.model.Item;
@@ -8,6 +9,7 @@ import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.AvatarService;
+import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.FriendService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class UserController {
 
     private final UserService userService;
     private final AvatarService avatarService;
+    private final GameService gameService;
     private final FriendService friendService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -79,15 +82,16 @@ public class UserController {
 
     @PatchMapping("/edit/name")
     public ResponseEntity<?> editProfileName(@RequestBody InitUserRequest request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        if(!userService.haveChangeNameCard(user.getId()))
+            return ResponseEntity.ok(new AbstractResponse(405, "User have not change name card!!!", false));
         if (userService.isUsernameExist(request.getUsername()))
             return ResponseEntity.ok(new AbstractResponse(405, "This username have been used!!!", false));
-
-        User updatedUser = userService.changeName((User) authentication.getPrincipal(), request.getUsername());
+        User updatedUser = userService.changeName(user, request.getUsername());
         return ResponseEntity.ok().body(new AbstractResponse(200, "Username have been updated!", updatedUser.getUserResponse()));
 
 
     }
-
 
     @GetMapping("/me")
     public ResponseEntity<?> getUser(Authentication authentication) {
@@ -95,7 +99,7 @@ public class UserController {
         User user = userService.getUserById(userAuth.getId()).get();
         UserResponse userResponse = user.getUserResponse();
         userResponse.setMoney(user.getMoney());
-        return ResponseEntity.ok(new AbstractResponse(200, "Get infomation successfully!", userResponse));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get information successfully!", userResponse));
     }
 
     @GetMapping("/exists/{username}")
@@ -116,12 +120,11 @@ public class UserController {
         List<Item> itemList = userService.getListItem(id);
         return ResponseEntity.ok(new AbstractResponse(200, "Bag is here", itemList));
     }
+    @GetMapping("/match/{id}")
+    public ResponseEntity<?> getAllMatches(@PathVariable String id) {
+        List<Match> matches = gameService.getAllMatchByUserId(id);
+        return ResponseEntity.ok(new AbstractResponse(200, "Successfully", matches));
 
-    @GetMapping("/haveChangeNameCard/{id}")
-    public ResponseEntity<?> haveChangeNameCard(@PathVariable String id) {
-        if (userService.haveChangeNameCard(id))
-            return ResponseEntity.ok(new AbstractResponse(200, "Have Change Name Card", true));
-        return ResponseEntity.ok(new AbstractResponse(200, "Have Not Change Name Card", false));
     }
 
 
@@ -199,7 +202,7 @@ public class UserController {
     @GetMapping("/friend")
     public ResponseEntity<?> getFriends(Authentication authentication){
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(new AbstractResponse(200, "Get friend request successfully!", friendService.getAllFriendByUserId(user.getId())));
+        return ResponseEntity.ok(new AbstractResponse(200, "Get friends successfully!", friendService.getAllFriendByUserId(user.getId())));
     }
 
     @DeleteMapping ("/friend/remove/{friendId}")
@@ -218,7 +221,6 @@ public class UserController {
         if (userSearchOptional.isEmpty())
             return ResponseEntity.status(405).body(new AbstractResponse(405, "Username is wrong!", null));
         return ResponseEntity.ok(new AbstractResponse(200, "Get info successfully!", userSearchOptional.get().getUserResponse()));
-
     }
 
 }

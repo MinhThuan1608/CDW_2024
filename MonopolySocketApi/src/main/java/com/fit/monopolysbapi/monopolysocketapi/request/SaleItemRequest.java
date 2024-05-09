@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BuyItemRequest {
-    private String productId;
-    private int amount;
+public class SaleItemRequest {
+    private String itemId;
+    private int saleNumber;
 }

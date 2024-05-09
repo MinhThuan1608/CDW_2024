@@ -5,6 +5,8 @@
     --bg-color : #202020;
     --highlight : #28DF99;
     --check : #FEEC48;
+    --border-color : #8a43e7;
+    --close-btn-bgr: #7E30E1;
 }
 
 @media all and (max-width: 450px) {

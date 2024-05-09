@@ -7,31 +7,36 @@
     width: 90%;
     justify-content: space-around;
     align-items: center;
-    
+    background-color: rgb(201, 201, 201);
+    border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .tabsButton{
-    width: 33%;
+    width: 34%;
     margin-bottom: 0;
     cursor: pointer;
     text-align: center;
     padding: 0.5rem 1rem;
     background-color: rgb(201, 201, 201);
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: rgb(82, 82, 82);
 }
 
 .tabsButton.active{
-    border-radius: 0.5rem 0.5rem 0 0;
-    border: 2px solid black;
     border-bottom: none;
     background-color: white;
+    color: black;
 }
 
 .btnClose{
     margin-right: auto !important;
 }
 
+.btnClose:hover{
+    background-color: #7E30E1;
+}
+
 .modalBody{
-    border: 2px solid black;
     border-radius: 0 0 0.5rem 0.5rem;
     height: 60vh;
     overflow: auto;
@@ -75,12 +80,11 @@
     width: 100%;
     border-radius: 0.5rem;
     cursor: default;
-    border: 1px solid white;
+    margin: 4px 0;
+    border: 1px solid #8a43e7;
 }
 
-.friendCard:hover{
-    border: 1px solid gray;
-}
+
 
 .userCard{
     display: flex;

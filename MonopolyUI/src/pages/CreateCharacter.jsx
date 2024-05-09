@@ -37,8 +37,8 @@ const CreateCharacter = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const imageDataUrl = e.target.result;
+                console.log(imageDataUrl)
                 var imageObject = { data: imageDataUrl }
-                console.log(avt.data)
                 setAvt(imageObject);
                 setListImg(prevList => [...prevList, imageObject]);
             };

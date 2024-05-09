@@ -11,8 +11,7 @@ body {
   font-family: 'Rowdies';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  min-width: 400px;
+  min-width: 700px;
   background: radial-gradient(ellipse at center, #E26EE5, #49108B);
 }
 

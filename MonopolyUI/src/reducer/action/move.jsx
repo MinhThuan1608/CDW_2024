@@ -1,5 +1,12 @@
 import actionsTypes from "../actionsType"
 
+export const initGameBoard = ({position}) => {
+   
+    return {
+        type: actionsTypes.INIT_GAME,
+        payload: {position},
+    }
+} 
 export const makeNewMove = ({newPosition, turn}) => {
    
     return {

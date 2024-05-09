@@ -5,7 +5,7 @@ import { formatDate } from './help';
 import { SocketContext } from '../../App';
 
 const GameChat = (props) => {
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const [messageValue, setMessageValue] = useState('')
 
     const messRef = useRef()
@@ -35,7 +35,7 @@ const GameChat = (props) => {
 
 
     return (
-        <div className="chat-room-part">
+        <div className="chat-room-part" style={{width: '100%'}}>
             <p className="title-chat">chat</p>
             <div className="messageList force-overflow scrollbar"   >
                 {props.listMessageInGame.map((message, index) => (

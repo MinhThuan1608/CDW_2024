@@ -96,7 +96,7 @@ export async function EditProfileAvatar(username, avatar) {
     // const responseData = await response
     console.log(responseData)
     if (response.ok) {
-        return responseData.data;
+        return responseData;
     }
     return responseData.message;// init fail
 }
@@ -118,12 +118,9 @@ export async function ChangeUserName(username) {
     });
 
     const responseData = await response.json()
-    // const responseData = await response
     console.log(responseData)
-    if (response.ok) {
-        return responseData.data;
-    }
-    return responseData.message;// init fail
+
+    return responseData;// init fail
 }
 
 export async function GetBag(id) {
@@ -143,9 +140,8 @@ export async function GetBag(id) {
     }
     return responseData.message;
 }
-
-export async function HaveChangeNameCard(id) {
-    const urlString = `http://localhost:8001/user/haveChangeNameCard/${id}`;
+export async function GetMatches(id) {
+    const urlString = `http://localhost:8001/user/match/${id}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -159,7 +155,7 @@ export async function HaveChangeNameCard(id) {
     if (response.ok) {
         return responseData.data;
     }
-    return false;
+    return responseData.message;
 }
 
 export async function RequestAddFriend(userID) {

@@ -33,7 +33,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(Base64.getEncoder().encode(env.getProperty("jwt.key").getBytes()));
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getIdFromToken(String token) {
         final Claims claims = getAllClaimsFromToken(token);
         return claims.getSubject();
     }
@@ -52,7 +52,7 @@ public class JwtUtil {
         User user = (User) userDetails;
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", tokenType);
-        return Jwts.builder().setClaims(claims).setSubject(user.getUsername() != null ? user.getUsername() : user.getEmail())
+        return Jwts.builder().setClaims(claims).setSubject(user.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()
                         + (tokenType.equals(TokenType.AUTHENTICATE) ? JWT_TOKEN_VALIDITY : JWT_EMAIl_TOKEN_VALIDITY)))
@@ -61,8 +61,8 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         User user = (User) userDetails;
-        final String username = getUsernameFromToken(token);
-        return ((username.equals(user.getUsername()) || username.equals(user.getEmail())) && !isTokenExpired(token));
+        final String id = getIdFromToken(token);
+        return id.equals(user.getId()) && !isTokenExpired(token);
     }
 
     private Claims getAllClaimsFromToken(String token) {
