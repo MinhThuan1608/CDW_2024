@@ -1,7 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.util;
 
 import org.springframework.stereotype.Component;
-
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;

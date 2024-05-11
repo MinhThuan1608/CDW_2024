@@ -1,18 +1,13 @@
 package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.*;
-import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRepository;
-import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRequestRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.List;
-
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 

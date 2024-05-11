@@ -10,7 +10,6 @@ import com.fit.monopolysbapi.monopolysocketapi.response.FriendResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

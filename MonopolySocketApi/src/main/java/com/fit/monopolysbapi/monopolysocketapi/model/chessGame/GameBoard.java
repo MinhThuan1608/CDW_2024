@@ -3,9 +3,6 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,7 +30,6 @@ public class GameBoard {
     private Date createAt;
     private List<Move> hints;
     private CheckScanner checkScanner = new CheckScanner(this);
-    private CheckScaner checkScaner = new CheckScaner(this);
 
     @Override
     public String toString() {
@@ -41,7 +37,6 @@ public class GameBoard {
                 "pieces=" + Arrays.toString(pieces) +
                 ", enPassantTile=" + enPassantTile +
                 ", turn='" + turn + '\'' +
-                ", checkScaner=" + checkScaner +
                 '}';
     }
 

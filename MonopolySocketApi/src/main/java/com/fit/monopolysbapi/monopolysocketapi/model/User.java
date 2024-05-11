@@ -1,4 +1,5 @@
 package com.fit.monopolysbapi.monopolysocketapi.model;
+
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,8 +36,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role==null) role = Role.USER;
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        if (role == null) role = Role.USER;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -59,7 +60,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public UserResponse getUserResponse(){
+    public UserResponse getUserResponse() {
         return UserResponse.builder()
                 .id(getId())
                 .email(getEmail())
