@@ -29,8 +29,8 @@ export async function IsUsernameValid(username) {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         return responseData.data; //true if username can be use, false if username is exists
     }
     return false;
