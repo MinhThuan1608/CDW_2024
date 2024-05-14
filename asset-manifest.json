@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/chess/static/css/main.3869cf77.css",
+    "main.js": "/chess/static/js/main.17ec3e22.js",
+    "static/js/453.8592ab59.chunk.js": "/chess/static/js/453.8592ab59.chunk.js",
+    "static/media/meme-meo-khoc-2.png": "/chess/static/media/meme-meo-khoc-2.eafc823714285c6935b3.png",
+    "static/media/meo.jpg": "/chess/static/media/meo.4d8efaa73a0fb02d3150.jpg",
+    "static/media/win-cup.jpg": "/chess/static/media/win-cup.025cfba88969b08ffe8f.jpg",
+    "static/media/chess_move.mp3": "/chess/static/media/chess_move.8002da194bfe488a3023.mp3",
+    "static/media/dice.png": "/chess/static/media/dice.87f0e786ffebbc7f5d39.png",
+    "static/media/school-bag.png": "/chess/static/media/school-bag.eca9d1543a63cd210e24.png",
+    "static/media/meo-load.jpg": "/chess/static/media/meo-load.7d1400c99805f4badc08.jpg",
+    "static/media/shops.png": "/chess/static/media/shops.ac36915e7210e7230b99.png",
+    "index.html": "/chess/index.html",
+    "main.3869cf77.css.map": "/chess/static/css/main.3869cf77.css.map",
+    "main.17ec3e22.js.map": "/chess/static/js/main.17ec3e22.js.map",
+    "453.8592ab59.chunk.js.map": "/chess/static/js/453.8592ab59.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3869cf77.css",
+    "static/js/main.17ec3e22.js"
+  ]
+}
