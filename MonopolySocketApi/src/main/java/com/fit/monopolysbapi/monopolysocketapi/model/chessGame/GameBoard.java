@@ -3,12 +3,8 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,7 +15,7 @@ public class GameBoard {
     public static final int COL = 8;
     public static final int ROW = 8;
     public static final int TILE_SIZE = 25;
-    public static final int RESET_TURN = 60;
+    public int resetTime;
     private int enPassantTile = -1;
     private int timer;
     private Timer countdownTimer;
@@ -37,16 +33,19 @@ public class GameBoard {
                 "pieces=" + Arrays.toString(pieces) +
                 ", enPassantTile=" + enPassantTile +
                 ", turn='" + turn + '\'' +
+                ", checkScaner=" + checkScanner +
                 '}';
     }
 
-    public GameBoard() {
+    public GameBoard(int resetTime) {
         this.createAt = new Date();
         this.turn = 'w';
-        this.timer = RESET_TURN;
+        this.resetTime = resetTime;
+        this.timer = resetTime;
         initGame();
         startTimer();
     }
+
     public void startTimer() {
         if (countdownTimer != null) {
             countdownTimer.cancel();
@@ -58,24 +57,24 @@ public class GameBoard {
             public void run() {
                 if (timer > 0) {
                     timer--;
-//                    System.out.println("Timer: " + timer);
+                    System.out.println("Timer: " + timer);
                 } else {
-                    if(turn == 'w'){
+                    if (turn == 'w') {
                         countdownResetCounterWhite++;
-                    }else{
+                    } else {
                         countdownResetCounterBlack++;
                     }
                     justResetCounter = true;
                     if (countdownResetCounterWhite > 3) {
                         countdownTimer.cancel();
                         System.out.println("dden thang");
-                    } else  if (countdownResetCounterBlack > 3) {
+                    } else if (countdownResetCounterBlack > 3) {
                         countdownTimer.cancel();
                         System.out.println("trang thang");
-                    }else {
+                    } else {
                         turn = turn == 'w' ? 'b' : 'w';
                         hints = getNextStepHints(turn);
-                        timer = RESET_TURN;
+                        timer = resetTime;
                         System.out.println("Timer reset");
                         System.out.println(turn);
                     }
@@ -84,7 +83,6 @@ public class GameBoard {
             }
         }, 1000, 1000); // Giảm giá trị của timer mỗi giây (1000ms)
     }
-
 
 
     public void initGame() {
@@ -140,6 +138,10 @@ public class GameBoard {
             }
         }
         return null;
+    }
+
+    public boolean onlyKing() {
+        return this.getPieces().length == 2 && findKing(true) != null && findKing(false) != null;
     }
 
     public void makeMove(Move move, String namePromotion) {
@@ -201,9 +203,9 @@ public class GameBoard {
 
     private void promotionPawn(Move move, String name) {
         switch (name) {
-            case "q":
-                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
-                break;
+//            case "q":
+//                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
+//                break;
             case "n":
                 move.piece = new Knight(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
@@ -214,6 +216,7 @@ public class GameBoard {
                 move.piece = new Bishop(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
             default:
+                move.piece = new Queen(this, move.newRow, move.newCol, move.piece.isWhite);
                 break;
 
         }
@@ -243,6 +246,28 @@ public class GameBoard {
         return this.hints.isEmpty();
     }
 
+    public boolean notEnoughPieceToPlay(Move move) {
+        int bishopKnightCount = 0;
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COL; j++) {
+                if (bishopKnightCount > 1) return false;
+                if (i == move.getOldRow() && j == move.getOldCol()) continue;
+                char piece = pieces[i][j].getName().charAt(1);
+                if (i == move.getNewRow() && j == move.getNewCol()) piece = move.getPiece().getName().charAt(1);
+                switch (piece) {
+                    case 'k':
+                        break;
+                    case 'n', 'b':
+                        bishopKnightCount++;
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public List<Move> getNextStepHints(char nextStepColor) {
         List<Move> res = new ArrayList<>();
         for (Piece[] row : pieces) {
@@ -251,6 +276,7 @@ public class GameBoard {
                     List<Move> hints = piece.getMoveHint();
                     res.addAll(hints);
                 }
+
             }
         }
         return res;
@@ -265,7 +291,7 @@ public class GameBoard {
         return turn == 'w' ? 'b' : 'w';
     }
 
-    public List<Hint> getHintsResponse(){
+    public List<Hint> getHintsResponse() {
         return hints.stream().map(Move::toMoveResponse).toList();
     }
 

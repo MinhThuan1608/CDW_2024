@@ -6,7 +6,6 @@ const Piece = ({ rank, file, piece, hints, justMoving, listUsers, me }) => {
 
     const { appState, dispatch } = useAppContext()
     const { turn, position: currentPosition } = appState;
-
     const onDragStart = (e) => {
         e.dataTransfer.setData('text/plain', `${piece},${rank},${file}`)
         e.dataTransfer.effectAllowed = 'move'

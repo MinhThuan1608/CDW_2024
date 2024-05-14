@@ -18,6 +18,7 @@ public class King extends Piece {
         this.isWhite = isWhite;
         this.name = isWhite ? "wk" : "bk";
 
+//        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0,2}, {0,-2}};
     }
 
@@ -62,6 +63,7 @@ public class King extends Piece {
             x = row + direction[0];
             y = col + direction[1];
             if (x < 0 || x >= 8 || y < 0 || y >= 8) continue;
+            if (Math.abs(direction[1])==2 && !canCastle(x, y)) continue;
             piece = board.getPiece(x, y);
             if (piece != null && piece.getColor() == this.getColor()) continue;
             move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();

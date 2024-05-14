@@ -4,13 +4,16 @@ import shopImg from '../../assert/images/icon/shops.png';
 import schoolBag from '../../assert/images/icon/school-bag.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
-import { GetRoomMeIn } from '../../api_caller/room';
+import { GetRoomMeIn, QuickJoinRoom } from '../../api_caller/room';
 import { toast } from 'react-toastify';
 
 
-const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag
-    , setShowModalBag, showModalShop, setShowModalShop, showModalFriend, showModalSetting, socket, me }) => {
+const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom, showModalBag,
+    setShowModalBag, showModalShop, setShowModalShop, showModalFriend, socket, showModalSetting, me, listItem, setListItem }) => {
     const [roomMeIn, setRoomMeIn] = useState(null)
+    const [searchRoomText, setSearchRoomText] = useState('TÌM PHÒNG NHANH')
+    const [quickJoin, setQuickJoin] = useState(false)
+
 
     useEffect(() => {
         GetRoomMeIn().then(res => {
@@ -48,8 +51,8 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                     });
             }
         })
-    }, [socket])
-    // Hàm xử lý khi ấn vào ô chọn phòng
+    }, [socket, quickJoin])
+
     const handleOpenModal = () => {
         if (!showModalCreateRoom && !showModalBag && !showModalShop && !showModalFriend && !showModalSetting) {
             setShowModal(true);
@@ -70,8 +73,6 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
             setShowModalShop(true);
         }
     };
-
-
     const handleReturnRoom = () => {
         window.location = '/wait-room/' + roomMeIn.id
     }
@@ -79,6 +80,27 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     const handleReturnGame = () => {
         window.location = '/game/' + roomMeIn.id
     }
+    const handleQuickJoinRoom = () => {
+        if (me.confirmEmail && socket) {
+            setSearchRoomText('ĐANG TÌM...')
+            socket.publish({
+                destination: '/app/room/quick-join',
+                body: ""
+            });
+            socket.subscribe('/topic/room/quick-join', (message) => {
+                const messResponse = message.body;
+                console.log(messResponse);
+                setQuickJoin(true)
+                window.location = '/wait-room/' + messResponse
+
+            });
+            
+        }else{
+            toast.warn('Chưa xác thực mail kìa má!')
+        } 
+        setQuickJoin(false)
+    }
+
 
     return (
         <div className="bottom-container">
@@ -91,15 +113,18 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 <div className="shop-container" data-bs-toggle="tooltip" title="Túi đồ">
                     <img src={schoolBag} alt="bag" className="util-icon" id="bag-image"
                         onClick={handleOpenModalBag} />
-                    <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />
+                    {listItem?.length > 0 && <FontAwesomeIcon icon={faCircle} className="dot show" id="bag-dot" />}
                 </div>
-            
+
             </div>
             <div className="action-button-container">
                 {roomMeIn?.playing ? (<button className="action-button" id="return-room-button" onClick={handleReturnGame}>TRỞ LẠI GAME</button>) :
                     roomMeIn ? <button className="action-button" id="return-room-button" onClick={handleReturnRoom}>TRỞ LẠI PHÒNG</button> :
-                        <><button className="action-button" id="create-room-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
-                            <button className="action-button" id="choose-room-button" onClick={handleOpenModal}>CHỌN PHÒNG</button></>}
+                        <>
+                            <button className="action-button" onClick={searchRoomText === 'ĐANG TÌM...' ? null : handleQuickJoinRoom}>{searchRoomText}</button>
+                            <button className="action-button" onClick={handleOpenModalCreateRoom} >TẠO PHÒNG</button>
+                            <button className="action-button" onClick={handleOpenModal}>CHỌN PHÒNG</button>
+                        </>}
             </div>
 
 

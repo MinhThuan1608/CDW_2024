@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import chessMoveSound from '../../assert/sounds/chess_move.mp3'
 
 const GameBoard = (props) => {
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const { appState, dispatch } = useAppContext()
     const { roomId } = useParams("roomId");
     const [completePromotionChoose, setCompletePromotionChoose] = useState(false)
@@ -23,7 +23,7 @@ const GameBoard = (props) => {
     const files = Array(8).fill().map((x, i) => i + 1)
     const position = appState.position[appState.position.length - 1]
 
-    // const me = JSON.parse(sessionStorage.getItem('user'))
+
 
     const getClassName = (i, j) => {
         let c = 'tile'
@@ -39,7 +39,7 @@ const GameBoard = (props) => {
     }
 
     useEffect(() => {
-        if (socket && props.me?.id) {
+        if (socket && props.me?.id && props.listUsers.length !== 0) {
             socket.subscribe('/topic/game/chess/' + roomId, (message) => {
                 const messResponse = JSON.parse(message.body);
                 console.log(messResponse)
@@ -47,7 +47,8 @@ const GameBoard = (props) => {
                 setHints(messResponse.hints)
                 switch (messResponse.messageType) {
                     case 'WIN':
-                        newPosition = messResponse.pieces
+                        // newPosition = messResponse.pieces
+                        newPosition = props.listUsers[0]?.id === props.me?.id ? messResponse.pieces : messResponse.pieces.reverse()
                         turn = messResponse.turn
                         if (newPosition)
                             dispatch(makeNewMove({ newPosition, turn }))
@@ -86,16 +87,15 @@ const GameBoard = (props) => {
                                     setJustMoving([messResponse.move?.newRow, messResponse.move?.newCol])
                                 else
                                     setJustMoving([7 - messResponse.move?.newRow, messResponse.move?.newCol])
-                                PlaySound(chessMoveSound, true)
+                                // PlaySound(chessMoveSound, true)
 
                             }
 
                             props.setSeconds(messResponse.timer)
                         }
-                        PlaySound(chessMoveSound)
+                        // PlaySound(chessMoveSound)
                         break
                     case 'GIVE_UP':
-                        newPosition = messResponse.pieces
                         if (props.me?.id === messResponse.winnerId) {
                             toast('Chúc mừng, bạn đã chiến thắng <3, vì người chơi còn lại đã bỏ cuộc');
                             props.setWin(true)
@@ -103,7 +103,6 @@ const GameBoard = (props) => {
                         }
                         else {
                             toast('Tiếc ghê, bạn bỏ cuộc nên thua mất rồi... hichic');
-
                         }
                         toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
                         setTimeout(() => {
@@ -111,13 +110,12 @@ const GameBoard = (props) => {
                         }, 10000)
                         break
                     case 'EXIT':
-                        newPosition = messResponse.pieces
                         if (props.me?.id === messResponse.winnerId) {
                             props.setWin(true)
                             props.setIsUserWin(messResponse.winnerId)
                             toast('Bạn sẽ được chuyển về trang phòng chờ sau 10s');
                             setTimeout(() => {
-                                window.location = '/wait-room/'+roomId;
+                                window.location = '/wait-room/' + roomId;
                             }, 10000)
                         }
                         else {
@@ -149,6 +147,8 @@ const GameBoard = (props) => {
         }
     }, [socket, props.me]);
 
+
+
     return (
 
         <div className="board">
@@ -160,10 +160,11 @@ const GameBoard = (props) => {
                     )
                 )}
             </div>
-            <Piceces roomId={roomId} isSelected={isSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose}
+            <Piceces roomId={roomId} isSelected={isSelected} setIsSelected={setIsSelected} completePromotionChoose={completePromotionChoose} setCompletePromotionChoose={setCompletePromotionChoose}
                 hints={hints} justMoving={justMoving} listUsers={props.listUsers} me={props.me} />
 
-            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected} setCompletePromotionChoose={setCompletePromotionChoose} />)}
+            {appState.isPromotion && (<Popup isSelected={isSelected} setIsSelected={setIsSelected}
+                setCompletePromotionChoose={setCompletePromotionChoose} seconds={props.seconds} />)}
             <Files files={files} />
 
         </div>

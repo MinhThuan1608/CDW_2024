@@ -1,7 +1,8 @@
 import React from 'react';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear, faCircle, faEnvelope, faBell, faCoins, faUserFriends, faUser, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import {faGear, faCircle, faSignOut, faBell, faCoins, faUserFriends, faUser, faTrophy} from '@fortawesome/free-solid-svg-icons';
+import { formatCurrency } from '../gameBoard/help';
 
 const HomeTop = (props) => {
 
@@ -9,6 +10,10 @@ const HomeTop = (props) => {
         if (!props.showModalCreateRoom && !props.showModalBag && !props.showModal && !props.showModalFriend && !props.showModalSetting) {
             props.setShowModalProfile(true);
         }
+    };
+    const handleLogOut = () => {
+        sessionStorage.clear()
+        window.location = '/login'
     };
 
     const handleOpenFriendModal = () => {
@@ -35,7 +40,7 @@ const HomeTop = (props) => {
                 <div className="coin-container">
                     <i className="fa-solid fa-coins "></i>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
-                    <p className="money coin">{props.me?.money}</p>
+                    <p className="money coin">{props.me?.money ? formatCurrency(props.me?.money) : props.me?.money}</p>
                 </div>
                 <div className="coin-container">
                     <i className="fa-solid fa-coins "></i>
@@ -44,6 +49,10 @@ const HomeTop = (props) => {
                 </div>
             </div>
             <div className="setting-container">
+                <div className="icon-container">
+                    <FontAwesomeIcon icon={faSignOut} className="setting-icon" id="letter" onClick={handleLogOut} />
+                    <FontAwesomeIcon icon={faCircle} className="dot" id="setting-dot" />
+                </div>
                 <div className="icon-container">
                     <FontAwesomeIcon icon={faGear} className="setting-icon" id="setting" onClick={handleOpenSettingModal}/>
                     <FontAwesomeIcon icon={faCircle} className="dot" id="setting-dot" />

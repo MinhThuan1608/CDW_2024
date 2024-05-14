@@ -61,15 +61,19 @@ public class GameController {
                 if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn() == 'w') ||
                         (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn() == 'b')) {
                     Move move = chessMessage.getMove();
-                    move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
-                    move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
-                    System.out.println("move: " + move);
+                    if (move != null) {
+                        move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
+                        move.setCapture(gameBoard.getPiece(move.getNewRow(), move.getNewCol()));
+                        System.out.println("move: " + move);
+                    }
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
                         char nextTurn = gameBoard.getNextTurn();
                         boolean isEnemyChecked = gameBoard.isChecked(nextTurn);
                         boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(nextTurn);
-                        if (isEnemyHasNoStepToPlay && isEnemyChecked) {
+//                        boolean onlyKing = gameBoard.onlyKing();
+                        if ((isEnemyHasNoStepToPlay && isEnemyChecked)
+                                || (move.getCapture() != null && move.getCapture().getName().substring(1).equals("k"))) {
                             User loser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.WIN)
@@ -79,7 +83,7 @@ public class GameController {
                             simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
                             gameService.matchEnd(room, user, loser, true);
                             return;
-                        } else if (isEnemyHasNoStepToPlay) {
+                        } else if (isEnemyHasNoStepToPlay || gameBoard.notEnoughPieceToPlay(move)) {
                             User otherUser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.DRAW)
@@ -88,7 +92,7 @@ public class GameController {
                             gameService.matchEnd(room, user, otherUser, false);
                         } else {
                             gameBoard.setTurn(nextTurn);
-                            gameBoard.setTimer(GameBoard.RESET_TURN);
+                            gameBoard.setTimer(gameBoard.getResetTime());
                             gameBoard.startTimer();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.MOVE)
@@ -113,7 +117,7 @@ public class GameController {
                         .sender(user).build();
                 break;
             case GIVE_UP:
-                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                winner = user.getId().equals(room.getUsers().get(0).getId()) ? room.getUsers().get(1) : room.getUsers().get(0);
                 gameService.matchEnd(room, winner, user, true);
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.GIVE_UP)
@@ -122,7 +126,7 @@ public class GameController {
                         .build();
                 break;
             case EXIT:
-                winner = gameBoard.getTurn() == 'w' ? room.getUsers().get(1) : room.getUsers().get(0);
+                winner = user.getId().equals(room.getUsers().get(0).getId()) ? room.getUsers().get(1) : room.getUsers().get(0);
                 gameService.matchEnd(room, winner, user, true);
                 responseMessage = ChessMessage.builder()
                         .messageType(ChessMessage.ChessMessageType.EXIT)
@@ -159,8 +163,7 @@ public class GameController {
                                 .build());
 
                         gameService.matchEnd(roomService.getRooms().get(i), roomService.getRooms().get(i).getUsers().get(1), roomService.getRooms().get(i).getUsers().get(0), true);
-                    }
-                    else {
+                    } else {
                         simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomService.getRooms().get(i).getId(), ChessMessage.builder()
                                 .messageType(ChessMessage.ChessMessageType.TIME)
                                 .turn(roomService.getRooms().get(i).getGameBoard().getTurn())

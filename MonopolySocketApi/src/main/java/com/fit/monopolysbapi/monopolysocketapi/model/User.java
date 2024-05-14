@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -31,6 +32,8 @@ public class User implements UserDetails {
     private boolean isNonLocked;
     @Column(nullable = false, columnDefinition = "bigint default 1000")
     private long exp;
+    private Date lastLoginDate;
+    private Date createDate;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -66,6 +69,7 @@ public class User implements UserDetails {
                 .email(getEmail())
                 .username(getUsername())
                 .avatar(getAvatar())
+                .money(getMoney())
                 .isNonLocked(isNonLocked())
                 .isConfirmEmail(isConfirmEmail())
                 .exp(getExp())

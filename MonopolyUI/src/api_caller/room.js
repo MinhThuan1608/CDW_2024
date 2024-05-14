@@ -57,7 +57,7 @@ export async function JoinRoom(roomId, password) {
 
     const responseData = await response.json()
     if (response.ok) {
-        return responseData.data; //true if you can join this room and else
+        return responseData.code; //true if you can join this room and else
     }
     return false;
 }

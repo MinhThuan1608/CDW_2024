@@ -14,10 +14,11 @@ public class InviteMessage {
     private String receiverId;
     private String roomId;
     private String roomPass;
+    private String errorMessage;
     private InviteMessageType inviteMessageType;
 
     public enum InviteMessageType{
-        INVITE, DECLINE
+        INVITE, DECLINE, NOT_CONFIRM_MAIL
     }
 
     @Override

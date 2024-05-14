@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Styles from '../../assert/style/setting-modal.module.css'
-import { SettingContext } from '../../App';
 
 
 const SettingModal = (props) => {
@@ -28,7 +27,6 @@ const SettingModal = (props) => {
                 <Modal.Header className={Styles.modalHeader}>
                     <div className={Styles.tabsContainer}>
                         <p className={`${Styles.tabsButton} ${tabSelected === 1 ? Styles.active : ''}`} onClick={() => setTabSelected(1)}>Âm thanh</p>
-                        <p className={`${Styles.tabsButton} ${tabSelected === 2 ? Styles.active : ''}`} onClick={() => setTabSelected(2)}>Tài khoản</p>
                     </div>
                     <button type="button" className={`btn-close ${Styles.btnClose}`} data-bs-dismiss="modal" aria-label="Close" onClick={handleCloseModal}></button>
                 </Modal.Header>

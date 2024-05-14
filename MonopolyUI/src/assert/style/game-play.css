@@ -1,42 +1,50 @@
 @import './constant.css';
-.container-gameplay{
+
+.container-gameplay {
     display: flex;
     align-items: center;
     position: relative;
     justify-content: center;
     /* margin: 48px; */
 }
-.chat-div{
+
+.chat-div {
     background-color: #ffffff;
     height: max-content;
     border-radius: 15px;
     padding: 8px;
     margin-left: 32px;
 }
-.board{
+
+.board {
     display: grid;
     grid-template-columns: calc(.25* var(--tile-size)) calc(8* var(--tile-size));
     margin: 32px 0;
     position: relative;
 }
-.tiles{
+
+.tiles {
     display: grid;
     grid-template-columns: repeat(8, var(--tile-size));
     grid-template-rows: repeat(8, var(--tile-size));
-    width:calc(8 *var(--tile-size));
+    width: calc(8 *var(--tile-size));
 }
-.tile{
+
+.tile {
     padding: 12px;
     margin: 0;
     position: relative;
 }
-.tile--light{
+
+.tile--light {
     background-color: var(--light-tile);
 }
-.tile--dark{
+
+.tile--dark {
     background-color: var(--dark-tile);
 }
-.highlight::after{
+
+.highlight::after {
     content: "";
     display: block;
     position: absolute;
@@ -48,7 +56,8 @@
     background-color: var(--highlight);
     /* background-color: red; */
 }
-.attacking::after{
+
+.attacking::after {
     content: "";
     display: block;
     position: absolute;
@@ -61,16 +70,18 @@
     border: 4px solid var(--highlight);
     /* border: 4px solid red; */
 }
-.old-piece .new-piece{
+
+.old-piece .new-piece {
     background-color: #8aa905;
 }
 
 /* khung người chơi */
-.player-turn{
+.player-turn {
     display: flex;
     justify-content: space-between;
 }
-.control-game{
+
+.control-game {
     border-radius: 15px;
     border: solid 2px #ffffff;
     margin: 0;
@@ -81,22 +92,25 @@
     align-items: center;
     justify-content: space-around;
     position: relative;
-  
+
 }
-.img-avt{
+
+.img-avt {
     border-radius: 50%;
     border: var(--dark-tile) 3px solid;
     width: 50px;
     height: 50px;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-color: #6e19dc;
-   
+
 }
-.control-game.active{
+
+.control-game.active {
     background-color: var(--light-tile);
     border: 4px solid #8aa905;
 }
+
 .main-room-player.own {
     position: absolute;
     top: -20px;
@@ -107,22 +121,26 @@
     z-index: 1;
     transform: rotate(-27deg);
 }
-.name-player{
+
+.name-player {
     width: 85px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 20px;
 }
-.icon-chess-game{
+
+.icon-chess-game {
     font-size: 35px;
 }
-.turn-player{
-    text-align: center; 
+
+.turn-player {
+    text-align: center;
     margin: 0;
     display: flex;
     justify-content: space-around;
 }
+
 .countdown-timer {
     font-size: 18px;
     margin-top: 10px;
@@ -133,27 +151,26 @@
     color: green;
     font-weight: bold;
 }
-.icon-chess-white-win{
-    font-size: 80px;
-    filter: drop-shadow(0 0 4px #000);
-}
-.icon-chess-dark{
+
+.icon-chess-dark {
     font-size: 80px;
     filter: drop-shadow(0 0 4px #fff);
     /* background-color: #fff; */
 }
-.white-color{
+
+.white-color {
     color: #ffffff;
 }
 
 /* khung chưa các nút bấm */
-.control-btn{
+.control-btn {
     display: flex;
     justify-content: center;
     border-radius: 15px;
     margin-top: 12px;
 }
-.control-btn button{
+
+.control-btn button {
     border: none;
     padding: 8px 12px;
     border-radius: 3px;
@@ -163,46 +180,159 @@
 
 /* VictoryModal */
 
-.victory-modal {
+.victory {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
     background-color: rgba(35, 35, 23, 0.6);
+    z-index: 1000;
+    transition: top 0.5s ease;
+    animation: bounceIn 0.5s ease forwards;
+}
+
+.victory-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
     z-index: 1000;
 }
 
-.victory-img{
-    border: #ffffff 3px solid;
-    background-color: #6e19dc;
-    background-repeat: no-repeat;
-    background-size: contain;
-    border-radius: 10px;
-    height: 300px;
-    width: 300px;
-    margin: auto;
+.tilte-win {
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
-.tilte-win {
-    margin-top: 24px;
-    text-align: center;
-    font-size: 24px;
-}
-.btn-control{
-    display: flex;
-    justify-content: center;
-}
-.btn-yes, .btn-out {
-    text-align: center;
-    width: 20%;
-    border: none;
-    background-color: #6e19dc;
-    color: aliceblue;
-    border-radius: 5px;
+
+.icon-chess-game {
+    font-size: 48px;
+    margin: 0 10px;
+    background-color: #8aa905;
     padding: 8px;
-    margin: 24px;
+    border-radius: 4px;
+}
+
+.icon-chess-white {
+    color: #ffffff;
+
+}
+
+
+.victory-img {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    /* border-radius: 50%; */
+    margin: 20px auto;
+}
+
+
+
+.btn-yes:hover {
+    background-color: #2ecc71;
+    /* Màu xanh lá cây tối */
+}
+
+@keyframes fireworks {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(200px);
+        opacity: 0;
+    }
+}
+
+.firework {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ffd000;
+    /* Màu của pháo hoa */
+    /* border-radius: 50%; */
+    animation: fireworks 1.5s ease-out forwards;
+    z-index: 1000;
+}
+
+
+/* Animation */
+.animated {
+    animation-duration: 0.5s;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* mobile sibar fly */
+.turn-player-mobile {
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    font-size: 38px;
+    z-index: 1200;
+    color: #ffd000;
+    display: none;
+}
+
+.chat-div-mobile {
+    position: absolute;
+    background-color: #ffffff;
+    right: -100%;
+    top: 0;
+    bottom: 0;
+    padding: 12px 24px;
+    animation: slideFromRight 0.3s ease forwards;
+    
+}
+
+@keyframes slideFromRight {
+    from {
+        right: -100%;
+    }
+
+    to {
+        right: 0;
+    }
+}
+@keyframes slideFromLeft {
+    from {
+        right: 0;
+    }
+
+    to {
+        right: -100%;
+    }
+}
+
+.sidebar-icon {
+    cursor: pointer;
+}
+
+.sidebar-icon.btn-close {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.chat-div-mobile .chat-room-part {
+    display: block;
 }

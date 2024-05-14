@@ -9,10 +9,10 @@ import FriendModal from './friend-model';
 import SettingModal from './setting-modal';
 
 
-const HomeMiddle = ({ showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom,
-    showModalBag, setShowModalBag, showModalProfile, setShowModalProfile, showModalShop, setShowModalShop,
-    showModalFriend, setShowModalFriend, friendRequests, setFriendRequests, showModalSetting, setShowModalSetting, me }) => {
-
+const HomeMiddle = ({ me, setMe, showModal, setShowModal, showModalCreateRoom, setShowModalCreateRoom,
+    showModalBag, setShowModalBag, showModalProfile, setShowModalProfile, showModalShop,
+     setShowModalShop, showModalFriend, setShowModalFriend, friendRequests, setFriendRequests,
+     showModalSetting, setShowModalSetting , listItem, setListItem }) => {
 
     const [showJoinRoomModal, setShowJoinRoomModal] = useState(false);
 
@@ -23,17 +23,11 @@ const HomeMiddle = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
 
             {showModalFriend && (<FriendModal showModalFriend={showModalFriend} setShowModalFriend={setShowModalFriend}
                 friendRequests={friendRequests} setFriendRequests={setFriendRequests} me={me} />)}
-
-            {showModalSetting && (<SettingModal setShowModalSetting={setShowModalSetting} />)}
-
             {showModalCreateRoom && (<CreateRoomModal showModalCreateRoom={showModalCreateRoom} setShowModalCreateRoom={setShowModalCreateRoom} />)}
-
-            {showModalBag && (<ModalBag showModalBag={showModalBag} setShowModalBag={setShowModalBag} />)}
-
-            {showModalProfile && (<EditUserProfileModal showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />)}
-
-            {showModalShop && (<ModalShop showModalShop={showModalShop} setShowModalShop={setShowModalShop} />)}
-
+            {showModalBag && (<ModalBag me={me} setMe={setMe} showModalBag={showModalBag} setShowModalBag={setShowModalBag} listItem={listItem} setListItem={setListItem} />)}
+            {showModalProfile && (<EditUserProfileModal me={me} setMe={setMe} listItem={listItem} showModalProfile={showModalProfile} setShowModalProfile={setShowModalProfile} />)}
+            {showModalShop && (<ModalShop me={me} showModalShop={showModalShop} setShowModalShop={setShowModalShop} />)}
+            {showModalSetting && (<SettingModal setShowModalSetting={setShowModalSetting} />)}
         </div>
     );
 }

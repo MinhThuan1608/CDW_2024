@@ -1,4 +1,4 @@
-import { createPosition } from "./help";
+import {  createPosition } from "./help";
 
 
 export const initGameState = {

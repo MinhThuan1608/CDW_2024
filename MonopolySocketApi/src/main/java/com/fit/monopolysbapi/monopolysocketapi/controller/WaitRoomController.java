@@ -15,6 +15,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -42,6 +43,8 @@ public class WaitRoomController {
     @PostMapping("/room/create")
     public ResponseEntity<?> createRoom(@RequestBody CreateRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
+        if (!user.isConfirmEmail())
+            return ResponseEntity.ok(new AbstractResponse(405, "Not Confirm Your Email", null));
         RoomResponse newRoom = roomService.createRoom(request, user);
         System.out.println(newRoom);
         simpMessagingTemplate.convertAndSend("/topic/room/get-all", roomService.getRoomsResponse());
@@ -65,13 +68,16 @@ public class WaitRoomController {
     @PostMapping("/room/join")
     public ResponseEntity<?> joinRoom(@RequestBody JoinRoomRequest request, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
+        if (!user.isConfirmEmail())
+            return ResponseEntity.ok(new AbstractResponse(405, "Not Confirm Your Email", false));
         if (roomService.checkJoinRoom(request)) {
             roomService.joinRoom(user, request.getRoomId());
             simpMessagingTemplate.convertAndSend("/topic/room/get-all", roomService.getRoomsResponse());
             return ResponseEntity.ok(new AbstractResponse(200, "Join room successfully", true));
         }
-        return ResponseEntity.ok(new AbstractResponse(200, "Join room fail", false));
+        return ResponseEntity.ok(new AbstractResponse(201, "Join room fail", false));
     }
+
 
     @GetMapping("/room/{roomId}/get/pass")
     public ResponseEntity<?> getRoomPass(@PathVariable String roomId, Authentication authentication) {
@@ -92,6 +98,16 @@ public class WaitRoomController {
             return ResponseEntity.ok(new AbstractResponse(200, "Get user in room successfully", roomService.getUserInRoom(roomId)));
         }
         return ResponseEntity.ok(new AbstractResponse(200, "Get user in room fail", false));
+    }
+    @MessageMapping("/room/quick-join")
+    @SendTo("/topic/room/quick-join")
+    public String quickJoinRoom(Message message) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) headerAccessor.getHeader("simpUser");
+        User user = (User) token.getPrincipal();
+        String messageResponse = roomService.quickJoinRoom(user);
+        System.out.println(messageResponse);
+        return messageResponse;
     }
 
     @MessageMapping("/game/room/{roomId}")
@@ -131,7 +147,7 @@ public class WaitRoomController {
                             .users(room.getUsers())
                             .messageType(WaitRoomMessage.RoomMessageType.START_GAME)
                             .build();
-                    roomService.startGame(room);
+                    roomService.startGame(room, waitRoomMessage.getTimeOfTurn());
                 }
                 break;
             default:

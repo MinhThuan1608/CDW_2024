@@ -7,6 +7,8 @@ import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -53,6 +55,7 @@ public class UserService {
                 .isNonLocked(true)
                 .isConfirmEmail(false)
                 .role(Role.USER)
+                .createDate(new Date())
                 .build();
         userRepository.save(user);
         return user;
@@ -75,18 +78,31 @@ public class UserService {
 
     public User changeName(User user, String username) {
         user.setUsername(username);
+        updateChangeNameCard(user);
         return userRepository.save(user);
     }
+    public void updateChangeNameCard(User user) {
+        for (Item item : getListItem(user.getId())) {
+            if (item.getProduct().getId().equals("2")) {
+                if (item.getQuantity() > 1) {
+                    item.setQuantity(item.getQuantity() - 1);
+                    itemRepository.save(item);
+                } else {
+                    itemRepository.delete(item);
+                }
 
-    public List<Item> getListItem(String id) {
-        if (!userRepository.existsById(id)) return null;
+            }
+        }
+    }
+    public List<Item> getListItem(String id){
+        if(!userRepository.existsById(id)) return null;
         return itemRepository.findAllByUserId(id);
     }
 
     public boolean haveChangeNameCard(String id) {
         if (!userRepository.existsById(id)) return false;
-        System.out.println(itemRepository.findItemByProductId("3"));
-        return getListItem(id).contains(itemRepository.findItemByProductId("3"));
+        List<Item> itemList = itemRepository.findAllByProductIdAndUserId("2",id);
+        return !itemList.isEmpty();
     }
 
     private String getVerifyEmailURL(User user) throws NoSuchAlgorithmException {
@@ -128,7 +144,5 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
-
-
 
 }

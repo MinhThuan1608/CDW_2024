@@ -1,7 +1,7 @@
 
 export const getCharacter = file => String.fromCharCode(file + 96)
 export const createPosition = () => {
-
+    
     const position = new Array(8).fill('').map(x => new Array(8).fill(''))
     for (let i = 0; i < 8; i++) {
         position[6][i] = 'bp'
@@ -54,6 +54,47 @@ export const formatDate = (data) => {
     return `${hour < 10 ? '0'+hour : hour}:${minute < 10 ? '0'+minute : minute}`
 
 }
+export const formatDateAndTime = (data) => {
+
+    const dateObj = new Date(data);
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); 
+    const year = String(dateObj.getFullYear()); 
+
+    const formattedDateTime = `${hours}:${minutes} ${day}-${month}-${year}`;
+
+    return formattedDateTime;
+
+}
+export const formatSecondsToHHMMSS = (milliseconds) => {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(seconds).padStart(2, '0');
+
+  const formattedTime = `${formattedMinutes}:${formattedSeconds}`;
+
+  return formattedTime;
+}
 export const formatCurrency = (amount) => {
     return amount.toLocaleString('en-EN');
+}
+export const convertSecondsToMinutesAndSeconds = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+const adjectives = ['Red', 'Brave', 'Wise', 'Mighty', 'Swift', 'Gentle', 'Fierce'];
+const nouns = ['Dragon', 'Knight', 'Wizard', 'Sorcerer', 'Warrior', 'Archer', 'Thief'];
+export const generateRandomUsername = () => {
+    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+    const random = Math.floor(Math.random() * 100000);
+    var randomName = randomAdjective + randomNoun + random;
+    return randomName
 }

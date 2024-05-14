@@ -12,6 +12,7 @@ import { reducer } from "./reducer/reducer";
 import { Client } from "@stomp/stompjs";
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import './assert/style/responsitive.css'
 import { AddFriend, GetMe, RemoveFriendRequest } from './api_caller/user';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -30,9 +31,15 @@ export const PlaySound = (soundURL) => {
 }
 
 function App() {
+
   // socket context
   const [socket, setSocket] = useState(null);
   const publicPages = ['/login', '/register', '/forget-password', '/reset-password']
+
+
+
+  const [userOnline, setUserOnline] = useState([])
+  const [me, setMe] = useState({})
 
   // app state context
   const [appState, dispatch] = useReducer(reducer, initGameState)
@@ -41,8 +48,6 @@ function App() {
     dispatch
   }
 
-  const [userOnline, setUserOnline] = useState([])
-  const [me, setMe] = useState({})
 
   useEffect(() => {
     var accessToken = sessionStorage.getItem('access_token');
@@ -109,11 +114,25 @@ function App() {
           }
         });
       });
-
+// 
       socket.subscribe(`/user/${me.id}/topic/friend/add`, (message) => {
         console.log(message.body)
         toast(`Người chơi ${message.body} đã đồng ý kết bạn!`)
       });
+
+      // donate
+      socket.subscribe(`/user/${me.id}/topic/donate`, (message) => {
+        const donateMessage = JSON.parse(message.body)
+        Swal.fire({
+          title: "Êi cho này nè!!!",
+          html: "Bạn nhận được " + donateMessage.sendProduct?.name + " từ <b>" + donateMessage.sender?.username + "</b>",
+          confirmButtonText: "OK",
+          // imageUrl: donateMessage.sender?.avatar?.data,
+          imageUrl: donateMessage.sendProduct?.urlImage,
+          imageWidth: 200,
+          imageHeight: 200,
+        })
+      })
     }
   }, [socket, me])
 
@@ -125,6 +144,7 @@ function App() {
         window.location = '/login'
       } else {
         GetMe().then(user => {
+          console.log(user)
           if (user) setMe(user)
           if (!user?.username && !window.location.pathname.startsWith('/create-character')) {
             window.location = '/create-character'
@@ -135,13 +155,16 @@ function App() {
     sessionStorage.setItem('isClicked', false)
   }, [])
 
+
+
+
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
       <AppContext.Provider value={providerState}>
         <div>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<HomePage me={me} />} />
+              <Route path="/" element={<HomePage me={me} setMe={setMe} />} />
               <Route path="/wait-room/:roomId" element={<WaitRoom userOnline={userOnline} me={me} />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

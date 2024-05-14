@@ -3,6 +3,7 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CheckScanner {
     GameBoard board;
@@ -13,7 +14,7 @@ public class CheckScanner {
 
     public boolean isKingChecked(Move move) {
         Piece king = board.findKing(move.piece.isWhite);
-        assert king != null;
+        if(king == null) return false;
         int kingRow = king.row;
         int kingCol = king.col;
         if (move.piece.name != null && move.piece.name.substring(1).equals("k")) {
@@ -104,4 +105,5 @@ public class CheckScanner {
     private boolean checkPawn(Piece p, Piece k, int row, int col) {
         return p != null && !board.sameTeam(p, k) && p.name.substring(1).equals("p") && p.col != col && p.row != row;
     }
+
 }

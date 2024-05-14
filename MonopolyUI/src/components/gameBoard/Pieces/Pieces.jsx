@@ -1,18 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import './Pieces.css';
 import Piece from "./Piece";
-import { copyPosition, createPosition } from "../help";
+import { copyPosition, createPosition, createPositionBlack, createPositionWhite } from "../help";
 import { useAppContext } from "../../../contexts/Context";
 import { SocketContext } from "../../../App";
-import { clearCandidates, makeNewMove } from "../../../reducer/action/move";
+import { clearCandidates, initGameBoard, makeNewMove } from "../../../reducer/action/move";
 
 let movePromotion = {}
 const Piceces = (props) => {
 
-    const { socket, setSocket } = useContext(SocketContext);
+    const { socket } = useContext(SocketContext);
     const ref = useRef()
     const { appState, dispatch } = useAppContext()
+
     const currentPosition = appState.position[appState.position.length - 1]
+
 
     const calculateCoords = e => {
         const { width, left, top } = ref.current.getBoundingClientRect()
@@ -34,12 +36,18 @@ const Piceces = (props) => {
 
             if ((p === 'wp' || p === 'bp') && x === 7) {
                 appState.isPromotion = true;
-                movePromotion = {
-                    oldRow: Number(rank),
-                    oldCol: Number(file),
-                    newRow: x,
-                    newCol: y
-                }
+                movePromotion = props.listUsers[0]?.id === props.me?.id ?
+                    {
+                        oldRow: Number(rank),
+                        oldCol: Number(file),
+                        newRow: x,
+                        newCol: y
+                    } : {
+                        oldRow: 7 - Number(rank),
+                        oldCol: Number(file),
+                        newRow: 7 - x,
+                        newCol: y
+                    }
                 console.log(movePromotion)
             } else {
                 newPosition[Number(rank)][Number(file)] = ''
@@ -91,8 +99,10 @@ const Piceces = (props) => {
                 })
             });
             props.setCompletePromotionChoose(false)
+            props.setIsSelected('')
         }
     }, [props.completePromotionChoose])
+
 
     return <div
         className="pieces"

@@ -2,6 +2,7 @@ package com.fit.monopolysbapi.monopolysocketapi.config;
 
 import com.fit.monopolysbapi.monopolysocketapi.entrypoint.JwtAuthenticationEntryPoint;
 import com.fit.monopolysbapi.monopolysocketapi.filter.JwtRequestFilter;
+import com.fit.monopolysbapi.monopolysocketapi.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationProvider authenticationProvider;
-    public static final String[] PUBLIC_RESOURCE = {"/authenticate/*", "/user/avatar/default","/user/verify_email/*"};
+    public static final String[] PUBLIC_RESOURCES = {"/authenticate/*", "/user/avatar/default","/user/verify_email/*"};
+    private static final String[] ADMIN_RESOURCES = {"/statistic"};
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -39,7 +41,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((request) -> request.requestMatchers(PUBLIC_RESOURCE).permitAll()
+                .authorizeHttpRequests((request) -> request
+                        .requestMatchers(PUBLIC_RESOURCES).permitAll()
+                        .requestMatchers(ADMIN_RESOURCES).hasRole(Role.ADMIN.name())
                         .anyRequest().fullyAuthenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement((s) -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

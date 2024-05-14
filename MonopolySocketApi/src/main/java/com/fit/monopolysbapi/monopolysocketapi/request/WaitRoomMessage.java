@@ -20,6 +20,7 @@ public class WaitRoomMessage {
     private String content;
     private String createAt;
     private GameBoard gameBoard;
+    private int timeOfTurn;
     public enum RoomMessageType{
         JOIN, LEAVE, MESSAGE, START_GAME, KICK, TIME_OUT
     }
