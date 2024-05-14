@@ -3,7 +3,6 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 import com.fit.monopolysbapi.monopolysocketapi.model.Item;
 import com.fit.monopolysbapi.monopolysocketapi.model.Product;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
 import com.fit.monopolysbapi.monopolysocketapi.request.BuyItemRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.DonateMessage;
 import com.fit.monopolysbapi.monopolysocketapi.request.InviteMessage;

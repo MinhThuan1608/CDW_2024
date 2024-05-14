@@ -1,10 +1,8 @@
 package com.fit.monopolysbapi.monopolysocketapi.util;
 
 import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
 

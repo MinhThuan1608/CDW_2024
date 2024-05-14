@@ -18,8 +18,8 @@ public class King extends Piece {
         this.isWhite = isWhite;
         this.name = isWhite ? "wk" : "bk";
 
-        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-//        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0,2}, {0,-2}};
+//        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0,2}, {0,-2}};
     }
 
     public boolean isValidMovement(int row, int col) {
@@ -59,15 +59,11 @@ public class King extends Piece {
         int x, y;
         Move move;
         Piece piece;
-        if ((row == 7 || row == 0) && col == 4) {
-            directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 2}, {0, -2}};
-        } else {
-            directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-        }
         for (int[] direction : directions) {
             x = row + direction[0];
             y = col + direction[1];
             if (x < 0 || x >= 8 || y < 0 || y >= 8) continue;
+            if (Math.abs(direction[1])==2 && !canCastle(x, y)) continue;
             piece = board.getPiece(x, y);
             if (piece != null && piece.getColor() == this.getColor()) continue;
             move = Move.builder().newRow(x).newCol(y).oldRow(row).oldCol(col).piece(this).build();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Form, FloatingLabel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Styles from '../../assert/style/friend-modal.module.css'
-import { AddFriend, GetFriends, RemoveFriend, RemoveFriendRequest, RequestAddFriend, SearchUser } from '../../api_caller/user';
+import { AddFriend, GetFriendRequest, GetFriends, RemoveFriend, RemoveFriendRequest, RequestAddFriend, SearchUser } from '../../api_caller/user';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { toast } from 'react-toastify';
 
@@ -17,6 +17,9 @@ const FriendModal = (props) => {
     useEffect(() => {
         if (tabSelected === 1)
             GetFriends().then(res => setFriends(res))
+        else if (tabSelected === 2) {
+            GetFriendRequest().then(res => props.setFriendRequests(res))
+        }
     }, [tabSelected])
 
     const handleCloseModal = () => {

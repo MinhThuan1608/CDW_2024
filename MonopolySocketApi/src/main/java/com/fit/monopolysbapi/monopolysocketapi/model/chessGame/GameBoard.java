@@ -3,15 +3,8 @@ package com.fit.monopolysbapi.monopolysocketapi.model.chessGame;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.*;
 import com.fit.monopolysbapi.monopolysocketapi.response.Hint;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -33,7 +26,6 @@ public class GameBoard {
     private Date createAt;
     private List<Move> hints;
     private CheckScanner checkScanner = new CheckScanner(this);
-//    private CheckScaner checkScaner = new CheckScaner(this);
 
     @Override
     public String toString() {
@@ -53,6 +45,7 @@ public class GameBoard {
         initGame();
         startTimer();
     }
+
     public void startTimer() {
         if (countdownTimer != null) {
             countdownTimer.cancel();
@@ -66,19 +59,19 @@ public class GameBoard {
                     timer--;
                     System.out.println("Timer: " + timer);
                 } else {
-                    if(turn == 'w'){
+                    if (turn == 'w') {
                         countdownResetCounterWhite++;
-                    }else{
+                    } else {
                         countdownResetCounterBlack++;
                     }
                     justResetCounter = true;
                     if (countdownResetCounterWhite > 3) {
                         countdownTimer.cancel();
                         System.out.println("dden thang");
-                    } else  if (countdownResetCounterBlack > 3) {
+                    } else if (countdownResetCounterBlack > 3) {
                         countdownTimer.cancel();
                         System.out.println("trang thang");
-                    }else {
+                    } else {
                         turn = turn == 'w' ? 'b' : 'w';
                         hints = getNextStepHints(turn);
                         timer = resetTime;
@@ -90,7 +83,6 @@ public class GameBoard {
             }
         }, 1000, 1000); // Giảm giá trị của timer mỗi giây (1000ms)
     }
-
 
 
     public void initGame() {
@@ -147,9 +139,11 @@ public class GameBoard {
         }
         return null;
     }
+
     public boolean onlyKing() {
         return this.getPieces().length == 2 && findKing(true) != null && findKing(false) != null;
     }
+
     public void makeMove(Move move, String namePromotion) {
         if (move.piece.getName().substring(1).equals("p")) {
             movePawn(move, namePromotion);
@@ -252,6 +246,27 @@ public class GameBoard {
         return this.hints.isEmpty();
     }
 
+    public boolean notEnoughPieceToPlay(Move move) {
+        int bishopKnightCount = 0;
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COL; j++) {
+                if (bishopKnightCount > 1) return false;
+                if (i == move.getOldRow() && j == move.getOldCol()) continue;
+                char piece = pieces[i][j].getName().charAt(1);
+                if (i == move.getNewRow() && j == move.getNewCol()) piece = move.getPiece().getName().charAt(1);
+                switch (piece) {
+                    case 'k':
+                        break;
+                    case 'n', 'b':
+                        bishopKnightCount++;
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public List<Move> getNextStepHints(char nextStepColor) {
         List<Move> res = new ArrayList<>();
@@ -276,7 +291,7 @@ public class GameBoard {
         return turn == 'w' ? 'b' : 'w';
     }
 
-    public List<Hint> getHintsResponse(){
+    public List<Hint> getHintsResponse() {
         return hints.stream().map(Move::toMoveResponse).toList();
     }
 

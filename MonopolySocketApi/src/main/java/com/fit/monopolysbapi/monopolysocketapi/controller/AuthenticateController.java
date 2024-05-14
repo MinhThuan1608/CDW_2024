@@ -1,7 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.repository.MatchRepository;
 import com.fit.monopolysbapi.monopolysocketapi.request.LoginRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.RegisterRequest;
 import com.fit.monopolysbapi.monopolysocketapi.request.ResetPasswordRequest;
@@ -9,7 +8,6 @@ import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import com.fit.monopolysbapi.monopolysocketapi.util.JwtUtil;
-import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

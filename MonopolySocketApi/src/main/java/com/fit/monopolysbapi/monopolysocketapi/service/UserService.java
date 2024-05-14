@@ -1,8 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.*;
-import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRepository;
-import com.fit.monopolysbapi.monopolysocketapi.repository.FriendRequestRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
@@ -58,6 +55,7 @@ public class UserService {
                 .isNonLocked(true)
                 .isConfirmEmail(false)
                 .role(Role.USER)
+                .createDate(new Date())
                 .build();
         userRepository.save(user);
         return user;
@@ -146,7 +144,5 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
-
-
 
 }

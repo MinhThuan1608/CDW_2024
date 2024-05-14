@@ -1,27 +1,17 @@
 package com.fit.monopolysbapi.monopolysocketapi.interceptor;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
-import com.fit.monopolysbapi.monopolysocketapi.request.JoinRoomRequest;
-import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.OnlineService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessageType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

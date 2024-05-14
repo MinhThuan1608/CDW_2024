@@ -5,28 +5,18 @@ import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.ChessMessage;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.GameBoard;
 import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.Move;
-import com.fit.monopolysbapi.monopolysocketapi.request.WaitRoomMessage;
-import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
-import com.fit.monopolysbapi.monopolysocketapi.model.chessGame.pieces.Piece;
-import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
-import com.fit.monopolysbapi.monopolysocketapi.service.OnlineService;
 import com.fit.monopolysbapi.monopolysocketapi.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 
@@ -70,7 +60,6 @@ public class GameController {
                         .build();
                 if ((user.getId().equals(room.getUsers().get(0).getId()) && gameBoard.getTurn() == 'w') ||
                         (user.getId().equals(room.getUsers().get(1).getId()) && gameBoard.getTurn() == 'b')) {
-
                     Move move = chessMessage.getMove();
                     if (move != null) {
                         move.setPiece(gameBoard.getPiece(move.getOldRow(), move.getOldCol()));
@@ -79,22 +68,12 @@ public class GameController {
                     }
                     if (gameBoard.isValidMove(move)) {
                         gameBoard.makeMove(move, chessMessage.getNamePromotion());
-                        if (move.getCapture() != null && move.getCapture().getName().substring(1).equals("k")) {
-                            User loser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
-                            responseMessage = ChessMessage.builder()
-                                    .messageType(ChessMessage.ChessMessageType.WIN)
-                                    .winnerId(user.getId())
-                                    .pieces(gameBoard.getPiecesResponse())
-                                    .build();
-                            simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
-                            gameService.matchEnd(room, user, loser, true);
-                            return;
-                        }
                         char nextTurn = gameBoard.getNextTurn();
                         boolean isEnemyChecked = gameBoard.isChecked(nextTurn);
                         boolean isEnemyHasNoStepToPlay = gameBoard.hasNoStepToPlay(nextTurn);
-                        boolean onlyKing = gameBoard.onlyKing();
-                        if (isEnemyHasNoStepToPlay && isEnemyChecked) {
+//                        boolean onlyKing = gameBoard.onlyKing();
+                        if ((isEnemyHasNoStepToPlay && isEnemyChecked)
+                                || (move.getCapture() != null && move.getCapture().getName().substring(1).equals("k"))) {
                             User loser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.WIN)
@@ -104,21 +83,14 @@ public class GameController {
                             simpMessagingTemplate.convertAndSend("/topic/game/chess/" + roomId, responseMessage);
                             gameService.matchEnd(room, user, loser, true);
                             return;
-                        } else if (isEnemyHasNoStepToPlay ) {
+                        } else if (isEnemyHasNoStepToPlay || gameBoard.notEnoughPieceToPlay(move)) {
                             User otherUser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
                             responseMessage = ChessMessage.builder()
                                     .messageType(ChessMessage.ChessMessageType.DRAW)
                                     .pieces(gameBoard.getPiecesResponse())
                                     .build();
                             gameService.matchEnd(room, user, otherUser, false);
-                        }else if (onlyKing) {
-                            User otherUser = room.getUsers().stream().filter(u -> !u.getId().equals(user.getId())).findFirst().get();
-                            responseMessage = ChessMessage.builder()
-                                    .messageType(ChessMessage.ChessMessageType.DRAW)
-                                    .pieces(gameBoard.getPiecesResponse())
-                                    .build();
-                            gameService.matchEnd(room, user, otherUser, false);
-                        }else {
+                        } else {
                             gameBoard.setTurn(nextTurn);
                             gameBoard.setTimer(gameBoard.getResetTime());
                             gameBoard.startTimer();

@@ -5,9 +5,7 @@ import com.fit.monopolysbapi.monopolysocketapi.repository.AvatarRepository;
 import com.fit.monopolysbapi.monopolysocketapi.util.ImageUtil;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

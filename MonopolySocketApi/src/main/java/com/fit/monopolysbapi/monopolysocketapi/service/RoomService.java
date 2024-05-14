@@ -80,39 +80,23 @@ public class RoomService {
     }
 
     public String quickJoinRoom(User user) {
-//        if (!user.isConfirmEmail()) return "INVALID_MAIL";
         if (userQueue.isEmpty()) {
-            System.out.println("hàng đơi chua có ai");
-            userQueue.add(user);
             if (!rooms.isEmpty()) {
-                User user1 = userQueue.peek();
                 for (Room room : rooms) {
-                    if (!room.havePassword() && room.getUsers().size() < 2 && !isUserInRoom(user1.getId(), room.getId())) {
-                        joinRoom(user1, room.getId());
-                        System.out.println("hàng đợi va phòng r==============");
-                        System.out.println(userQueue);
-                        userQueue.poll();
+                    if (!room.havePassword() && room.getUsers().size() < 2 && !isUserInRoom(user.getId(), room.getId())) {
+                        joinRoom(user, room.getId());
                         return room.getId();
                     }
                 }
-            }
-        } else if(!userQueue.contains(user)) {
-            //        nếu hag đợi đang có người
-            System.out.println("tạo phòng moiws 2 ng");
+            } else userQueue.add(user);
+        } else if (!userQueue.contains(user)) {
             User owner = userQueue.poll();
             String roomName = "QR" + owner.getId();
-            RoomResponse roomResponse = createRoom(CreateRoomRequest.builder().roomName(roomName).password("").build(),
-                    owner);
+            RoomResponse roomResponse = createRoom(CreateRoomRequest.builder().roomName(roomName).password("").build(), owner);
             joinRoom(user, roomResponse.getId());
-            System.out.println("============tạo phog moi===========");
-            System.out.println(userQueue);
             return roomResponse.getId();
-
         }
-        System.out.println("=========ko có phong nao phu họp==============");
-        System.out.println(userQueue);
         return null;
-
     }
 
     public void leaveRoom(User user, String id) {
