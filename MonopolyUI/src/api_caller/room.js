@@ -1,7 +1,7 @@
 const accessToken = sessionStorage.getItem('access_token');
 
 export async function CreateRoom(roomName, password) {
-    const urlString = `http://localhost:8001/room/create`;
+    const urlString = `http://103.9.159.202:8001/room/create`;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -23,7 +23,7 @@ export async function CreateRoom(roomName, password) {
 }
 
 export async function GetAllRoom() {
-    const urlString = `http://localhost:8001/room/all`;
+    const urlString = `http://103.9.159.202:8001/room/all`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -41,7 +41,7 @@ export async function GetAllRoom() {
 }
 
 export async function JoinRoom(roomId, password) {
-    const urlString = `http://localhost:8001/room/join`;
+    const urlString = `http://103.9.159.202:8001/room/join`;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -63,7 +63,7 @@ export async function JoinRoom(roomId, password) {
 }
 
 export async function GetRoomPass(roomId) {
-    const urlString = `http://localhost:8001/room/${roomId}/get/pass`;
+    const urlString = `http://103.9.159.202:8001/room/${roomId}/get/pass`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -83,7 +83,7 @@ export async function GetRoomPass(roomId) {
 }
 
 export async function GetUserInRoom(roomId) {
-    const urlString = `http://localhost:8001/room/${roomId}/user`;
+    const urlString = `http://103.9.159.202:8001/room/${roomId}/user`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -102,7 +102,7 @@ export async function GetUserInRoom(roomId) {
     return false;
 }
 export async function GetTimmer(roomId) {
-    const urlString = `http://localhost:8001/room/game/time/${roomId}`;
+    const urlString = `http://103.9.159.202:8001/room/game/time/${roomId}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -120,7 +120,7 @@ export async function GetTimmer(roomId) {
 }
 
 export async function GetRoomMeIn() {
-    const urlString = `http://localhost:8001/room/me`;
+    const urlString = `http://103.9.159.202:8001/room/me`;
 
     const response = await fetch(urlString, {
         method: "GET",
