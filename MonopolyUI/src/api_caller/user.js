@@ -1,7 +1,7 @@
 const accessToken = sessionStorage.getItem('access_token');
 
 export async function GetMe() {
-    const urlString = `http://localhost:8001/user/me`;
+    const urlString = `http://103.9.159.202:8001/user/me`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -19,7 +19,7 @@ export async function GetMe() {
 }
 
 export async function IsUsernameValid(username) {
-    const urlString = `http://localhost:8001/user/exists/${username}`;
+    const urlString = `http://103.9.159.202:8001/user/exists/${username}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -37,7 +37,7 @@ export async function IsUsernameValid(username) {
 }
 
 export async function GetDefaultAvatar() {
-    const urlString = `http://localhost:8001/user/avatar/default`;
+    const urlString = `http://103.9.159.202:8001/user/avatar/default`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -54,7 +54,7 @@ export async function GetDefaultAvatar() {
 }
 
 export async function InitUser(username, defaultAvatarId, avatar) {
-    const urlString = `http://localhost:8001/user/init`;
+    const urlString = `http://103.9.159.202:8001/user/init`;
 
     const response = await fetch(urlString, {
         method: "PATCH",
@@ -77,7 +77,7 @@ export async function InitUser(username, defaultAvatarId, avatar) {
 }
 
 export async function EditProfileAvatar(username, avatar) {
-    const urlString = `http://localhost:8001/user/edit/avatar`;
+    const urlString = `http://103.9.159.202:8001/user/edit/avatar`;
 
     const response = await fetch(urlString, {
         method: "PATCH",
@@ -102,7 +102,7 @@ export async function EditProfileAvatar(username, avatar) {
 }
 
 export async function ChangeUserName(username) {
-    const urlString = `http://localhost:8001/user/edit/name`;
+    const urlString = `http://103.9.159.202:8001/user/edit/name`;
 
     const response = await fetch(urlString, {
         method: "PATCH",
@@ -124,7 +124,7 @@ export async function ChangeUserName(username) {
 }
 
 export async function GetBag(id) {
-    const urlString = `http://localhost:8001/user/bag/${id}`;
+    const urlString = `http://103.9.159.202:8001/user/bag/${id}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -141,7 +141,7 @@ export async function GetBag(id) {
     return responseData.message;
 }
 export async function GetMatches(id) {
-    const urlString = `http://localhost:8001/user/match/${id}`;
+    const urlString = `http://103.9.159.202:8001/user/match/${id}`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -159,7 +159,7 @@ export async function GetMatches(id) {
 }
 
 export async function RequestAddFriend(userID) {
-    const urlString = "http://localhost:8001/user/friend/request/"+userID;
+    const urlString = "http://103.9.159.202:8001/user/friend/request/"+userID;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -177,7 +177,7 @@ export async function RequestAddFriend(userID) {
 }
 
 export async function AddFriend(requestID) {
-    const urlString = "http://localhost:8001/user/friend/add/"+requestID;
+    const urlString = "http://103.9.159.202:8001/user/friend/add/"+requestID;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -195,7 +195,7 @@ export async function AddFriend(requestID) {
 }
 
 export async function RemoveFriendRequest(requestID) {
-    const urlString = "http://localhost:8001/user/friend/request/remove/"+requestID;
+    const urlString = "http://103.9.159.202:8001/user/friend/request/remove/"+requestID;
 
     const response = await fetch(urlString, {
         method: "DELETE",
@@ -213,7 +213,7 @@ export async function RemoveFriendRequest(requestID) {
 }
 
 export async function GetFriendRequest() {
-    const urlString = "http://localhost:8001/user/friend/request";
+    const urlString = "http://103.9.159.202:8001/user/friend/request";
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -231,7 +231,7 @@ export async function GetFriendRequest() {
 }
 
 export async function GetFriends() {
-    const urlString = "http://localhost:8001/user/friend";
+    const urlString = "http://103.9.159.202:8001/user/friend";
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -249,7 +249,7 @@ export async function GetFriends() {
 }
 
 export async function SearchUser(username) {
-    const urlString = "http://localhost:8001/user/search/"+username;
+    const urlString = "http://103.9.159.202:8001/user/search/"+username;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -267,7 +267,7 @@ export async function SearchUser(username) {
 }
 
 export async function RemoveFriend(userId) {
-    const urlString = "http://localhost:8001/user/friend/remove/"+userId;
+    const urlString = "http://103.9.159.202:8001/user/friend/remove/"+userId;
 
     const response = await fetch(urlString, {
         method: "DELETE",

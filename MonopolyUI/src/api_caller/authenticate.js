@@ -1,6 +1,6 @@
 
 export async function LoginAPI(identify, password) {
-    const urlString = "http://localhost:8001/authenticate/login";
+    const urlString = "http://103.9.159.202:8001/authenticate/login";
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -24,7 +24,7 @@ export async function LoginAPI(identify, password) {
 }
 
 export async function RegisterAPI(email, password, confirmPassword) {
-    const urlString = "http://localhost:8001/authenticate/register";
+    const urlString = "http://103.9.159.202:8001/authenticate/register";
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -46,7 +46,7 @@ export async function RegisterAPI(email, password, confirmPassword) {
 }
 
 export async function SendForgetPassword(email) {
-    const urlString = "http://localhost:8001/authenticate/forget-pass?email=" + email;
+    const urlString = "http://103.9.159.202:8001/authenticate/forget-pass?email=" + email;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -63,7 +63,7 @@ export async function SendForgetPassword(email) {
 }
 
 export async function SendResetPassword(password, confirmPassword, token) {
-    const urlString = "http://localhost:8001/authenticate/user/reset-pass";
+    const urlString = "http://103.9.159.202:8001/authenticate/user/reset-pass";
 
     const response = await fetch(urlString, {
         method: "POST",
