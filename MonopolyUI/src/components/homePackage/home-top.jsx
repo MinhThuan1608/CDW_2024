@@ -61,10 +61,10 @@ const HomeTop = (props) => {
                     <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal} />
                     <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length ? "dot show" : "dot"} id="letter-dot" />
                 </div>
-                <div className="icon-container">
+                {/* <div className="icon-container">
                     <FontAwesomeIcon icon={faBell} className="setting-icon" id="notification"/>
                     <FontAwesomeIcon icon={faCircle} className="dot" id="notification-dot" />
-                </div>
+                </div> */}
             </div>
         </div>
     );

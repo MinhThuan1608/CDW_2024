@@ -1,7 +1,7 @@
 import { React, useContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import userAvt from '../../assert/images/avatar/meo.jpg';
-import { faXmark, faGear, faCoins, faEyeSlash, faEye, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faGear, faCoins, faEyeSlash, faEye, faCopy, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { SocketContext } from '../../App';
 
 
@@ -56,7 +56,7 @@ const WaitRoom = (props) => {
                     </div> : <></>}
             </div>
             <div className="web-options">
-
+         
                 <div className="icon-container">
                     <FontAwesomeIcon icon={faGear} className="setting-icon" />
                 </div>

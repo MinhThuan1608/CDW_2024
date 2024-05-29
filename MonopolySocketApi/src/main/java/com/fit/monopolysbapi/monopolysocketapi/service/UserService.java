@@ -106,11 +106,11 @@ public class UserService {
     }
 
     private String getVerifyEmailURL(User user) throws NoSuchAlgorithmException {
-        return "http://localhost:8001/user/verify_email/" + user.getId() + "?token=" + util.hash(user.getPassword());
+        return "http://chessgame.ddns.net:8001/user/verify_email/" + user.getId() + "?token=" + util.hash(user.getPassword());
     }
 
     private String getForgetPasswordURL(String token) {
-        return "http://localhost:3000/reset-password?token=" + token;
+        return "http://chessgame.ddns.net/reset-password?token=" + token;
     }
 
     public void sendVerifyMail(User user) throws NoSuchAlgorithmException {

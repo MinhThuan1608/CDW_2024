@@ -3,8 +3,13 @@
 
     /* waitroom */
     .online-part,
+    .chat-room-part,
     .chat-div {
         display: none;
+    }
+    .icon-mobile-online,
+    .icon-mobile-chat {
+        display: block;
     }
 
     .top-name-user {
@@ -27,6 +32,10 @@
     /* home */
     .action-button {
         padding: 12px 15px;
+    }
+    .item-action-button{
+        font-size: 14px;
+        margin: 0 4px ;
     }
 
     /* game-play */
@@ -73,6 +82,11 @@
     }
 
     /* home */
+    .item-action-button{
+        font-size: 12px;
+        padding: 12px;
+        margin: 0 4px ;
+    }
     .setting-icon {
         font-size: 18px;
     }

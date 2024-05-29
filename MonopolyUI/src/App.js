@@ -53,7 +53,7 @@ function App() {
     var accessToken = sessionStorage.getItem('access_token');
     if (accessToken && !socket) {
       const client = new Client({
-        brokerURL: `ws://localhost:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
+        brokerURL: `ws://103.9.159.202:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
         debug: function (str) {
           // console.log(str);
         },
