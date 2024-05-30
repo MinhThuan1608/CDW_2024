@@ -38,9 +38,8 @@ const VictoryModal = (props) => {
     return <div className='victory'>
         <div className="victory-modal">
         <div className='tilte-win'>
-            <span>Quân </span>
             <FontAwesomeIcon icon={faChess} className={`${props.listUsers[0].id === props.isUserWin ? 'icon-chess-white' : ''} icon-chess-game`} /> 
-            <p> {props.listUsers[0].id === props.isUserWin ? props.listUsers[0].username : props.listUsers[1].username} thắng</p>
+            <p> Chúc mừng bạn chiến thắng</p>
             {/* <span> thắng</span> */}
         </div>
         {/* <div className="victory-img" style={{ backgroundImage: `url(${props.listUsers[0].id === props.isUserWin ? props.listUsers[0].avatar.data : props.listUsers[1].avatar.data})` }}></div> */}

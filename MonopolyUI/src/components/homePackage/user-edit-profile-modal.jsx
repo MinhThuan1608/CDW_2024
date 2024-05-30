@@ -129,12 +129,13 @@ const EditUserProfileModal = (props) => {
             const matches = await GetMatches(props.me.id);
             if (matches) {
                 setListMatch(matches)
+                setLoading(false)
             }
         }
+        
         getMatches();
-        setLoading(false)
 
-    }, [])
+    }, [props.showModalProfile])
 
     const handleChangeAvatar = () => {
         if (!isChangeAvt && !isChangeName)
@@ -251,11 +252,13 @@ const EditUserProfileModal = (props) => {
 
                                 </div>
                             </div>
+                           
+                        {isLoading && <Loader isLoading={isLoading} />}
                         </Modal.Body>
                     </Modal.Dialog>
                 )}
             </div>
-            {isLoading && <Loader isLoading={isLoading} />}
+            
         </>
     );
 }

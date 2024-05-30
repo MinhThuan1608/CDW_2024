@@ -32,7 +32,7 @@ const HomeTop = (props) => {
             <div className="info-container">
                 <img src={props.me?.avatar ? props.me.avatar.data : userAvt} alt="avatar" id="avatar" onClick={handleOpenModalProfile} />
 
-                <div className="username-container">
+                <div className="username-container-home ">
                     <p id="username-title">{props.me?.username}</p>
                 </div>
             </div>
@@ -61,10 +61,10 @@ const HomeTop = (props) => {
                     <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal} />
                     <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length ? "dot show" : "dot"} id="letter-dot" />
                 </div>
-                <div className="icon-container">
+                {/* <div className="icon-container">
                     <FontAwesomeIcon icon={faBell} className="setting-icon" id="notification"/>
                     <FontAwesomeIcon icon={faCircle} className="dot" id="notification-dot" />
-                </div>
+                </div> */}
             </div>
         </div>
     );

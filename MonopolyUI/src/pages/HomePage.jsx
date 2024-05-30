@@ -86,7 +86,7 @@ const HomePage = (props) => {
     GetFriendRequest().then(res => setFriendRequests(res))
     GetBag(props.me?.id).then(res => setListItem(res))
     }
-  }, [props.me.id, props.me.money, props.me.username])
+  }, [props.me.id, props.me.money, props.me.username, showModalBag])
 
   return (
     <div className='home-container'>

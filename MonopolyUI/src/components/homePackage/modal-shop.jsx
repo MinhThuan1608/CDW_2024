@@ -44,11 +44,11 @@ const ModalShop = ({ me, showModalShop, setShowModalShop }) => {
         const getProductShop = async () => {
             const products = await GetProduct();
             setListProduct(products)
+            setLoading(false)
             
         }
         setLoading(true)
         getProductShop();
-        setLoading(false)
 
     }, [])
 
