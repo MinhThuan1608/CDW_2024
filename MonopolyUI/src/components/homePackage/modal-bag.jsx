@@ -139,8 +139,8 @@ const ModalBag = (props) => {
         setLoading(true)
         GetFriends().then(res => {
             setListFriend(res);
+            setLoading(false)
         })
-        setLoading(false)
     }, [])
     const handleFriendClick = (friend) => {
         setSelectedFriend(friend);

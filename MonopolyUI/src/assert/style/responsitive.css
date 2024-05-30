@@ -13,9 +13,9 @@
     }
 
     .top-name-user {
-        padding-left: 25px;
-        width: 74%;
-        margin-left: 61px;
+        /* padding-left: 25px; */
+        /* width: 74%; */
+        /* margin-left: 61px; */
     }
 
     .img-frame {
@@ -42,6 +42,10 @@
     .turn-player-mobile {
         display: block;
     }
+    #username-title {
+        display: none;
+    }
+
 }
 
 /* Điện thoại di động */

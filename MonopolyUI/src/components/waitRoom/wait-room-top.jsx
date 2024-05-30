@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { faXmark, faGear, faCoins, faEyeSlash, faEye, faCopy, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { SocketContext } from '../../App';
+import { formatCurrency } from '../gameBoard/help';
 
 
 const WaitRoom = (props) => {
@@ -29,11 +30,13 @@ const WaitRoom = (props) => {
     return (
         <div className='top-part'>
             <div className="score-and-money">
-                <p className="top-name-user">{props.me.username}</p>
+                <div className="top-name-user">
+                    <span>{props.me.username}</span>
+                </div>
                 <div className="img-frame" style={{ backgroundImage: `url(${!props.me ? userAvt : props.me.avatar ? props.me.avatar.data : userAvt})` }}>
                 </div>
                 <p className="coins">
-                    <span>{props.me.money}</span>
+                    <span>{props.me?.money ? formatCurrency(props.me?.money) : props.me?.money}</span>
                     <FontAwesomeIcon icon={faCoins} className="money-icon" />
                 </p>
 

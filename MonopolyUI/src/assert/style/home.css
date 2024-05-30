@@ -13,7 +13,7 @@
     justify-content: space-between;
     background-color: rgba(73, 16, 139, 0.3);
     border-radius: 10vh;
-    overflow: hidden;
+    min-width: 500px;
 }
 
 .info-container {
@@ -36,7 +36,7 @@
     box-shadow: 0 0 2px #b484f4, 0 0 6px #8a43e7, 0 0 10px #7E30E1;
 }
 
-.username-container {
+.username-container-home {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -46,6 +46,8 @@
     color: #F3F8FF;
     font-size: 20px;
     margin: 0 12px;
+    width: 50%;
+    text-align: left;
 }
 
 .money-container {
@@ -507,6 +509,7 @@
 
 .profile-left-contain {
     width: 40%;
+    overflow-x: auto;
 }
 
 .profile-right-contain {
@@ -564,12 +567,16 @@
     align-items: center;
     justify-content: flex-start;
     font-size: 18px;
+    /* overflow: hidden; */
+    width: 10%;
 }
 
 .input-username-container-profile p {
     margin-bottom: 0;
     margin-right: 4px;
-
+    white-space: nowrap;
+    text-overflow: ellipsis;
+ 
 }
 
 .icon-pen {

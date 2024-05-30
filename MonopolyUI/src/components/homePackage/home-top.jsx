@@ -32,7 +32,7 @@ const HomeTop = (props) => {
             <div className="info-container">
                 <img src={props.me?.avatar ? props.me.avatar.data : userAvt} alt="avatar" id="avatar" onClick={handleOpenModalProfile} />
 
-                <div className="username-container">
+                <div className="username-container-home ">
                     <p id="username-title">{props.me?.username}</p>
                 </div>
             </div>

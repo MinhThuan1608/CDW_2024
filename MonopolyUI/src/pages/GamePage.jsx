@@ -113,7 +113,7 @@ const GamePage = (props) => {
                 <GameChat listMessageInGame={listMessageInGame} roomId={roomId} />
                 <div className="control-btn">
                     <button onClick={handleGiveUpGame}>Bỏ cuộc</button>
-                    <button onClick={handleExitGame}>Thoát</button>
+                    <button onClick={handleExitGame}>Thoát Game</button>
                 </div>
             </div>
             {displayChatDiv && (
@@ -138,7 +138,7 @@ const GamePage = (props) => {
                     <GameChat className='chat-room-part-mobile' listMessageInGame={listMessageInGame} roomId={roomId} />
                     <div className="control-btn">
                         <button onClick={handleGiveUpGame}>Bỏ cuộc</button>
-                        <button onClick={handleExitGame}>Thoát</button>
+                        <button onClick={handleExitGame}>Thoát Game</button>
                     </div>
                 </div>
             )}
