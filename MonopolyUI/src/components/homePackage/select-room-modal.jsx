@@ -49,7 +49,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
     // hàm xử lý tham gia phòng k có pass
     const handleJoinRoom = async (room) => {
         if (room.numUser > 1) {
-            toast.warn('Phòng full ời má!')
+            toast.warn('Phòng full ời bạn ưi!')
             return;
         }
         if (room.havePass) {
@@ -61,7 +61,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
         if (res === 200) {
             window.location = `/wait-room/${room.id}`
         } else if (res === 405){
-            toast.warn('Chưa xác thực mail kìa!!!')
+            toast.warn('Bạn chưa xác thực mail kìa, kiểm tra email nhé ^^!')
         }
     }
     // hàm xử lý tham gia phòng có pass
@@ -74,7 +74,7 @@ const SelectRoomModal = ({ showModal, setShowModal, showJoinRoomModal, setShowJo
         }
         const res = await JoinRoom(roomChosen.id, password);
         if(res === 405) {
-            toast.warn("Chưa xác thực mail kìa!!!")
+            toast.warn('Bạn chưa xác thực mail kìa, kiểm tra email nhé ^^!')
         }else if (res === 200) {
             window.location = `/wait-room/${roomChosen.id}`
         } else {

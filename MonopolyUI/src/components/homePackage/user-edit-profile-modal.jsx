@@ -149,7 +149,7 @@ const EditUserProfileModal = (props) => {
                 setIsChangeName(true)
             else setIsChangeName(false)
             setErrorMessage('')
-        } else toast.warn('Chưa có thẻ đổi tên má oii, mua ở shop đi đã :v')
+        } else toast.warn('Chưa có thẻ đổi tên bạn ơi, mua ở shop đi đã :v')
 
     }
 

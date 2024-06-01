@@ -155,7 +155,7 @@ const ModalBag = (props) => {
                     amount: donateNumber
                 })
             });
-            toast.success('Tặng thành công!');
+            toast.success('Tặng thành công rùi nho!');
             let remain = itemDetail.quantity - donateNumber
             if (remain > 0) {
                 itemDetail.quantity = remain
@@ -164,7 +164,7 @@ const ModalBag = (props) => {
                 const updatedList = props.listItem.filter(item => item.id !== itemDetail.id);
                 props.setListItem(updatedList);
             }
-        } else toast.error('Chưa chọn người nhận kìa má!');
+        } else toast.error('Chưa chọn người nhận bạn ơi!!!');
      
     }
 

@@ -97,7 +97,7 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
           
             
         }else{
-            toast.warn('Chưa xác thực mail kìa má!')
+            toast.warn('Bạn chưa xác thực mail kìa, kiểm tra email nhé ^^!')
         } 
         setQuickJoin(false)
     }
