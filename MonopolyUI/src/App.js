@@ -17,13 +17,12 @@ import { AddFriend, GetMe, RemoveFriendRequest } from './api_caller/user';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Swal from 'sweetalert2';
+import TestChart from './pages/TestChart';
 import AdminPage from './pages/AdminPage';
-import Statistical from './components/adminPackage/statistical';
-import UserManagement from './components/adminPackage/user-management';
-import MatchManagement from './components/adminPackage/match-management';
 
 export const SocketContext = React.createContext();
 export const SettingContext = React.createContext();
+export const Domain = 'http://localhost:8001';
 
 export const PlaySound = (soundURL) => {
 
@@ -175,6 +174,7 @@ function App() {
               <Route path="/forget-password" element={<ForgetPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/create-character" element={<CreateCharacter />} />
+              <Route path="/test" element={<TestChart />} />
               <Route path="/game/:roomId" element={<GamePage me={me} />} />
 
               {/* ADMIN */}

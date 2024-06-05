@@ -1,7 +1,9 @@
+import { Domain } from "../App";
+
 const accessToken = sessionStorage.getItem('access_token');
 
 export async function GetProduct() {
-    const urlString = `http://103.9.159.202:8001/shop`;
+    const urlString = Domain+`/shop`;
 
     const response = await fetch(urlString, {
         method: "GET",
@@ -19,7 +21,7 @@ export async function GetProduct() {
     return [];
 }
 export async function BuyItem(productId, buyNumber) {
-    const urlString = `http://103.9.159.202:8001/buyItem`;
+    const urlString = Domain+`/buyItem`;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -38,7 +40,7 @@ export async function BuyItem(productId, buyNumber) {
     return responseData.data; 
 }
 export async function SaleItem(itemId, saleNumber) {
-    const urlString = `http://103.9.159.202:8001/saleItem`;
+    const urlString = Domain+`/saleItem`;
 
     const response = await fetch(urlString, {
         method: "POST",
