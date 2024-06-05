@@ -1,4 +1,4 @@
-import { faClose, faCrown, faSkullCrossbones, faTrophy, faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faCrown, faHand, faHandFist, faSkullCrossbones, faTrophy, faUser, faUserPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
@@ -19,6 +19,13 @@ ChartJS.register(
 
 const Statistical = (props) => {
 
+    const [userLoginToday, setUserLoginToday] = useState(0)
+    const [newUserToday, setNewUserToday] = useState(0)
+    const [matchToday, setMatchToday] = useState(0)
+    const [userLoginAll, setUserLoginAll] = useState(0)
+    const [matchAll, setMatchAll] = useState(0)
+    const [newUserAll, setNewUserAll] = useState(0)
+
     const [userStatistic, setUserStatistic] = useState({
         labels: [], datasets: [{
             label: 'Số người chơi',
@@ -36,12 +43,20 @@ const Statistical = (props) => {
                 let dates = statistics.map((item, index) => {
                     let date = new Date(item.logDate)
                     if (index !== statistics.length - 1) date.setDate(date.getDate() - 1)
-                    else if (date.getHours() < 4) date.setDate(date.getDate() - 1)
+                    else {
+                        if (date.getHours() < 4) date.setDate(date.getDate() - 1)
+                        setUserLoginToday(item.userLoginCount)
+                        setNewUserToday(item.newUserCount)
+                        setMatchToday(item.matchCount)
+                    }
                     return date.getDate() + '/' + (date.getMonth() + 1)
                 })
                 let usersLogin = statistics.map(item => item.userLoginCount)
                 let newUserCount = statistics.map(item => item.newUserCount)
                 let matchCount = statistics.map(item => item.matchCount)
+                setUserLoginAll(usersLogin.reduce((accom, item)=>accom+item, 0))
+                setNewUserAll(newUserCount.reduce((accom, item)=>accom+item, 0))
+                setMatchAll(matchCount.reduce((accom, item)=>accom+item, 0))
                 setUserStatistic({
                     labels: dates, datasets: [{
                         label: 'Số người chơi',
@@ -109,22 +124,24 @@ const Statistical = (props) => {
     };
 
     return (
-        <div className='statistical'>
-            <h1>Hôm nay</h1>
+        <div className='statistical' style={{ marginTop: '20px', marginRight: '10px' }}>
+
             <div className="statistical-top">
                 <div className="win-match">
-                    <p>
-                        <FontAwesomeIcon icon={faTrophy} className="icon-win" />
-                        Thắng
-                    </p>
-                    <span>1000 trận</span>
+                    <p style={{ color: '#F9F07A' }}>Hôm nay</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginToday}<FontAwesomeIcon icon={faUser}/></span>  </p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người mới: <span style={{color: 'white'}}>{newUserToday} <FontAwesomeIcon icon={faUserPlus}/></span></p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số trận: <span style={{color: 'white'}}>{matchToday} <FontAwesomeIcon icon={faHandFist}/></span></p>
+                    </div>
                 </div>
                 <div className="lose-match">
-                    <p>
-                        <FontAwesomeIcon icon={faSkullCrossbones} className="icon-lose" />
-                        Thua
-                    </p>
-                    <span>1000 trận</span>
+                    <p style={{ color: '#F9F07A' }}>Trước - nay</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginAll}<FontAwesomeIcon icon={faUser}/></span>  </p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người mới: <span style={{color: 'white'}}>{newUserAll} <FontAwesomeIcon icon={faUserPlus}/></span></p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số trận: <span style={{color: 'white'}}>{matchAll} <FontAwesomeIcon icon={faHandFist}/></span></p>
+                    </div>
                 </div>
 
             </div>
