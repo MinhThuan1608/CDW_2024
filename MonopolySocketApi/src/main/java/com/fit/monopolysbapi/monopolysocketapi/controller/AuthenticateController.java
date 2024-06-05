@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
@@ -40,6 +41,8 @@ public class AuthenticateController {
         if (!user.isAccountNonLocked())
             return ResponseEntity.status(403).body(new AbstractResponse(403, "Your account is blocked!", null));
         String jwtToken = jwtUtil.generateToken(user, JwtUtil.TokenType.AUTHENTICATE);
+        user.setLastLoginDate(new Date());
+        userService.save(user);
         return ResponseEntity.ok(new AbstractResponse(200, "Login successfull!",
                 UserResponse.builder().id(user.getId())
                         .username(user.getUsername())
@@ -88,5 +91,7 @@ public class AuthenticateController {
         userService.changePassword(user, request.getPassword());
         return ResponseEntity.ok(new AbstractResponse(200, "Reset password successfully!", true));
     }
+
+
 
 }

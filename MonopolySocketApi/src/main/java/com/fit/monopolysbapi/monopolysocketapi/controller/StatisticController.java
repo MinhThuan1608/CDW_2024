@@ -33,7 +33,7 @@ public class StatisticController {
     @GetMapping("/statistics")
     public ResponseEntity<?> getUserStatistic(){
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.DATE, -30);
         calendar.set(Calendar.HOUR, 4);
         List<Statistic> statistics = statisticService.getStatisticBetween(calendar.getTime(), new Date());
         return ResponseEntity.ok(new AbstractResponse(200, "Get statistics successfully!", statistics));

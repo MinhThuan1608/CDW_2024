@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface StatisticRepository extends JpaRepository<Statistic, Long> {
 
-    List<Statistic> getByLogDateBetween(Date from, Date to);
+    List<Statistic> getByLogDateBetweenOrderByLogDateAsc(Date from, Date to);
 
 
 }

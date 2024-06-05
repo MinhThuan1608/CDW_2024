@@ -48,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } else logger.warn("JWT does not begin with Bearer");
         if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = userService.getUserById(id).orElseThrow(() -> new UsernameNotFoundException("Username not found!"));
-            if (user != null && jwtUtil.validateToken(jwtToken, user)) {
+            if (user != null && jwtUtil.validateToken(jwtToken, user) && user.isNonLocked()) {
                 if (user.getUsername()==null) user.setUsername(user.getEmail());
                 System.out.println(user);
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

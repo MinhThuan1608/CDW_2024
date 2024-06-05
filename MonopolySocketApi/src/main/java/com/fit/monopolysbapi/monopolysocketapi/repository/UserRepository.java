@@ -20,5 +20,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsernameOrEmail(String identifier);
     int countUserByLastLoginDateBetween(Date lastLoginDate, Date lastLoginDate2);
     int countByCreateDateBetween(Date from, Date to);
-
 }
