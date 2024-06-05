@@ -67,7 +67,7 @@ const HomeTop = (props) => {
                     <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal} />
                     <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length ? "dot show" : "dot"} id="letter-dot" />
                 </div>
-                {props.me?.role === null && (
+                {props.me?.role === 'ADMIN' && (
                     <div className="icon-container">
                         <FontAwesomeIcon icon={faUserTie} className="setting-icon" id="notification" onClick={handleIconClick} />
                     </div>

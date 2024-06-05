@@ -1,5 +1,6 @@
 package com.fit.monopolysbapi.monopolysocketapi.controller;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.Statistic;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.StatisticService;
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Calendar;
@@ -37,6 +40,11 @@ public class StatisticController {
         calendar.set(Calendar.HOUR, 4);
         List<Statistic> statistics = statisticService.getStatisticBetween(calendar.getTime(), new Date());
         return ResponseEntity.ok(new AbstractResponse(200, "Get statistics successfully!", statistics));
+    }
+    @GetMapping("/matches/{page}")
+    public List<Match> getMatches(@PathVariable int page) {
+        int size = 10;
+        return statisticService.getMatches(page, size);
     }
 
 }

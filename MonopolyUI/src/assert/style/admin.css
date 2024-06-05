@@ -86,7 +86,6 @@
     left: 0;
     max-width: 300px;
     padding: 0 12px;
-    z-index: 1200;
     flex-direction: column;
     overflow: auto;
     color: #ffffff;
@@ -175,6 +174,7 @@
     color: #f0f0f0;
 }
 
+
 /* statistical */
 .statistical {
     color: #ffffff;
@@ -200,4 +200,21 @@
 .admin-icon-lose {
     font-size: 20px;
     margin: 0;
+}
+
+/* more btn */
+.more-btn{
+    background-color: #b484f4;
+    color: #f0f0f0;
+    padding: 12px;
+    margin: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+    float: right;
+}
+.more-btn:hover{
+    cursor: pointer;
+    box-shadow: 2px 3px #b484f4;
 }

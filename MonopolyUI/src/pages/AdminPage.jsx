@@ -21,7 +21,7 @@ const AdminPage = (props) => {
                 showUserBar={showUserBar} setShowUserBar={setShowUserBar}/>
             </div>
             <div className="right">
-                <Nav/>
+               { (showMatchBar || showUserBar ) &&  <Nav/>}
                 {showStatistical && <Statistical />}
                 {showUserBar && <UserManagement />}
                 {showMatchBar && <MatchManagement />}
