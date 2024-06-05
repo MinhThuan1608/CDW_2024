@@ -30,7 +30,7 @@ const SideBar = (props) => {
         <div className="admin-sidebar">
             {/* <FontAwesomeIcon icon={faClose} className='sidebar-btn-close' /> */}
             <div className='top-sidebar'>
-                <img src={userAvt} alt="avatar" className="admin-avatar" />
+                <img src={props.me?.avatar ? props.me.avatar.data : userAvt} alt="avatar" className="admin-avatar" />
 
                 <div className="admin-username">
                     <p>{props.me?.username}</p>
