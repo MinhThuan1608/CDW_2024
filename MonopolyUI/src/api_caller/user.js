@@ -13,8 +13,8 @@ export async function GetMe() {
         },
     });
 
-    const responseData = await response.json()
     if (response.ok) {
+        const responseData = await response.json()
         return responseData.data; //user
     }
     return null;
