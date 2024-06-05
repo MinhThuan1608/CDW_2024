@@ -1,6 +1,7 @@
+import { Domain } from "../App";
 
 export async function LoginAPI(identify, password) {
-    const urlString = "http://localhost:8001/authenticate/login";
+    const urlString = Domain+"/authenticate/login";
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -24,7 +25,7 @@ export async function LoginAPI(identify, password) {
 }
 
 export async function RegisterAPI(email, password, confirmPassword) {
-    const urlString = "http://localhost:8001/authenticate/register";
+    const urlString = +Domain+"/authenticate/register";
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -46,7 +47,7 @@ export async function RegisterAPI(email, password, confirmPassword) {
 }
 
 export async function SendForgetPassword(email) {
-    const urlString = "http://localhost:8001/authenticate/forget-pass?email=" + email;
+    const urlString = Domain+"/authenticate/forget-pass?email=" + email;
 
     const response = await fetch(urlString, {
         method: "POST",
@@ -63,7 +64,7 @@ export async function SendForgetPassword(email) {
 }
 
 export async function SendResetPassword(password, confirmPassword, token) {
-    const urlString = "http://localhost:8001/authenticate/user/reset-pass";
+    const urlString = Domain+"/authenticate/user/reset-pass";
 
     const response = await fetch(urlString, {
         method: "POST",

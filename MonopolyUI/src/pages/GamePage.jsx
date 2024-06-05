@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import '../assert/style/game-play.css';
 import GameBoard from '../components/gameBoard/game-board'
-import ChatSide from '../components/waitRoom/wait-room-chat-side';
 import { SocketContext } from '../App';
 import { useAppContext } from '../contexts/Context';
 import { useParams } from 'react-router-dom';
@@ -11,8 +10,7 @@ import { faBackward, faBarChart, faBars, faChess, faClose, faCrow, faCrown } fro
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import GameChat from '../components/gameBoard/game-chat';
 import VictoryModal from '../components/gameBoard/VictoryModal';
-import { initGameBoard } from '../reducer/action/move';
-import { convertSecondsToMinutesAndSeconds, createPositionBlack, createPositionWhite, formatSecondsToHHMMSS } from '../components/gameBoard/help';
+import { convertSecondsToMinutesAndSeconds } from '../components/gameBoard/help';
 
 const GamePage = (props) => {
     const { socket } = useContext(SocketContext);
@@ -115,7 +113,7 @@ const GamePage = (props) => {
                 <GameChat listMessageInGame={listMessageInGame} roomId={roomId} />
                 <div className="control-btn">
                     <button onClick={handleGiveUpGame}>Bỏ cuộc</button>
-                    <button onClick={handleExitGame}>Thoát</button>
+                    <button onClick={handleExitGame}>Thoát Game</button>
                 </div>
             </div>
             {displayChatDiv && (
@@ -140,7 +138,7 @@ const GamePage = (props) => {
                     <GameChat className='chat-room-part-mobile' listMessageInGame={listMessageInGame} roomId={roomId} />
                     <div className="control-btn">
                         <button onClick={handleGiveUpGame}>Bỏ cuộc</button>
-                        <button onClick={handleExitGame}>Thoát</button>
+                        <button onClick={handleExitGame}>Thoát Game</button>
                     </div>
                 </div>
             )}

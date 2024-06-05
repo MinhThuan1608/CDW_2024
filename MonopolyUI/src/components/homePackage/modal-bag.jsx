@@ -139,8 +139,8 @@ const ModalBag = (props) => {
         setLoading(true)
         GetFriends().then(res => {
             setListFriend(res);
+            setLoading(false)
         })
-        setLoading(false)
     }, [])
     const handleFriendClick = (friend) => {
         setSelectedFriend(friend);
@@ -155,7 +155,7 @@ const ModalBag = (props) => {
                     amount: donateNumber
                 })
             });
-            toast.success('Tặng thành công!');
+            toast.success('Tặng thành công rùi nho!');
             let remain = itemDetail.quantity - donateNumber
             if (remain > 0) {
                 itemDetail.quantity = remain
@@ -164,7 +164,7 @@ const ModalBag = (props) => {
                 const updatedList = props.listItem.filter(item => item.id !== itemDetail.id);
                 props.setListItem(updatedList);
             }
-        } else toast.error('Chưa chọn người nhận kìa má!');
+        } else toast.error('Chưa chọn người nhận bạn ơi!!!');
      
     }
 
@@ -282,7 +282,7 @@ const ModalBag = (props) => {
                                                 <div className="item-action-button-container">
                                                     {(donateProduct || saleProduct || isChangeNameCard) && <button className="item-action-button exit-button" onClick={handleShowExitDiv}>Thoát</button>}
                                                     {itemDetail.product.saleAble && !donateProduct && !isChangeNameCard && <button className="item-action-button sell-button" onClick={saleProduct ? saleItem : handleShowSaleProductDiv}>Bán</button>}
-                                                    {itemDetail.product.useAble && !saleProduct && !donateProduct && <button className="item-action-button use-button" onClick={isChangeNameCard ? changeName : handleShowChangeNameDiv}>{isChangeNameCard ? 'Đổi tên':'Sử dụng'}</button>}
+                                                    {itemDetail.product.useAble && !saleProduct && !donateProduct && <button className="item-action-button use-button" onClick={isChangeNameCard ? changeName : handleShowChangeNameDiv}>{isChangeNameCard ? 'Đổi tên':'Dùng'}</button>}
                                                     {itemDetail.product.donateAble && !saleProduct && !isChangeNameCard && <button className="item-action-button donate-button" onClick={donateProduct ? donateItem : handleShowDonateProductDiv}>Tặng</button>}
                                                 </div>
                                             </>

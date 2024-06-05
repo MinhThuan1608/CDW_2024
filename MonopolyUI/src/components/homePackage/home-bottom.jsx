@@ -83,10 +83,6 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
     const handleQuickJoinRoom = () => {
         if (me.confirmEmail && socket) {
             setSearchRoomText('ĐANG TÌM...')
-            socket.publish({
-                destination: '/app/room/quick-join',
-                body: ""
-            });
             socket.subscribe('/topic/room/quick-join', (message) => {
                 const messResponse = message.body;
                 console.log(messResponse);
@@ -94,9 +90,14 @@ const HomeBottom = ({ showModal, setShowModal, showModalCreateRoom, setShowModal
                 window.location = '/wait-room/' + messResponse
 
             });
+            socket.publish({
+                destination: '/app/room/quick-join',
+                body: ""
+            });
+          
             
         }else{
-            toast.warn('Chưa xác thực mail kìa má!')
+            toast.warn('Bạn chưa xác thực mail kìa, kiểm tra email nhé ^^!')
         } 
         setQuickJoin(false)
     }

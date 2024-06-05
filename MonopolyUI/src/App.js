@@ -18,15 +18,17 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Swal from 'sweetalert2';
 import TestChart from './pages/TestChart';
+import AdminPage from './pages/AdminPage';
 
 export const SocketContext = React.createContext();
 export const SettingContext = React.createContext();
+export const Domain = 'http://localhost:8001';
 
 export const PlaySound = (soundURL) => {
 
   const generalVolume = Number(localStorage.getItem('generalVolume')) ?? 80
   var sound = new Audio(soundURL)
-  sound.volume = generalVolume/ 100
+  sound.volume = generalVolume / 100
   sound.play()
 
 }
@@ -54,7 +56,7 @@ function App() {
     var accessToken = sessionStorage.getItem('access_token');
     if (accessToken && !socket) {
       const client = new Client({
-        brokerURL: `ws://localhost:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
+        brokerURL: `ws://103.9.159.202:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
         debug: function (str) {
           // console.log(str);
         },
@@ -115,7 +117,7 @@ function App() {
           }
         });
       });
-// 
+      // 
       socket.subscribe(`/user/${me.id}/topic/friend/add`, (message) => {
         console.log(message.body)
         toast(`Người chơi ${message.body} đã đồng ý kết bạn!`)
@@ -174,6 +176,10 @@ function App() {
               <Route path="/create-character" element={<CreateCharacter />} />
               <Route path="/test" element={<TestChart />} />
               <Route path="/game/:roomId" element={<GamePage me={me} />} />
+
+              {/* ADMIN */}
+              <Route path="/admin" element={<AdminPage me={me}/>} />
+              
             </Routes>
           </BrowserRouter>
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />

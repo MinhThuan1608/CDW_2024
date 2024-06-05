@@ -26,7 +26,7 @@ const CreateRoomModal = ({ showModalCreateRoom, setShowModalCreateRoom}) => {
         const room = await CreateRoom(roomName, password);
         if (room){
             window.location = `/wait-room/${room.id}`
-        } else toast.warn('Chưa xác thực mail kìa!!!')
+        } else  toast.warn('Bạn chưa xác thực mail kìa, kiểm tra email nhé ^^!')
     }
 
     return (

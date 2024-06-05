@@ -145,7 +145,7 @@ const GameBoard = (props) => {
                 })
             })
         }
-    }, [socket, props.me]);
+    }, [socket, props.me, props.listUsers]);
 
 
 

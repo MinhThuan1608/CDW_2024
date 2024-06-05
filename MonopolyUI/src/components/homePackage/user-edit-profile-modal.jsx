@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import React, {  useState, useEffect } from 'react';
+import {  Modal } from 'react-bootstrap';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import dice from '../../assert/images/icon/dice.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -129,12 +129,13 @@ const EditUserProfileModal = (props) => {
             const matches = await GetMatches(props.me.id);
             if (matches) {
                 setListMatch(matches)
+                setLoading(false)
             }
         }
+        
         getMatches();
-        setLoading(false)
 
-    }, [])
+    }, [props.showModalProfile])
 
     const handleChangeAvatar = () => {
         if (!isChangeAvt && !isChangeName)
@@ -148,7 +149,7 @@ const EditUserProfileModal = (props) => {
                 setIsChangeName(true)
             else setIsChangeName(false)
             setErrorMessage('')
-        } else toast.warn('Chưa có thẻ đổi tên má oii, mua ở shop đi đã :v')
+        } else toast.warn('Chưa có thẻ đổi tên bạn ơi, mua ở shop đi đã :v')
 
     }
 
@@ -207,10 +208,10 @@ const EditUserProfileModal = (props) => {
                                 <p className='title-history-match'> Lịch sử trận đấu - {listMatch.length} trận </p>
                                 <div className="history-match">
                                     {listMatch.map((match, index) => (
-                                        <div className={`match ${props.me.id == match.winner.id ? `win` : `lose`}`} key={index}>
+                                        <div className={`match ${props.me.id === match.winner.id ? `win` : `lose`}`} key={index}>
                                             <div className='match-top'>
-                                                <p className={props.me.id == match.winner.id ? 'icon-win' : 'icon-lose'}>
-                                                    {props.me.id == match.winner.id ? 'VICTORY' : 'DEFEAT'}
+                                                <p className={props.me.id === match.winner.id ? 'icon-win' : 'icon-lose'}>
+                                                    {props.me.id === match.winner.id ? 'VICTORY' : 'DEFEAT'}
                                                 </p>
                                                 <p>
                                                     Ngày chơi: {formatDateAndTime(match.startAt)}
@@ -219,7 +220,7 @@ const EditUserProfileModal = (props) => {
 
                                             </div>
                                             <div className='match-bottom'>
-                                                {props.me.id == match.winner.id ? (
+                                                {props.me.id === match.winner.id ? (
                                                     <>
                                                         <p>
                                                             <FontAwesomeIcon icon={faTrophy} className="icon-win" />
@@ -251,11 +252,13 @@ const EditUserProfileModal = (props) => {
 
                                 </div>
                             </div>
+                           
+                        {isLoading && <Loader isLoading={isLoading} />}
                         </Modal.Body>
                     </Modal.Dialog>
                 )}
             </div>
-            {isLoading && <Loader isLoading={isLoading} />}
+            
         </>
     );
 }
