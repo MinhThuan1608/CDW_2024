@@ -17,6 +17,10 @@ import { AddFriend, GetMe, RemoveFriendRequest } from './api_caller/user';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Swal from 'sweetalert2';
+import AdminPage from './pages/AdminPage';
+import Statistical from './components/adminPackage/statistical';
+import UserManagement from './components/adminPackage/user-management';
+import MatchManagement from './components/adminPackage/match-management';
 
 export const SocketContext = React.createContext();
 export const SettingContext = React.createContext();
@@ -25,7 +29,7 @@ export const PlaySound = (soundURL) => {
 
   const generalVolume = Number(localStorage.getItem('generalVolume')) ?? 80
   var sound = new Audio(soundURL)
-  sound.volume = generalVolume/ 100
+  sound.volume = generalVolume / 100
   sound.play()
 
 }
@@ -114,7 +118,7 @@ function App() {
           }
         });
       });
-// 
+      // 
       socket.subscribe(`/user/${me.id}/topic/friend/add`, (message) => {
         console.log(message.body)
         toast(`Người chơi ${message.body} đã đồng ý kết bạn!`)
@@ -172,6 +176,10 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/create-character" element={<CreateCharacter />} />
               <Route path="/game/:roomId" element={<GamePage me={me} />} />
+
+              {/* ADMIN */}
+              <Route path="/admin" element={<AdminPage me={me}/>} />
+              
             </Routes>
           </BrowserRouter>
           <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />

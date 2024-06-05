@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
+import React, {  useState, useEffect } from 'react';
+import {  Modal } from 'react-bootstrap';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import dice from '../../assert/images/icon/dice.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -208,10 +208,10 @@ const EditUserProfileModal = (props) => {
                                 <p className='title-history-match'> Lịch sử trận đấu - {listMatch.length} trận </p>
                                 <div className="history-match">
                                     {listMatch.map((match, index) => (
-                                        <div className={`match ${props.me.id == match.winner.id ? `win` : `lose`}`} key={index}>
+                                        <div className={`match ${props.me.id === match.winner.id ? `win` : `lose`}`} key={index}>
                                             <div className='match-top'>
-                                                <p className={props.me.id == match.winner.id ? 'icon-win' : 'icon-lose'}>
-                                                    {props.me.id == match.winner.id ? 'VICTORY' : 'DEFEAT'}
+                                                <p className={props.me.id === match.winner.id ? 'icon-win' : 'icon-lose'}>
+                                                    {props.me.id === match.winner.id ? 'VICTORY' : 'DEFEAT'}
                                                 </p>
                                                 <p>
                                                     Ngày chơi: {formatDateAndTime(match.startAt)}
@@ -220,7 +220,7 @@ const EditUserProfileModal = (props) => {
 
                                             </div>
                                             <div className='match-bottom'>
-                                                {props.me.id == match.winner.id ? (
+                                                {props.me.id === match.winner.id ? (
                                                     <>
                                                         <p>
                                                             <FontAwesomeIcon icon={faTrophy} className="icon-win" />
