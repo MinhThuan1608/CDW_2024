@@ -17,6 +17,7 @@ import { AddFriend, GetMe, RemoveFriendRequest } from './api_caller/user';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Swal from 'sweetalert2';
+import TestChart from './pages/TestChart';
 
 export const SocketContext = React.createContext();
 export const SettingContext = React.createContext();
@@ -171,6 +172,7 @@ function App() {
               <Route path="/forget-password" element={<ForgetPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/create-character" element={<CreateCharacter />} />
+              <Route path="/test" element={<TestChart />} />
               <Route path="/game/:roomId" element={<GamePage me={me} />} />
             </Routes>
           </BrowserRouter>
