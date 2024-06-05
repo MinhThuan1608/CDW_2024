@@ -1,10 +1,13 @@
 package com.fit.monopolysbapi.monopolysocketapi.service;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.Statistic;
 import com.fit.monopolysbapi.monopolysocketapi.repository.MatchRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.StatisticRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -51,5 +54,8 @@ public class StatisticService {
         return statistics;
     }
 
-
+    public List<Match> getMatches(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return matchRepository.findAll(pageable).getContent();
+    }
 }

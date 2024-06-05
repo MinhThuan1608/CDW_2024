@@ -149,8 +149,12 @@ function App() {
         GetMe().then(user => {
           console.log(user)
           if (user) setMe(user)
+            else toast.warn('Có lỗi xảy ra!!')
           if (!user?.username && !window.location.pathname.startsWith('/create-character')) {
             window.location = '/create-character'
+          }
+          if(user?.role !== 'ADMIN' && window.location.pathname.startsWith('/admin')){
+            window.location = '/' 
           }
         })
       }

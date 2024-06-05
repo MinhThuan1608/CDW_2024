@@ -5,6 +5,7 @@ import Styles from '../../assert/style/friend-modal.module.css'
 import { AddFriend, GetFriendRequest, GetFriends, RemoveFriend, RemoveFriendRequest, RequestAddFriend, SearchUser } from '../../api_caller/user';
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { toast } from 'react-toastify';
+import Loader from '../loader/loader';
 
 
 const FriendModal = (props) => {
@@ -13,11 +14,17 @@ const FriendModal = (props) => {
     const [filterKey, setFilterKey] = useState('')
     const [tabSelected, setTabSelected] = useState(1)
     const [userSearched, setUserSearched] = useState(null)
+    const [isLoading, setLoading] = useState(false)
 
     useEffect(() => {
-        if (tabSelected === 1)
-            GetFriends().then(res => setFriends(res))
-        else if (tabSelected === 2) {
+        if (tabSelected === 1) {
+            setLoading(true)
+            GetFriends().then(res => {
+                setFriends(res)
+                setLoading(false)
+            })
+
+        } else if (tabSelected === 2) {
             GetFriendRequest().then(res => props.setFriendRequests(res))
         }
     }, [tabSelected])
@@ -148,6 +155,7 @@ const FriendModal = (props) => {
                         </div>
                     </Modal.Body>
 
+                    {isLoading && <Loader isLoading={isLoading} />}
                 </Modal.Dialog>
             )}
 
