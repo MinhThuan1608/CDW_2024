@@ -70,6 +70,8 @@ public class User implements UserDetails {
                 .username(getUsername())
                 .avatar(getAvatar())
                 .money(getMoney())
+                .role(getRole())
+                .lastLoginDate(getLastLoginDate())
                 .isNonLocked(isNonLocked())
                 .isConfirmEmail(isConfirmEmail())
                 .exp(getExp())

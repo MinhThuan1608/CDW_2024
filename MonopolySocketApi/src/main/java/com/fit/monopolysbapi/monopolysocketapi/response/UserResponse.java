@@ -4,6 +4,8 @@ import com.fit.monopolysbapi.monopolysocketapi.model.Avatar;
 import com.fit.monopolysbapi.monopolysocketapi.model.Role;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class UserResponse {
     private String token;
     private Status status;
     private long exp;
+    private Date lastLoginDate;
 
     public enum Status{
         ONLINE, IN_ROOM, IN_GAME

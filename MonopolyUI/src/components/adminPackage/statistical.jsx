@@ -6,6 +6,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { color } from 'chart.js/helpers';
 import { width } from '@fortawesome/free-solid-svg-icons/faClose';
 import { GetStatistics } from '../../api_caller/admin';
+import Loader from '../loader/loader';
 
 ChartJS.register(
     CategoryScale,
@@ -18,7 +19,7 @@ ChartJS.register(
 );
 
 const Statistical = (props) => {
-
+    const [isLoading, setLoading] = useState(false);
     const [userLoginToday, setUserLoginToday] = useState(0)
     const [newUserToday, setNewUserToday] = useState(0)
     const [matchToday, setMatchToday] = useState(0)
@@ -38,6 +39,7 @@ const Statistical = (props) => {
     })
 
     useEffect(() => {
+        setLoading(true)
         GetStatistics().then(statistics => {
             if (statistics.length) {
                 let dates = statistics.map((item, index) => {
@@ -81,8 +83,10 @@ const Statistical = (props) => {
                         tension: 0.1,
                     }]
                 })
+                setLoading(false)
             }
         })
+        
     }, [])
 
     const options = {
@@ -150,6 +154,7 @@ const Statistical = (props) => {
                     <Line data={userStatistic} options={options} />
                 </div>
             </div>
+            {isLoading && <Loader isLoading={isLoading} />}
         </div>
     );
 };

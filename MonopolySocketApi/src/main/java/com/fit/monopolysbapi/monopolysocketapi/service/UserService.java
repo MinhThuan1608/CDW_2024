@@ -3,8 +3,14 @@ package com.fit.monopolysbapi.monopolysocketapi.service;
 import com.fit.monopolysbapi.monopolysocketapi.model.*;
 import com.fit.monopolysbapi.monopolysocketapi.repository.ItemRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
+import com.fit.monopolysbapi.monopolysocketapi.response.ListUserResponseAdmin;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.util.Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -147,6 +153,10 @@ public class UserService {
 
     public void save(User user){
         userRepository.save(user);
+    }
+
+    public Page<User> searchUsers(String username, Pageable pageable) {
+        return userRepository.findByUsernameContaining(username, pageable);
     }
 
 }

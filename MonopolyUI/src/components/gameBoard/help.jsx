@@ -55,7 +55,7 @@ export const formatDate = (data) => {
 
 }
 export const formatDateAndTime = (data) => {
-
+    if(data === null) return "";
     const dateObj = new Date(data);
     const hours = String(dateObj.getHours()).padStart(2, '0');
     const minutes = String(dateObj.getMinutes()).padStart(2, '0');

@@ -7,18 +7,23 @@ import com.fit.monopolysbapi.monopolysocketapi.model.Item;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.request.InitUserRequest;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.ListUserResponseAdmin;
 import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.AvatarService;
 import com.fit.monopolysbapi.monopolysocketapi.service.GameService;
 import com.fit.monopolysbapi.monopolysocketapi.service.FriendService;
 import com.fit.monopolysbapi.monopolysocketapi.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +119,22 @@ public class UserController {
     public ResponseEntity<?> getDefaultAvatars() {
         List<Avatar> avatars = avatarService.getDefaultAvatars();
         return ResponseEntity.ok(new AbstractResponse(200, "Successfully!", avatars));
+    }
+
+    @PatchMapping("/search")
+    public  ResponseEntity<?>  searchUsers(@RequestBody ListUserResponseAdmin listUserResponseAdmin) {
+        int size = 5;
+        Pageable pageable = PageRequest.of(listUserResponseAdmin.getPage(), size);
+        List<UserResponse> responses = new ArrayList<>();
+        List<User> users = userService.searchUsers(listUserResponseAdmin.getUsername(), pageable).getContent();
+        int totalPage = userService.searchUsers(listUserResponseAdmin.getUsername(), pageable).getTotalPages();
+        for (User user : users) {
+            responses.add(user.getUserResponse());
+        }
+        listUserResponseAdmin.setUserResponse(responses);
+        listUserResponseAdmin.setTotalPage(totalPage);
+
+        return ResponseEntity.ok(new AbstractResponse(200, "List user here!", listUserResponseAdmin));
     }
 
     @GetMapping("/bag/{id}")

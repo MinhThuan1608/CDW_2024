@@ -2,17 +2,19 @@ package com.fit.monopolysbapi.monopolysocketapi.service;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.Statistic;
+import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.repository.MatchRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.StatisticRepository;
 import com.fit.monopolysbapi.monopolysocketapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -50,12 +52,13 @@ public class StatisticService {
         int loginToday = userRepository.countUserByLastLoginDateBetween(lastLogDate, now);
         int matchToday = matchRepository.countMatchByStartAtBetween(lastLogDate, now);
         int registerToday = userRepository.countByCreateDateBetween(lastLogDate, now);
-        statistics.addLast(Statistic.builder().userLoginCount(loginToday).matchCount(matchToday).newUserCount(registerToday).logDate(now).build());
+        statistics.add(Statistic.builder().userLoginCount(loginToday).matchCount(matchToday).newUserCount(registerToday).logDate(now).build());
+//        statistics.addLast(Statistic.builder().userLoginCount(loginToday).matchCount(matchToday).newUserCount(registerToday).logDate(now).build());
         return statistics;
     }
 
-    public List<Match> getMatches(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return matchRepository.findAll(pageable).getContent();
+//
+    public Page<Match> searchMatches(String id, Pageable pageable) {
+        return matchRepository.findByIdContaining(id, pageable);
     }
 }

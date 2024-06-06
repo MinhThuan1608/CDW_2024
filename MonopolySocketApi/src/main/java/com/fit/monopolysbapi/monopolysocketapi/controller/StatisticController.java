@@ -2,16 +2,20 @@ package com.fit.monopolysbapi.monopolysocketapi.controller;
 
 import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.Statistic;
+import com.fit.monopolysbapi.monopolysocketapi.model.User;
 import com.fit.monopolysbapi.monopolysocketapi.response.AbstractResponse;
+import com.fit.monopolysbapi.monopolysocketapi.response.ListUserResponseAdmin;
+import com.fit.monopolysbapi.monopolysocketapi.response.UserResponse;
 import com.fit.monopolysbapi.monopolysocketapi.service.StatisticService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,10 +45,17 @@ public class StatisticController {
         List<Statistic> statistics = statisticService.getStatisticBetween(calendar.getTime(), new Date());
         return ResponseEntity.ok(new AbstractResponse(200, "Get statistics successfully!", statistics));
     }
-    @GetMapping("/matches/{page}")
-    public List<Match> getMatches(@PathVariable int page) {
-        int size = 10;
-        return statisticService.getMatches(page, size);
+
+    @PatchMapping("/search/matches")
+    public  ResponseEntity<?>  searchForMatches(@RequestBody ListUserResponseAdmin listUserResponseAdmin) {
+        int size = 5;
+        Pageable pageable = PageRequest.of(listUserResponseAdmin.getPage(), size, Sort.by("startAt").descending());
+        List<Match> matches = statisticService.searchMatches(listUserResponseAdmin.getId(), pageable).getContent();
+        int totalPage = statisticService.searchMatches(listUserResponseAdmin.getId(), pageable).getTotalPages();
+        listUserResponseAdmin.setMatches(matches);
+        listUserResponseAdmin.setTotalPage(totalPage);
+
+        return ResponseEntity.ok(new AbstractResponse(200, "List match here!", listUserResponseAdmin));
     }
 
 }

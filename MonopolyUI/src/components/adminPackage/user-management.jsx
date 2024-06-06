@@ -1,46 +1,118 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { GetAllUsers, GetUserBySearch } from '../../api_caller/admin';
+import { faAngleDoubleLeft, faAngleDoubleRight, faArrowDown, faArrowLeft, faArrowRight, faCheck, faCheckCircle, faLock, faUnlock, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Loader from '../loader/loader';
+
+import userAvt from '../../assert/images/avatar/meo.jpg';
+import { formatDate, formatDateAndTime } from '../gameBoard/help';
 
 const UserManagement = (props) => {
+    const [isLoading, setLoading] = useState(false);
+
+    const getAllUsers = async (username, page) => {
+        const dataResponse = await GetUserBySearch(username, page);
+        console.log(dataResponse)
+        if (dataResponse.userResponse) {
+            props.setListUser(dataResponse.userResponse)
+            props.setTotalPagesUser(dataResponse.totalPage)
+            props.setCurrentPageUser(dataResponse.page)
+            setLoading(false)
+        }
+    }
+
+
+    useEffect(() => {
+        setLoading(true)
+        getAllUsers(props.searchValue, 0);
+    }, [])
+
+    const handlePrevPage = () => {
+        setLoading(true)
+        getAllUsers(props.searchValue, props.currentPageUser - 1)
+        props.setCurrentPageUser(props.currentPageUser - 1)
+    }
+    const handleNextPage = () => {
+        setLoading(true)
+        getAllUsers(props.searchValue, props.currentPageUser + 1)
+        props.setCurrentPageUser(props.currentPageUser + 1)
+    }
+    const handleFirstPage = () => {
+        setLoading(true)
+        getAllUsers(props.searchValue, 0)
+        props.setCurrentPageUser(0)
+
+    }
+    const handleEndPage = () => {
+        setLoading(true)
+        getAllUsers(props.searchValue, props.totalPagesUser - 1)
+        props.setCurrentPageUser(props.totalPagesUser - 1)
+
+    }
     return (
-        <div>
-            <p className='user-list-length'>Tổng số: 
-                <span className='quantity-user'> 10 </span>
+        <div className='admin-tab-content'>
+            <p className='user-list-length'>Có:
+                <span className='quantity-user'> {props.listUser.length} </span>
                 người dùng
             </p>
-            <div className='ad-user-list-item'>
-                <div className='ad-user-list-top match-top'>
-                    <p>
-                        igfdgdf
-                    </p>
-                    <p>
-                        Ngày chơi: fsdf
+            {props.listUser.map((user, index) => (
+                <div className='ad-user-list-item' key={index}>
+                    <div className='ad-user-list-left'>
+                        <img src={user.avatar ? user.avatar.data : userAvt} alt="avatar" className="admin-avatar admin-avatar-user" />
 
-                    </p>
+                        <div className="admin-username">
+                            <p className='user-id'>id: {user.id}</p>
+                            <p >{user.username}</p>
+                        </div>
+
+                    </div>
+                    <div className='ad-user-list-center'>
+                        <p className='lastLoginDate'>Last login: {formatDateAndTime(user.lastLoginDate)}</p>
+                        <p>
+                            {!user.confirmEmail ? <FontAwesomeIcon icon={faWarning} className="admin-icon-warning icon-win" />
+                                : <FontAwesomeIcon icon={faCheckCircle} className="admin-icon-check" />}
+                            {user.email}
+                        </p>
+
+                    </div>
+                    <div className='ad-user-list-right'>
+
+                        {!user.nonLocked ? <FontAwesomeIcon icon={faLock} className="icon-lose admin-icon-lose" />
+                            : <FontAwesomeIcon icon={faUnlock} className="admin-icon-check" />}
+
+                    </div>
 
                 </div>
-                <div className='ad-user-list-bottom match-bottom'>
-                    sdad
+            ))}
 
-                    <p>âf</p>
-                </div>
+            <div className='pageable'>
+                {props.currentPageUser !== props.totalPagesUser - 1 && props.totalPagesUser !== 0 && (
+                    <>
+                        <p className='more-btn' aria-disabled onClick={handleEndPage} title='Đến cuối'>
+                            <FontAwesomeIcon icon={faAngleDoubleRight} className="admin-icon" />
+                        </p>
+                        <p className='more-btn' aria-disabled onClick={handleNextPage} title='Xem thêm'>
+                            <FontAwesomeIcon icon={faArrowRight} className="admin-icon" />
+                        </p>
+                    </>
+                )}
+                <p className='more-btn'>
+                    {props.currentPageUser === 0 && props.totalPagesUser === 0 ? 0 : props.currentPageUser + 1} / {props.totalPagesUser}
+                </p>
+
+                {props.currentPageUser !== 0 && (
+                    <>
+                        <p className='more-btn' onClick={handlePrevPage} title='Quay lại'>
+                            <FontAwesomeIcon icon={faArrowLeft} className="admin-icon" />
+                        </p>
+                        <p className='more-btn' aria-disabled onClick={handleFirstPage} title='Về đầu tiên'>
+                            <FontAwesomeIcon icon={faAngleDoubleLeft} className="admin-icon" />
+                        </p>
+                    </>
+                )}
+
             </div>
-            <div className='ad-user-list-item'>
-                <div className='ad-user-list-top match-top'>
-                    <p>
-                        igfdgdf
-                    </p>
-                    <p>
-                        Ngày chơi: fsdf
-
-                    </p>
-
-                </div>
-                <div className='ad-user-list-bottom match-bottom'>
-                    sdad
-
-                    <p>âf</p>
-                </div>
-            </div>
+            {isLoading && <Loader isLoading={isLoading} />}
         </div>
     );
 };

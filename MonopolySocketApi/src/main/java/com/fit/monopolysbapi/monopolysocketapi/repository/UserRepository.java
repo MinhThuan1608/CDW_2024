@@ -1,8 +1,12 @@
 package com.fit.monopolysbapi.monopolysocketapi.repository;
 
+import com.fit.monopolysbapi.monopolysocketapi.model.Match;
 import com.fit.monopolysbapi.monopolysocketapi.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -20,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsernameOrEmail(String identifier);
     int countUserByLastLoginDateBetween(Date lastLoginDate, Date lastLoginDate2);
     int countByCreateDateBetween(Date from, Date to);
+    @Query("SELECT u FROM User u WHERE u.username LIKE %:username%")
+    Page<User> findByUsernameContaining(@Param("username") String username, Pageable pageable);
+
+
 }
