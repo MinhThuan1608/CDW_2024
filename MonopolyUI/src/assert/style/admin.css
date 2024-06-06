@@ -136,7 +136,9 @@
     align-items: center;
     margin: 4px 0;
 }
-
+.title-tab{
+    flex: 5;
+}
 .admin-tab:hover,
 .admin-tab.active {
     background-color: #b484f4;
@@ -147,6 +149,7 @@
 
 .admin-icon-tab {
     margin: 0 16px 0 0;
+    flex: 1;
 }
 
 /* userlist */

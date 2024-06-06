@@ -2,7 +2,7 @@ import { faClose } from '@fortawesome/free-solid-svg-icons/faClose';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, {  useState } from 'react';
 import userAvt from '../../assert/images/avatar/meo.jpg';
-import { faChartLine, faChessBoard, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faChartLine, faChessBoard, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const SideBar = (props) => {
     const [activeTab, setActiveTab] = useState('1');
@@ -25,6 +25,9 @@ const SideBar = (props) => {
         props.setShowUserBar(false)
         setActiveTab('3')
     }
+    const returnHome = () => {
+        window.location = '/'
+    }
 
     return (
         <div className="admin-sidebar">
@@ -41,15 +44,19 @@ const SideBar = (props) => {
                 <ul className="admin-sidebar-menu">
                     <li className={`admin-tab ${activeTab === '1' ? 'active' : ''}`} onClick={handleTabSide1}>
                         <FontAwesomeIcon icon={faChartLine} className="setting-icon admin-icon-tab" id="notification" />
-                        <div>Thống kê</div>
+                        <div className='title-tab'>Thống kê</div>
                     </li>
                     <li className={`admin-tab ${activeTab === '2' ? 'active' : ''}`} onClick={handleTabSide2}>
                         <FontAwesomeIcon icon={faUsers} className="setting-icon admin-icon-tab" id="notification" />
-                        <div>Quản lý người dùng</div>
+                        <div className='title-tab'>Quản lý người dùng</div>
                     </li>
                     <li className={`admin-tab ${activeTab === '3' ? 'active' : ''}`} onClick={handleTabSide3}>
                         <FontAwesomeIcon icon={faChessBoard} className="setting-icon admin-icon-tab" id="notification" />
-                        <div>Quản lý trận đấu</div>
+                        <div className='title-tab'>Quản lý trận đấu</div>
+                    </li>
+                    <li className={`admin-tab ${activeTab === '4' ? 'active' : ''}`} onClick={returnHome}>
+                        <FontAwesomeIcon icon={faBackward} className="setting-icon admin-icon-tab" id="notification" />
+                        <div className='title-tab'>Về trang chủ</div>
                     </li>
                 </ul>
             </div>
