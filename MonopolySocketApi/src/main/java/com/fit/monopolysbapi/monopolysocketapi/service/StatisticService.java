@@ -44,7 +44,14 @@ public class StatisticService {
     }
 
     public List<Statistic> getStatisticBetween(Date from, Date to){
-        return statisticRepository.getByLogDateBetween(from, to);
+        List<Statistic> statistics = statisticRepository.getByLogDateBetweenOrderByLogDateAsc(from, to);
+        Date lastLogDate = statistics.get(statistics.size()-1).getLogDate();
+        Date now = new Date();
+        int loginToday = userRepository.countUserByLastLoginDateBetween(lastLogDate, now);
+        int matchToday = matchRepository.countMatchByStartAtBetween(lastLogDate, now);
+        int registerToday = userRepository.countByCreateDateBetween(lastLogDate, now);
+        statistics.addLast(Statistic.builder().userLoginCount(loginToday).matchCount(matchToday).newUserCount(registerToday).logDate(now).build());
+        return statistics;
     }
 
     public List<Match> getMatches(int page, int size) {
