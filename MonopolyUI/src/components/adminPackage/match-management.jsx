@@ -10,7 +10,8 @@ const MatchManagement = (props) => {
     useEffect(() => {
         setLoading(true)
         const getAllMatches = async () => {
-            const matches = await GetAllMatches(0);
+            const matches = await GetAllMatches(1);
+            console.log(matches)
             if (matches) {
                 setListMatch(matches)
                 setLoading(false)
@@ -19,7 +20,7 @@ const MatchManagement = (props) => {
 
         getAllMatches();
 
-    }, [props.showModalProfile])
+    }, [])
     return (
         <div>
             <p className='user-list-length'>Tổng:
