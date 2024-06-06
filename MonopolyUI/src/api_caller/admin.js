@@ -46,6 +46,22 @@ export async function GetUserBySearch(username, page) {
     }
     return false;
 }
+export async function LockAccount(userId) {
+    const urlString = Domain + `/user/lock/` + userId;
+
+    const response = await fetch(urlString, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        }
+    });
+
+    if (response.ok) {
+        return response.ok; //arr of matches
+    }
+    return false;
+}
 export async function GetStatistics() {
     const urlString = Domain + `/statistics`;
 

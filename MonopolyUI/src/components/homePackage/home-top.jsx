@@ -56,20 +56,20 @@ const HomeTop = (props) => {
             </div>
             <div className="setting-container">
                 <div className="icon-container">
-                    <FontAwesomeIcon icon={faSignOut} className="setting-icon" id="letter" onClick={handleLogOut} />
+                    <FontAwesomeIcon icon={faSignOut} className="setting-icon" id="letter" title='Đăng xuất' onClick={handleLogOut} />
                     <FontAwesomeIcon icon={faCircle} className="dot" id="setting-dot" />
                 </div>
                 <div className="icon-container">
-                    <FontAwesomeIcon icon={faGear} className="setting-icon" id="setting" onClick={handleOpenSettingModal} />
+                    <FontAwesomeIcon icon={faGear} className="setting-icon" id="setting" title='Cài đặt' onClick={handleOpenSettingModal} />
                     <FontAwesomeIcon icon={faCircle} className="dot" id="setting-dot" />
                 </div>
                 <div className="icon-container">
-                    <FontAwesomeIcon icon={faUserFriends} className="setting-icon" id="letter" onClick={handleOpenFriendModal} />
+                    <FontAwesomeIcon icon={faUserFriends} className="setting-icon" title='DS bạn bè' id="letter" onClick={handleOpenFriendModal} />
                     <FontAwesomeIcon icon={faCircle} className={props.friendRequests.length ? "dot show" : "dot"} id="letter-dot" />
                 </div>
                 {props.me?.role === 'ADMIN' && (
-                    <div className="icon-container">
-                        <FontAwesomeIcon icon={faUserTie} className="setting-icon" id="notification" onClick={handleIconClick} />
+                    <div className="icon-container" title='Vào trang ADMIN'>
+                        <FontAwesomeIcon icon={faUserTie} title='Vào trang ADMIN' className="setting-icon" id="notification" onClick={handleIconClick} />
                     </div>
                 )
                 }

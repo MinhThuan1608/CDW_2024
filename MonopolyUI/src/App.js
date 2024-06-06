@@ -23,6 +23,9 @@ import AdminPage from './pages/AdminPage';
 export const SocketContext = React.createContext();
 export const SettingContext = React.createContext();
 export const Domain = 'http://localhost:8001';
+export const HOST = 'localhost';
+// export const HOST = '103.9.159.202';
+// export const Domain = 'http://103.9.159.202:8001';
 
 export const PlaySound = (soundURL) => {
 
@@ -56,7 +59,7 @@ function App() {
     var accessToken = sessionStorage.getItem('access_token');
     if (accessToken && !socket) {
       const client = new Client({
-        brokerURL: `ws://103.9.159.202:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
+        brokerURL: `ws://${HOST}:8001/monopolyWs?Authorization=Bearer%20${accessToken}`,
         debug: function (str) {
           // console.log(str);
         },

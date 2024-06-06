@@ -53,6 +53,7 @@ const AdminPage = (props) => {
                 {showStatistical && <Statistical />}
                 {showUserBar && 
                 <UserManagement 
+                    me={props.me}
                     searchValue ={searchValue}
                     setSearchValue={setSearchValue}
                     listUser={listUser}

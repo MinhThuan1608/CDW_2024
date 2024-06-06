@@ -148,6 +148,15 @@ public class UserController {
         return ResponseEntity.ok(new AbstractResponse(200, "Successfully", matches));
 
     }
+    @GetMapping("/lock/{userId}")
+    public ResponseEntity<?> lockAccount(@PathVariable String userId) {
+        User user = null;
+        Optional<User> userOptional = userService.getUserById(userId);
+        if (userOptional.isPresent()) user = userOptional.get();
+        else return ResponseEntity.ok(new AbstractResponse(405, "User id is wrong!", false));
+        userService.lockUserAccount(user);
+        return ResponseEntity.ok("Lock success!");
+    }
 
 
     @GetMapping("/verify_email/{userId}")

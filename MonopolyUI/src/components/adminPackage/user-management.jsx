@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { GetAllUsers, GetUserBySearch } from '../../api_caller/admin';
+import { GetAllUsers, GetUserBySearch, LockAccount } from '../../api_caller/admin';
 import { faAngleDoubleLeft, faAngleDoubleRight, faArrowDown, faArrowLeft, faArrowRight, faCheck, faCheckCircle, faLock, faUnlock, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Loader from '../loader/loader';
 
 import userAvt from '../../assert/images/avatar/meo.jpg';
 import { formatDate, formatDateAndTime } from '../gameBoard/help';
+import { toast } from 'react-toastify';
 
 const UserManagement = (props) => {
     const [isLoading, setLoading] = useState(false);
@@ -49,6 +50,20 @@ const UserManagement = (props) => {
         props.setCurrentPageUser(props.totalPagesUser - 1)
 
     }
+
+    const handleLockUser = async (user) => {
+        setLoading(true)
+
+        const result = await LockAccount(user.id);
+
+        props.setListUser(prevListUser =>
+            prevListUser.map(us =>
+                us.id === user.id ? { ...us, nonLocked: !user.nonLocked } : us
+            )
+        );
+        setLoading(false)
+
+    }
     return (
         <div className='admin-tab-content'>
             <p className='user-list-length'>Có:
@@ -76,10 +91,16 @@ const UserManagement = (props) => {
 
                     </div>
                     <div className='ad-user-list-right'>
-
-                        {!user.nonLocked ? <FontAwesomeIcon icon={faLock} className="icon-lose admin-icon-lose" />
-                            : <FontAwesomeIcon icon={faUnlock} className="admin-icon-check" />}
-
+                        {user.id !== props.me?.id &&
+                            (!user.nonLocked ?
+                                <FontAwesomeIcon icon={faLock} className="icon-lose admin-icon icon-lock"
+                                    onClick={() => handleLockUser(user)} title='Mở Khoá TK' />
+                                :
+                                <FontAwesomeIcon icon={faUnlock} className="icon-win admin-icon icon-lock"
+                                    onClick={() =>handleLockUser(user)} title='Khoá TK' />
+                                // <button className='lock-btn' onClick={() => handleLockUser(user)}>Khoá</button>
+                            )
+                        }
                     </div>
 
                 </div>

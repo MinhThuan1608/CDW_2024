@@ -273,7 +273,15 @@
     height: 20px;
     margin: 0 8px 0 0;
 }
+.icon-lock:hover{
+    cursor: pointer;
 
+}
+.lock-btn{
+    background-color: antiquewhite;
+    border-radius: 5px;
+    border: none;
+}
 /* more btn */
 .pageable{
     display: flex;
@@ -299,5 +307,4 @@
 
 .more-btn:hover {
     cursor: pointer;
-    /* box-shadow: 2px 3px #b484f4; */
 }

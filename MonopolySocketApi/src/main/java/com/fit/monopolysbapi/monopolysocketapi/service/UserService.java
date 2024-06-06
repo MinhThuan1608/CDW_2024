@@ -145,6 +145,10 @@ public class UserService {
         user.setConfirmEmail(true);
         userRepository.save(user);
     }
+    public void lockUserAccount(User user) {
+        user.setNonLocked(!user.isNonLocked());
+        userRepository.save(user);
+    }
 
     public void changePassword(User user, String password) {
         user.setPassword(passwordEncoder.encode(password));

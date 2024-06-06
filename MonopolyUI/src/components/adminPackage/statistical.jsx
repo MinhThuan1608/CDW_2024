@@ -134,7 +134,7 @@ const Statistical = (props) => {
                 <div className="win-match">
                     <p style={{ color: '#F9F07A' }}>Hôm nay</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginToday}<FontAwesomeIcon icon={faUser}/></span>  </p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginToday}<FontAwesomeIcon icon={faUser} style={{marginLeft: '4px'}}/></span>  </p>
                         <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người mới: <span style={{color: 'white'}}>{newUserToday} <FontAwesomeIcon icon={faUserPlus}/></span></p>
                         <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số trận: <span style={{color: 'white'}}>{matchToday} <FontAwesomeIcon icon={faHandFist}/></span></p>
                     </div>
@@ -142,7 +142,7 @@ const Statistical = (props) => {
                 <div className="lose-match">
                     <p style={{ color: '#F9F07A' }}>Trước - nay</p>
                     <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginAll}<FontAwesomeIcon icon={faUser}/></span>  </p>
+                        <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người đăng nhập: <span style={{color: 'white'}}>{userLoginAll}<FontAwesomeIcon icon={faUser} style={{marginLeft: '4px'}}/></span>  </p>
                         <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số người mới: <span style={{color: 'white'}}>{newUserAll} <FontAwesomeIcon icon={faUserPlus}/></span></p>
                         <p style={{width: '50%', marginBottom: '5px', color: '#B7C9F2'}}>Số trận: <span style={{color: 'white'}}>{matchAll} <FontAwesomeIcon icon={faHandFist}/></span></p>
                     </div>
